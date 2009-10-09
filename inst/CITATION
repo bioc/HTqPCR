@@ -1,0 +1,10 @@
+citHeader("If you use HTqPCR for analyzing your data, please cite:")
+
+citEntry(entry="article",  
+  title  = paste("{HTqPCR}: High", "-", "throughput analysis and visualization of quantitative real", "-", "time PCR data in R"),
+  author = paste("Heidi Dvinge and Paul Bertone"),
+journal = "Bioinformatics",
+  year = "2009",
+  volume = "",
+  pages = "",
+  textVersion = paste("Heidi Dvinge and Paul Bertone (2009)","HTqPCR: High-throughput analysis and visualization of quantitative real-time PCR data in R.", "Bioinformatics."))

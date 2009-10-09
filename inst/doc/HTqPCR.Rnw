@@ -1,0 +1,783 @@
+%\VignetteIndexEntry{qPCR analysis in R}
+%\VignetteDepends{HTqPCR}
+%\VignetteKeywords{qpcr, preprocessing, normalization}
+%\VignettePackage{HTqPCR} % name of package
+
+%%%% HEAD SECTION: START EDITING BELOW %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[11pt, a4paper, fleqn]{article}
+\usepackage{geometry}\usepackage{color}
+\definecolor{darkblue}{rgb}{0.0,0.0,0.75}
+\usepackage[%
+baseurl={http://www.bioconductor.org},%
+pdftitle={Introduction to HTqPCR},%
+pdfauthor={Heidi Dvinge},%
+pdfsubject={HTqPCR Vignette},%
+pdfkeywords={Bioconductor},%
+pagebackref,bookmarks,colorlinks,linkcolor=darkblue,citecolor=darkblue,%
+filecolor=darkblue,urlcolor=darkblue,pagecolor=darkblue,%
+raiselinks,plainpages,pdftex]{hyperref}
+
+\usepackage{verbatim} % for multi-line comments
+\usepackage{fancyvrb}
+\usepackage{amsmath,a4,t1enc, graphicx}
+\usepackage{natbib}
+\bibpunct{(}{)}{;}{a}{,}{,}
+
+\parindent0mm
+%\parskip2ex plus0.5ex minus0.3ex
+
+\newcommand{\Robject}[1]{{\texttt{#1}}}
+\newcommand{\Rfunction}[1]{{\texttt{#1}}}
+\newcommand{\Rpackage}[1]{{\textit{#1}}}
+\newcommand{\Rclass}[1]{{\textit{#1}}}
+\newcommand{\Rmethod}[1]{{\textit{#1}}}
+\newcommand{\Rfunarg}[1]{{\texttt{#1}}}
+\newcommand{\phead}[1]{{\flushleft \sf \small \textbf{#1} \quad}}
+
+\newcommand{\myincfig}[3]{%
+  \begin{figure}[h!tb]
+    \begin{center}
+      \includegraphics[width=#2]{#1}
+      \caption{\label{#1}\textit{#3}}
+    \end{center}
+  \end{figure}
+}
+
+\addtolength{\textwidth}{2cm}
+\addtolength{\oddsidemargin}{-1cm}
+\addtolength{\evensidemargin}{-1cm}
+\addtolength{\textheight}{2cm}
+\addtolength{\topmargin}{-1cm}
+\addtolength{\skip\footins}{1cm}
+
+
+%%%%%%% START EDITING HERE %%%%%%%
+
+\begin{document}
+
+\DefineVerbatimEnvironment{Sinput}{Verbatim} {xleftmargin=1.5em}
+\DefineVerbatimEnvironment{Soutput}{Verbatim}{xleftmargin=1.5em}
+\DefineVerbatimEnvironment{Scode}{Verbatim}{xleftmargin=1.5em}
+\fvset{listparameters={\setlength{\topsep}{0pt}}}
+\renewenvironment{Schunk}{\vspace{\topsep}}{\vspace{\topsep}}
+
+\SweaveOpts{eps=false, keep.source=FALSE} % produce no 'eps' figures
+
+<<Prepare parameters, echo=FALSE>>=
+options(width=65)
+set.seed(123)
+@
+
+\title{HTqPCR - high-throughput qPCR analysis in R and Bioconductor}
+\author{Heidi Dvinge}
+%\date{}
+\maketitle
+
+\section{Introduction}
+
+The package \Rpackage{HTqPCR} is designed for the analysis of cycle threshold (Ct) values from quantitative real-time PCR data. The main areas of functionality comprise data import, quality assessment, normalisation, data visualisation, and testing for statistical significance in Ct values between different features (genes, miRNAs).
+
+Example data is included from TaqMan Low Density Arrays (TLDA), a proprietary format of Applied Biosystems, Inc. However, most functions can be applied to any kind of qPCR data, regardless of the nature of the experimental samples and whether genes or miRNAs were measured.
+
+<<Load package, results=hide>>=
+library("HTqPCR")
+@
+
+The package employs functions from other packages of the Bioconductor project \citep{ref:bioc}. Dependencies include \Rpackage{Biobase}, \Rpackage{RColorBrewer}, \Rpackage{limma}, \Rpackage{statmod}, \Rpackage{affy} and \Rpackage{gplots}. 
+
+\subsection*{Examples from the vignette}
+
+This vignette was developed in Sweave, so the embedded R code was compiled when the PDF was generated, and its output produced the results and plots that appear throughout the document. The following commands will extract all of the code from this file:
+
+<<Extract R code, results=hide>>=
+all.R.commands <- system.file("doc", "HTqPCR.Rnw", package = "HTqPCR")
+Stangle(all.R.commands)
+@
+
+This will create a file called HTqPCR.R in your current working directory, and this file can then either be sourced directly, or the commands run individually.
+
+\subsection*{General workflow}
+
+The main functions and their use are outlined in Figure~\ref{fig:workflow}. Note that the QC plotting functions can be used both before and after normalisation, in order to examine the quality of the data or look for particular trends.
+
+\begin{figure}
+\begin{center}
+	\includegraphics{workflow.png}
+\end{center}
+\caption{Workflow in \Rpackage{HTqPCR} analysis of qPCR data. Centre column: The main procedural steps in a typical qPCR analysis; Left:  examples of visualisation functions; Right: data analysis functions.}
+\label{fig:workflow}
+\end{figure}
+
+\subsection*{Getting help}
+
+Please send questions about \Rpackage{HTqPCR} to the Bioconductor mailing list.\\
+See \url{http://www.bioconductor.org/docs/mailList.html} \\
+%Their archive of questions and responses may prove helpful, too.
+
+
+%%%%%%%%%%%%%%%% DESCRIPTION OF THE DATA FORMAT  %%%%%%%%%%%%%%%%%
+
+
+\section{\Rclass{qPCRset} objects}
+
+The data is stored in an object of class \Rclass{qPCRset}, which is similar to the \Rclass{ExpressionSet} from package \Rpackage{Biobase} used for handling microarray data. The format is the same for raw and normalized data, and depending on how much information is available about the input data, the object can contain the following slots:
+
+\begin{description}
+    \item[\Robject{featureNames}] Object of class \Rclass{character} giving the names of the features (genes, miRNAs) used in the experiment.
+    \item[\Robject{sampleNames}] Object of class \Rclass{character} containing the sample names of the individual experiments.
+    \item[\Robject{exprs}] Object of class \Rclass{matrix} containing the Ct values.
+    \item[\Robject{flag}] Object of class \Rclass{data.frame} containing the flag for each Ct value, as supplied by the input files. These are typically set during the calculation of Ct values, and indicate whether the results are flagged as e.g.~"Passed" or "Flagged".
+    \item[\Robject{featureType}]Object of class \Rclass{factor} representing the different types of features on the card, such as endogenous controls and target genes.
+    \item[\Robject{featurePos}] Object of class \Rclass{character} representing the location "well" of a gene in case TLDA cards are used, or some other method containing a defined spatial layout of features.
+    \item[\Robject{featureClass}] Object of class \Rclass{factor} with some meta-data about the genes, for example if it is a  transcription factor, kinase, marker for different types of cancers or similar. This is typically set by the user.
+    \item[\Robject{featureCategory}] Object of class \Rclass{data.frame} representing the quality of the measurement for each Ct value, such as "OK", "Undetermined" or "Unreliable". These can be set using the function \Rfunction{setCategories} depending on a number of parameters, such as how the Ct values are flagged, upper and lower limits of Ct values and variations between technical and biological replicates of the same feature.
+    \item[\Robject{normalized}] Object of class \Rclass{character} indicating if the data has been normalized, and if so then what method was used. Automatically set when function \Rfunction{normalizeCtData} is called.
+\end{description}
+
+Generally, information can be handled in the \Rclass{qPCRset} using the same kind of functions as for \Rclass{ExpressionSet}, such as \Rfunction{exprs}, \Rfunction{featureNames} and \Rfunction{featureCategory} for extracting the data, and  \Rfunction{exprs<-}, \Rfunction{featureNames<-} and \Rfunction{featureCategory<-} for replacing or modifying values.
+
+Two \Robject{qPCRset} test objects are included in the package: one containing raw data, and the other containing processed values.
+
+<<Load example data>>=
+data(qPCRraw)
+data(qPCRpros)
+class(qPCRraw)
+@
+
+
+%%%%%%%%%%%%%%%% DATA INPUT  %%%%%%%%%%%%%%%%%
+
+
+\section{Reading in the raw data}
+
+\subsection{General data format}
+
+The input consists of tab-delimited text files containing the Ct values for a range of genes. Additional information, such as type of gene (e.g.~target, endogenous control) or groupings of genes into separate classes (e.g.~markers, kinases) can also be read in, or supplied later.
+
+The package comes with example input files (from Applied Biosystem's TLDA cards), along with a text file listing sample file names and biological conditions.  
+
+<<Example input files>>=
+path <- system.file("exData", package="HTqPCR")
+head(read.delim(file.path(path, "files.txt")))
+@
+
+The data consist of 192 features represented twice on the array and labelled "Gene1", "Gene2", etc. There are three different conditions, "Control", "Starve" and "LongStarve", each having 2 replicates.
+
+The input data consists of tab-delimited text files (one per sample); however, the format is likely to vary depending on the specific platform on which the data were obtained (e.g., TLDA cards, 96-well plates, or some other format). The only requirement is that columns containing the Ct values and feature names are present.
+
+<<Read raw data, results=hide>>=
+files <- read.delim(file.path(path, "files.txt"))
+raw <- readCtData(files=files$File, path=path)
+@
+
+The \Rclass{qPCRset} object looks like:
+
+<<Show qPCRset data object>>=
+show(raw)
+@
+
+\subsection{Sequence Detection Systems format}
+
+The qPCR data might come from Sequence Detection Systems (SDS) software, in which case each file has a header containing some generic information about the initial Ct detection. This header varies in length depending on how many files were analysed simultaneously, and an example is shown below.
+
+%readLines(file.path(path, "SDS_sample.txt"), n=19)
+<<Example SDS data>>=
+path <- system.file("exData", package="HTqPCR")
+cat(paste(readLines(file.path(path, "SDS_sample.txt"), n=19), "\n"))
+@
+
+Only the first 7 columns are shown, since the file shown here contains $>$30 columns (of which many are empty). All columns for the first 20 lines can be seen in an R terminal with the command:
+
+<<Example SDS data 2, results=hide>>=
+readLines(file.path(path, "SDS_sample.txt"), n=20)
+@
+
+For these files the parameter \Rfunction{SDS=TRUE} can be set in \Rfunction{readCtData}. The first 100 lines of each file will be scanned, and all lines preceding the actual data will be skipped (in this case 17), even when the length of the header varies between files.
+
+
+
+%%%%%%%%%%%%%%%% BASIC PLOTTING  %%%%%%%%%%%%%%%%%
+
+
+\section{Data visualisation}
+
+\subsection{Overview of Ct values across all groups}
+
+To get a general overview of the data the (average) Ct values for a set of features across all samples or different condition groups can be displayed. In principle, all features in a sample might be chosen, but to make it less cluttered Figure~\ref{fig:overview} displays only the first 10 features. The top plot was made using just the Ct values, and shows the 95\% confidence interval across replicates within and between samples. The bottom plot represents the same values but relative to a chosen calibrator sample, here the "Control". Confidence intervals can also be added to the relative plot, in which case these will be calculated for all values compared to the average of the calibrator sample per gene.
+
+%<<Ct overview ex 1, label=fig.overview1, include=FALSE>>=
+<<Ct overview ex 1, include=FALSE>>=
+g <- featureNames(raw)[1:10]
+plotCtOverview(raw, genes=g, xlim=c(0,50), groups=files$Treatment, conf.int=TRUE, 
+ylim=c(0,55))
+@
+
+<<Ct overview ex 2, include=FALSE>>=
+plotCtOverview(raw, genes=g, xlim=c(0,50), groups=files$Treatment, 
+calibrator="Control")
+@
+
+\begin{figure}
+\begin{center}
+<<fig =TRUE , echo =FALSE, width=10, height=14 >>=
+par(mfrow=c(2,1))
+<<Ct overview ex 1>>
+<<Ct overview ex 2>>
+@
+\end{center}
+\caption{Overview of Ct values for the raw data.}
+\label{fig:overview}
+\end{figure}
+
+\subsection{Spatial layout}
+
+When the features are organised in a particular spatial pattern, such as the 96- or 384-well plates, it is possible to plot the Ct values or other characteristics of the features using this layout. Figure~\ref{fig:one} shows an example of the Ct values, as well as the location of different classes of features (using random examples here), across all the wells of a TLDA microfluidic card.
+
+<<Ct card ex 1, include=FALSE>>=
+plotCtCard(raw, col.range=c(10,35), well.size=2.6)
+@
+<<Ct card ex 2, include=FALSE>>=
+featureClass(raw) <- factor(c("Marker", "TF", "Kinase")[sample(c(1,1,2,2,1,3), 
+384, replace=TRUE)])
+plotCtCard(raw, plot="class", well.size=2.6)
+@
+
+\begin{figure}
+\begin{center}
+<<fig=TRUE,echo=FALSE>>=
+<<Ct card ex 1>> 
+@
+<<fig=TRUE,echo=FALSE>>=
+<<Ct card ex 2>> 
+@
+\end{center}
+\caption{Ct values for the first sample (top), and the location of different feature classes (bottom). Ct values are visualised using colour intensity, and grey circles are features that were marked "undetermined" in the input file.}
+\label{fig:one}
+\end{figure}
+
+
+
+%%%%%%%%%% DESCRIPTION OF FEATURE CATEGORIES  %%%%%%%%%%%
+
+
+\section{Feature categories and filtering}
+
+Each Ct values in HTqPCR has an associated feature category. This is an important component to indicate the reliability of the qPCR data. Aside from the "OK" indicator, there are two other categories: "Undetermined" is used to flag Ct values above a user-selected threshold, and "Unreliable" indicates Ct values that are either so low as to be estimated by the user to be problematic, or that arise from deviation between individual Ct values across replicates.  By default, only Ct values labelled as "undetermined" in the input data files are placed into the "Undetermined" category, and the rest are classified as "OK". However, either before or after normalisation these categories can be altered depending on various criteria. 
+
+\begin{description}
+\item[Range of Ct values] Some Ct values might be too high or low to be considered a reliable measure of gene expression in the sample, and should therefore not be marked as "OK".
+\item[Flags] Depending on the qPCR input the values might have associated flags, such as "Passed" or "Failed", which are used for assigning categories.
+\item[Biological and technical replicates] If features are present multiple times within each sample, or if samples are repeated in the form of technical or biological replicates, then these values can be compared. Ct values lying outside a user-selected confidence interval (90\% by default) will be marked as "Unreliable".
+\end{description}
+
+<<Set Ct categories>>=
+raw.cat <- setCategory(raw, groups=files$Treatment, quantile=0.8)
+@
+
+A summary plot for the sample categories is depicted in Figure~\ref{fig:categories}. The result can be stratified by \Rfunction{featureType} or \Rfunction{featureClass}, for example to determine whether one class of features performed better or worse than others.  
+
+
+<<Plot Ct categories ex 1, include=FALSE>>=
+plotCtCategory(raw.cat)
+@
+<<Plot Ct categories ex 2, include=FALSE>>=
+plotCtCategory(raw.cat, stratify="class")
+@
+
+\begin{figure}
+\begin{center}
+<<fig=TRUE,echo=FALSE, width=8, height=8>>=
+par(mfrow=c(2,1))
+<<Plot Ct categories ex 1>> 
+<<Plot Ct categories ex 2>> 
+@
+\end{center}
+\caption{Summary of the categories, either for each sample individually or stratified by feature class.}
+\label{fig:categories}
+\end{figure}
+
+The results can also be shown per feature rather than averaged across samples (Figure~\ref{fig:categories2}).
+
+<<Plot Ct categories ex 3, include=FALSE>>=
+plotCtCategory(raw.cat, by.feature=TRUE, cexRow=0.1)
+@
+
+\begin{figure}
+\begin{center}
+<<fig=TRUE,echo=FALSE>>=
+<<Plot Ct categories ex 3>> 
+@
+\end{center}
+\caption{Summary of the categories, clustered across features.}
+\label{fig:categories2}
+\end{figure}
+
+
+If one doesn't want to include unreliable or undetermined data in part of the analysis, these Ct values can be set to NA using \Rfunction{filterCategory}.  However, the presence of NAs could make the tests for differential expression less robust. When testing for differential expression the result will come with an associated category ("OK" or "Unreliable") that can instead be used to assess the quality of the results. For the final results both "Undetermined" and "Unreliable" are pooled together as being "Unreliable". However, the label for each feature can either be set according to whether half or more of the samples are unreliable, or whether only a single non-"OK" category is present, depending on the level of stringency the user wishes to enforce.
+
+
+%%%%%%%%%%%%%%%% DATA NORMALISATION  %%%%%%%%%%%%%%%%%
+
+
+\section{Normalisation}
+
+Four different normalisation methods are currently implemented in \Rpackage{HTqPCR}. Two of these 
+(\Rfunction{scale.rankinvariant} and \Rfunction{deltaCt}) will scale each individual sample by a given value, whereas the remaining two will change the distribution of Ct values. 
+
+\begin{description}
+\item[quantile] Will make the distribution of Ct values more or less identical across samples.
+\item[norm.rankinvariant] Computes all rank-invariant sets of features between pairwise com- 
+parisons of each sample against a reference, such as a pseudo-mean. The rank-invari- 
+ant features are used as a reference for generating a smoothing curve, which is then 
+applied to the entire sample. 
+\item[scale.rankinvariant] Also computes the pairwise rank-invariant features, but then takes 
+only the features found in a certain number of samples, and used the average Ct value 
+of those as a scaling factor for correcting all Ct values.
+\item[deltaCt] Calculates the standard deltaCt values, i.e.~subtracts the mean of the chosen controls from all other values in the feature set.
+\end{description}
+
+For the rank-invariant normalisation methods, Ct values above a given threshold can be excluded from the calculation of a scaling factor or normalisation curve. This is useful so that a high proportion of "Undetermined" Ct values (assigned a value of 40 by default) in a given sample doesn't bias the normalisation of the remaining features.
+
+In the example dataset, Gene1 and Gene60 correspond to 18S RNA and GADPH, and are used as endogenous controls. Normalisation methods can be run as follows:
+
+<<Normalise data>>=
+q.norm <- normalizeCtData(raw.cat, norm="quantile")
+sr.norm <- normalizeCtData(raw.cat, norm="scale.rank")
+nr.norm <- normalizeCtData(raw.cat, norm="norm.rank")
+d.norm <- normalizeCtData(raw.cat, norm="deltaCt", deltaCt.genes=c("Gene1", "Gene60"))
+@
+
+Comparing the raw and normalised values gives an idea of how much correction has been performed (Figure~\ref{fig:two}). Note that the scale on the y-axis varies.
+
+\begin{figure}
+\begin{center}
+<<fig =TRUE , echo =FALSE >>=
+col <- rep(brewer.pal(6, "Spectral"), each=384)
+par(mfrow=c(2,2), mar=c(2,2,2,1))
+plot(exprs(raw), exprs(q.norm), pch=20, main="Quantile normalisation", col=col)
+plot(exprs(raw), exprs(sr.norm), pch=20, main="Rank invariant scaling", col=col)
+plot(exprs(raw), exprs(nr.norm), pch=20, main="Rank invariant normalisation", col=col)
+plot(exprs(raw), exprs(d.norm), pch=20, main="deltaCt normalisation", col=col)
+@
+\end{center}
+\caption{Normalized versus raw data, using a separate colour for each sample. The raw data is plotted along the x-axis and the normalised along y.}
+\label{fig:two}
+\end{figure}
+
+
+%%%%%%%%%%%%%%%% FILTERING %%%%%%%%%%%%%%%%%
+
+\section{Filtering and subsettting the data}
+
+At any point during the analysis it's possible to filter out both individual features or groups of features that are either deemed to be of low quality, or not of interest for a particular aspect of the analysis. This can be done using any of the feature characteristics that are included in the \Rfunction{featureNames}, \Rfunction{featureType}, \Rfunction{featureClass} and/or \Rfunction{featureCategory} slots of the data object. Likewise, the \Rfunction{qPCRset} object can be turned into smaller subsets, for example if only a particular class of features are to be used, or some samples should be excluded.
+
+Simple subsetting can be done using the standard \Rfunction{[,]} notation of R, for example:
+<<Subset data>>=
+nr.norm[1:10,]
+nr.norm[,c(1,3,5)]
+@
+
+Filtering is done by specifying the components to remove, either by just using a single criteria, or by combining multiple filters:
+<<Filter data 1>>=
+qFilt   <- filterCtData(nr.norm, remove.type="Endogenous Control")
+qFilt   <- filterCtData(nr.norm, remove.name=c("Gene1", "Gene20", "Gene30"))
+qFilt   <- filterCtData(nr.norm, remove.class="Kinase")
+qFilt   <- filterCtData(nr.norm, remove.type=c("Endogenous Control"), remove.name=c("Gene1", "Gene20", "Gene30"))
+@
+
+The data can also be adjusted according to feature categories. With \Rfunction{filterCategory} mentioned previously it's possible to replace certain Ct values with NA, but one might want to completely exclude features where a certain number of the Ct values are for example unreliable.
+
+<<Filter data 2>>=
+qFilt   <- filterCtData(nr.norm, remove.category="Undetermined")
+qFilt   <- filterCtData(nr.norm, remove.category="Undetermined", n.category=5)
+@
+
+Another typical filtering step would be to remove features showing little or no variation across samples, prior to testing for statistical significance of genes between samples. Features with relatively constant Ct levels are less likely to be differentially expressed, so including them in the downstream analysis would cause some loss of power when adjusting the p-values for multiple testing (the feature-by-feature hypothesis testing).  Variation across samples can be assessed using for example the interquartile range (IQR) values for each feature (Figure~\ref{fig:IQR}). All features with IQR below a certain threshold can then be filtered out.
+
+<<Filter data 3>>=
+qFilt   <- filterCtData(nr.norm, remove.IQR=1.5)
+@
+
+\begin{figure}
+\begin{center}
+<<fig =TRUE , echo =FALSE >>=
+hist(apply(exprs(nr.norm), 1, IQR), n=20, main="", xlab="IQR across samples")
+abline(v=1.5, col=2)
+@
+\end{center}
+\caption{Histogram of the IQR values for all features across the samples, including the cut-off used in the filtering example.}
+\label{fig:IQR}
+\end{figure}
+
+Note that filtering prior to normalisation can affect the outcome of the normalisation procedure. In some cases this might be desirable, for example if a particular feature class are heavily biasing the results so it's preferable to split the \Robject{qPCRset} object into smaller data sets. However, in other cases it might for example make it difficult to identify a sufficient number of rank invariant features for the\Rfunction{norm.rankinvariant} and \Rfunction{scale.rankinvariant} methods. Whether to perform filtering, and if so then during what step of the analysis, depends  on the genes and biological samples being analysed, as well as the quality of the data. It's therefore advisable to perform a detailed quality assessment and data comparison, as mentioned in the next section.
+
+
+%%%%%%%%%%%%%%%% QC  %%%%%%%%%%%%%%%%%
+
+
+\section{Quality assessment}
+
+\subsection{Correlation between samples}
+
+The overall correlation between different samples can be displayed visually, such as shown for the raw data in Figure~\ref{fig:cor}.
+
+<<Ct correlations, include=FALSE>>=
+plotCtCor(raw, main="Ct correlation")
+@
+
+\begin{figure}
+\begin{center}
+<<fig=TRUE,echo=FALSE, width=5, height=5>>=
+<<Ct correlations>> 
+@
+\end{center}
+\caption{Correlation between raw Ct values.}
+\label{fig:cor}
+\end{figure}
+
+\subsection{Distribution of Ct values}
+
+It may be of interest to examine the general distribution of data both before and after normalisation. A simple summary of the data can be obtained using \Rfunction{summary} as shown below. 
+
+<<Summary of Ct values>>=
+summary(raw)
+@
+
+However, figures are often more informative. To that end, the range of Ct values can be illustrated using histograms or with the density distribution, as shown in Figure~\ref{fig:density.box}. 
+
+
+<<Ct density, include=FALSE>>=
+plotCtDensity(sr.norm)
+@
+<<Ct histogram, include=FALSE>>=
+plotCtHistogram(sr.norm)
+@
+%<<label=fig.box,include=FALSE>>=
+%plotCtBoxes(r.norm, stratify=NULL)
+%@
+
+\begin{figure}
+\begin{center}
+<<fig=TRUE,echo=FALSE, width=10, height=5>>=
+par(mfrow=c(1,2), mar=c(3,3,2,1))
+<<Ct density>> 
+<<Ct histogram>> 
+@
+\end{center}
+\caption{Distribution of Ct values for the individual samples, either using the density of all arrays (left) or a histogram of a single sample (right), after scale rank-invariant normalisation.}
+\label{fig:density.box}
+\end{figure}
+
+Plotting the densities of the different normalisation methods lends insight into how they differ (Figure~\ref{fig:all.density}).
+
+\begin{figure}
+\begin{center}
+<<fig =TRUE , echo =FALSE >>=
+par(mfrow=c(2,2), mar=c(2,2,2,1))
+plotCtDensity(q.norm, main="quantile")
+plotCtDensity(sr.norm, main="scale.rankinvariant")
+plotCtDensity(nr.norm, main="norm.rankinvariant")
+plotCtDensity(d.norm, main="deltaCt")
+@
+\end{center}
+\caption{Densities of Ct values for all samples after each of the four normalisation methods. The peak at the high end originates from features with "Undetermined" Ct values, which are assigned the Ct value 40 by default. }
+\label{fig:all.density}
+\end{figure}
+
+Ct values can also be displayed in boxplots, either with one box per sample or stratified by different attributes of the features, such as \Rfunction{featureClass} or \Rfunction{featureType} (Fig.~\ref{fig:strat.box}).
+
+<<Ct boxes, include=FALSE>>=
+plotCtBoxes(sr.norm, stratify="class")
+@
+
+\begin{figure}
+\begin{center}
+<<fig=TRUE,echo=FALSE>>=
+<<Ct boxes>> 
+@
+\end{center}
+\caption{Boxplot of Ct values across all samples, stratified by feature classes.}
+\label{fig:strat.box}
+\end{figure}
+
+\subsection{Comparison of Ct values for two samples}
+
+It is often of interest to directly compare Ct values between two samples. In Figure~\ref{fig:scatter}, two examples are shown for the rank-invariant normalised data: one for different biological samples, and one for replicates.
+
+<<Ct scatter ex 1, include=FALSE>>=
+plotCtScatter(sr.norm, cards=c(1,2), col="type", diag=TRUE)
+@
+<<Ct scatter ex 2, include=FALSE>>=
+plotCtScatter(sr.norm, cards=c(1,4), col="class", diag=TRUE)
+@
+
+\begin{figure}
+\begin{center}
+<<fig=TRUE,echo=FALSE, width=10, height=5>>=
+par(mfrow=c(1,2), mar=c(3,3,2,1))
+<<Ct scatter ex 1>> 
+<<Ct scatter ex 2>> 
+@
+\end{center}
+\caption{Scatter plot of Ct values in different samples, with points marked either by featureType (left) or featureClass (right) and the diagonal through $x=y$ marked with a grey line.}
+\label{fig:scatter}
+\end{figure}
+
+
+\subsection{Scatter across all samples}
+
+It is also possible to generate a scatterplot of Ct values between more than the two samples shown above. In Figure~\ref{fig:scatter.all} all pairwise comparisons are shown, along with their correlation when all Ct values $<$35 are removed.
+
+<<Ct pairs, include=FALSE>>=
+plotCtPairs(sr.norm, col="type", diag=TRUE)
+@
+
+\begin{figure}
+\begin{center}
+<<fig=TRUE,echo=FALSE, width=10, height=10>>=
+<<Ct pairs>> 
+@
+\end{center}
+\caption{Scatterplot for all pairwise comparisons between samples, with spots marked depending on \Rfunction{featureType}, i.e.~whether they represent endogenous controls or targets.}
+\label{fig:scatter.all}
+\end{figure}
+
+
+
+\subsection{Ct heatmaps}
+
+Heatmaps provide a convenient way to visualise clustering of features and samples at the same time, and show the levels of Ct values (Figure~\ref{fig:heatmap}). The heatmaps can be based on either Pearson correlation coefficients or Euclidean distance clustering. Euclidean-based heatmaps will focus on the magnitude of Ct values, whereas Pearson clusters the samples based on similarities between the Ct profiles.
+
+<<Ct heatmap, include=FALSE>>=
+plotCtHeatmap(raw, gene.names="", dist="euclidean")
+@
+
+\begin{figure}
+\begin{center}
+<<fig=TRUE,echo=FALSE, width=6, height=7>>=
+<<Ct heatmap>> 
+@
+\end{center}
+\caption{Heatmap for all samples and genes, based on the Euclidean distance between Ct values.}
+\label{fig:heatmap}
+\end{figure}
+
+
+\subsection{Comparison of replicated features within samples}
+
+When a sample contains duplicate measurements for some or all features, the Ct values of these duplicates can be plotted against each other to measure accordance between duplicates. In Figure~\ref{fig:replicates} the duplicates in sample2 are plotted against each other, and those where the Ct values differ more than 20\% from the average of a given feature are marked.
+
+<<Ct replicates, include=FALSE>>=
+plotCtReps(qPCRraw, card=2, percent=20)
+@
+
+\begin{figure}
+\begin{center}
+<<fig=TRUE,echo=FALSE, results=hide, height=5, width=5>>=
+<<Ct replicates>> 
+@
+\end{center}
+\caption{Concordance between duplicated Ct values in sample 2, marking features differing $>$20\% from their mean.}
+\label{fig:replicates}
+\end{figure}
+
+Differences will often arise due to one of the duplicates marked as "Undetermined", thus contributing to an artificially high Ct value, but other known cases exist as well.
+
+
+%%%%%%%%%%%%%%%% CLUSTERING %%%%%%%%%%%%%%%%%
+
+\section{Hierarchical clustering}
+
+Both features and samples can be subjected to hierarchical clustering using either Euclidean or Pearson correlation distances, to display similarities and differences within groups of data. Individual subclusters can be selected, either using pre-defined criteria such as number of clusters, or interactively by the user. The content of each cluster is then saved to a list, to allow these features to be extracted from the full data set if desired.
+
+An example of a clustering of samples is shown in Figure~\ref{fig:cluster1}. In Figure~\ref{fig:cluster2} these data are clustered by features, and the main subclusters are marked. 
+
+<<Cluster Ct, include=FALSE>>=
+clusterCt(sr.norm, type="samples")
+@
+
+\begin{figure}
+\begin{center}
+<<fig=TRUE,echo=FALSE, height=4, width=6>>=
+<<Cluster Ct>> 
+@
+\end{center}
+\caption{Hierarchical clustering of samples.}
+\label{fig:cluster1}
+\end{figure}
+
+<<Plot subclusters, include=FALSE, results=hide>>=
+cluster.list <- clusterCt(sr.norm, type="genes", n.cluster=6, cex=0.5)
+@
+
+<<Show subcluster>>=
+c6 <- cluster.list[[6]]
+print(c6)
+show(sr.norm[c6,])
+@
+
+\begin{figure}
+\begin{center}
+<<fig=TRUE,echo=FALSE, width=20, height=15>>=
+<<Plot subclusters>> 
+@
+\end{center}
+\caption{Hierarchical clustering of features, with subclusters marked.}
+\label{fig:cluster2}
+\end{figure}
+
+
+%%%%%%%%%%%%%%%% DE TESTING %%%%%%%%%%%%%%%%%
+
+\section{Differential expression}
+
+In general there are two approaches in \Rpackage{HTqPCR} for testing the significance of differences in Ct values between samples.
+
+\begin{description}
+\item[ t-test] Performing a standard t-test between two sample groups. This function will incorporate information about replicates to calculate t and p-values. This is a fairly simple approach, typically used when comparing a single treatment and control sample, and multiple pair-wise tests can be carried out one-by-one by the user.
+\item[\Rpackage{limma}] Using a wrapper for functions from the package \Rpackage{limma}~\citep{ref:limma} to calculate more sophisticated t and p-values for any number of groups present across the experiment. This is more flexible in terms of what types of comparisons can be made, but the users need to familiarise themselves with the \Rpackage{limma} conventions for specifying what contrasts are of interest.
+\end{description}
+
+Examples of how to use each of these are given in the next sections. In both cases the output is similar; a data frame containing the test statistics for each feature, along with fold change and information about whether the Ct values are "OK" or "Unreliable". This result can be written to a file using standard functions such as \Rfunction{write.table}.
+
+\subsection{Two sample types - t-test}
+
+This section shows how to compare two samples, e.g.~the control and long starvation samples from the example data. A subset of the \Robject{qPCRset} data is created to encompass only these samples, and a t-test is then performed.
+
+<<Perform standard t-test>>=
+qDE.ttest <- ttestCtData(sr.norm[,1:4], groups=files$Treatment[1:4], 
+calibrator="Control")
+qDE.ttest[1:10,]
+@
+
+\subsection{Multiple sample types - limma}
+
+In this example all three types of treatment are compared, as well as the control against both starvation samples combined. The data is sorted by feature names, to make easier use of replicated features. 
+
+<<Perform limma test>>=
+# Preparing experiment design
+design <- model.matrix(~0+files$Treatment)
+colnames(design) <- c("Control", "LongStarve", "Starve")
+print(design)
+contrasts <- makeContrasts(LongStarve-Control, LongStarve-Starve, 
+Starve-Control, (Starve+LongStarve)/2-Control, levels=design)
+colnames(contrasts) <- c("LS-C", "LS-S", "S-C", "bothS-C")
+print(contrasts)
+# Reorder data to get the genes in consecutive rows
+sr.norm2    <- sr.norm[order(featureNames(sr.norm)),] 
+qDE.limma       <- limmaCtData(sr.norm2, design=design, contrasts=contrasts, 
+ndups=2, spacing=1)
+@
+
+The result is a list with one component per comparison. Each component is similar to the result from using \Rfunction{ttestCtData}.
+
+<<limma test output>>=
+class(qDE.limma)
+names(qDE.limma)
+qDE.limma[["LS-C"]][1:10,]
+@
+
+Furthermore, there is a "Summary" component at the end where each feature is denoted with -1, 0 or 1 to respectively indicate down-regulation, no change, or up-regulation in each of the comparisons.
+
+<<limma summary output, >>=
+qDE.limma[["Summary"]][21:30,]
+@
+
+
+%%%%%%%%%%%%%%%% SHOWING DE RESULTS  %%%%%%%%%%%%%%%%%
+  
+\section{Displaying the results}
+
+The results can be visualised using the generic \Rfunction{plotCtOverview} shown in Figure~\ref{fig:overview}. However, \Rpackage{HTqPCR} also contains more specialised functions, for example to include information about whether differences are significant or not.
+
+\subsection{Fold changes: Relative quantification}
+
+The relative Ct levels between two groups can be plotted with the function \Rfunction{plotCtRQ}. Below are two examples: one the result of \Rfunction{ttestCtData} where the top 15 genes are selected (figure~\ref{fig:rel.quant1}), and another from the first comparison in \Rfunction{limmaCtData} where all genes below a certain p-value are depicted (Figure~\ref{fig:rel.quant2}).
+
+<<Relative quantification ex 1, include=FALSE>>=
+plotCtRQ(qDE.ttest, genes=1:15)
+@
+
+<<Relative quantification ex 2, include=FALSE>>=
+plotCtRQ(qDE.limma, p.val=0.085, transform="log10", col="#9E0142")
+@
+
+The hatching on the bars indicates whether the target and calibrator Ct samples were unreliable, but this also depend on whether the parameter \Rfunction{stringent=TRUE} or \Rfunction{stringent=FALSE} when testing for differential expression. See the help functions for details (\Rfunction{?ttestCtData} and \Rfunction{?limmaCtData}).
+
+\begin{figure}
+\begin{center}
+<<fig=TRUE,echo=FALSE, height=7, width=9>>=
+<<Relative quantification ex 1>> 
+@
+\end{center}
+\caption{Relative quantification, using the top 15 features from ttestCtData.}
+\label{fig:rel.quant1}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+<<fig=TRUE,echo=FALSE, height=8, width=10>>=
+<<Relative quantification ex 2>> 
+@
+\end{center}
+\caption{Relative quantification, using all features with p-value$<$0.085 from limmaCtData.}
+\label{fig:rel.quant2}
+\end{figure}
+
+\subsection{Fold changes: Detailed visualisation}
+
+In some cases it will be beneficial to more closely examine individual Ct data points from the fold changes, partly to look at the data dispersion, and partly to determine which of these values are in the "OK versus "Unreliable"/"Undetermined" category. The function \Rfunction{plotCtSignificance} will take the result of \Rfunction{ttestCtData} or \Rfunction{limmaCtData}, along with the input data to these functions, and display a combined barplot showing the individual data points and marking those comparisons with a significant p-value.
+
+<<Significant Ct, include=FALSE>>=
+plotCtSignificance(qDE.limma, q=sr.norm, 
+groups=files$Treatment, target="LongStarve", 
+calibrator="Control", genes=featureNames(sr.norm)[11:20], un.col="#3288BD", jitter=0.2)
+@ 
+
+\begin{figure}
+\begin{center}
+<<fig=TRUE,echo=FALSE, height=6, width=6>>=
+<<Significant Ct>> 
+@
+\end{center}
+\caption{Ten genes from the data set, with the average Ct in two groups plotted along with the individual values. Points marked in blue are "Unreliable" or "Undetermined" whereas grey spots are "OK".}
+\label{fig:Ct.significance}
+\end{figure}
+
+\subsection{Heatmap across comparisons}
+
+When multiple conditions are compared with \Rfunction{limmaCtData}, the fold changes from all comparisons can be compared to see if features cluster together in groups (Figure~\ref{fig:heatmapsig}).
+
+<<Heatmap significant Ct>>=
+heatmapSig(qDE.limma, dist="euclidean")
+@
+
+\begin{figure}
+\begin{center}
+<<fig=TRUE,echo=FALSE, height=6, width=6>>=
+<<Heatmap significant Ct>> 
+@
+\end{center}
+\caption{Fold changes across all comparisons, clustered based on Euclidean distance.}
+\label{fig:heatmapsig}
+\end{figure}
+
+
+%%%%%%%%%%%%%%%% FINISHING  %%%%%%%%%%%%%%%%%
+
+\newpage
+\section{Concluding remarks}
+
+This vignette was generated using:
+
+<<sessionInfo, echo=FALSE,results=tex>>=
+toLatex(sessionInfo())
+@
+
+%%%%%%%%%%%%%%%% BIBLIOGRAPHY  %%%%%%%%%%%%%%%%%
+
+\bibliographystyle{abbrvnat}
+\bibliography{HTqPCR-Bibliography.bib}
+
+\end{document}

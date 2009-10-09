@@ -1,0 +1,39 @@
+importClassesFrom(methods, character, data.frame, factor, matrix)
+importMethodsFrom(affy, barplot, boxplot, hist)
+importMethodsFrom(Biobase, exprs, "exprs<-", featureNames,
+                  "featureNames<-", sampleNames, "sampleNames<-")
+importMethodsFrom(methods, show)
+importFrom(affy, normalize.invariantset)
+importFrom(Biobase, listLen)
+importFrom(gplots, heatmap.2, plotCI)
+importFrom(graphics, abline, axis, identify, layout, legend, matplot,
+           matpoints, mtext, pairs, par, plot, points, rect, text)
+importFrom(grDevices, colorRampPalette, dev.new)
+importFrom(limma, contrasts.fit, decideTests, duplicateCorrelation,
+           eBayes, lmFit, normalizeQuantiles, topTable, unwrapdups)
+importFrom(methods, "@<-", new)
+importFrom(RColorBrewer, brewer.pal)
+importFrom(stats, aggregate, approx, as.dist, biplot, cor, density,
+           hclust, heatmap, median, prcomp, qnorm, qt, quantile,
+           rect.hclust, sd, t.test, var)
+importFrom(utils, read.delim)
+
+#exportPattern("^[[:alpha:]]+")
+
+export('clusterCt', 'featureCategory', 'featureCategory<-', 'featureClass', 'featureClass<-', 'featurePos', 'featurePos<-', 'featureType', 'featureType<-', 'filterCategory', 'filterCtData', 'flag', 'flag<-', 'heatmapSig', 'limmaCtData', 'n.samples', 'n.wells', 'normalized', 'normalizeCtData', 'plotCtBoxes', 'plotCtCategory', 'plotCtCor', 'plotCtDensity', 'plotCtHeatmap', 'plotCtHistogram', 'plotCtOverview', 'plotCtPCA', 'plotCtReps', 'plotCtRQ', 'plotCtScatter', 'plotCtSignificance', 'plotCVBoxes', 'plotCtLines', 'plotCtCard', 'readCtData', 'setCategory', 'summary', 'ttestCtData', 'plotCtPairs')
+
+exportMethods(
+    "[",
+    "exprs",
+    "exprs<-",
+    "featureNames",
+    "featureNames<-",
+    "sampleNames",
+    "sampleNames<-",
+    "show",
+    "summary"
+)
+
+exportClasses(
+    "qPCRset" 
+)
