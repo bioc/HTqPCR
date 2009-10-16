@@ -1,7 +1,7 @@
 Package: HTqPCR
 Type: Package
 Title: Analysis of high-throughput qPCR data.
-Version: 0.99.2
+Version: 0.99.3
 Date: 2009-12-09
 Author: Heidi Dvinge
 Maintainer: Heidi Dvinge <heidi@ebi.ac.uk>, Paul Bertone <bertone@ebi.ac.uk>
