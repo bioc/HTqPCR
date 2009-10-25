@@ -1,4 +1,4 @@
-%\VignetteIndexEntry{qPCR analysis in R}
+%\VignetteIndexEntry{HTqPCR - automated high-throughput qPCR analysis}
 %\VignetteDepends{HTqPCR}
 %\VignetteKeywords{qpcr, preprocessing, normalization}
 %\VignettePackage{HTqPCR} % name of package
@@ -69,7 +69,7 @@ options(width=65)
 set.seed(123)
 @
 
-\title{HTqPCR - high-throughput qPCR analysis in R and Bioconductor}
+\title{HTqPCR - automated high-throughput qPCR analysis}
 \author{Heidi Dvinge}
 %\date{}
 \maketitle
