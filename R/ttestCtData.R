@@ -31,12 +31,17 @@ function(q,
 		calibrator	<- groups[1]
 	g1	<- groups==calibrator
 	g2	<- groups!=calibrator
-	# Perform the t-test. Have to remove samples where all values are identical!
+	# Perform the t-test. 
 	t.tests	<- lapply(data2, function(x) {
-		if (all(x[1,]==x[1,1])) {
+		x	<- as.matrix(x)
+		if (all(x==x[1,1])) {
+			# Have to remove samples where all values are identical!
 			list(p.value=1, statistic=NA, estimate=c(x[1,1], x[1,1]))
 		} else {
-			t.test(x[,g1], x[,g2], alternative=alternative, paired=paired, ...)
+			res	<- t.test(x[,g1], x[,g2], alternative=alternative, paired=paired, ...)
+			# Calculate mean for each group (not available if paired=TRUE)
+			res[["estimate"]]	<- c(mean(x[,g1]), mean(x[,g2]))
+			res
 		}})
 	# Collect output
 	means	<- t(sapply(t.tests, "[[", "estimate"))

@@ -13,7 +13,7 @@ function(q,
 	if (class(q)=="matrix") {
 		data	<- q[,cards]	
 	} else if (class(q)=="qPCRset") {
-		data	<- exprs(q)[,cards]
+		data	<- exprs(q)[,cards,drop=FALSE]
 	} else {
 		stop("Data is of wrong format, only qPCRset and matrices are supported.\n")
 	}

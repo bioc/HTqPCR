@@ -7,7 +7,7 @@ This function will read tab separated text files with Ct values and feature meta
 }
 
 \usage{
-readCtData(files, path = NULL, n.features = 384, flag = 4, feature = 6, type = 7, position = 3, Ct = 8, header = FALSE, SDS = FALSE, samples, na.value = 40, ...)
+readCtData(files, path = NULL, n.features = 384, flag = 4, feature = 6, type = 7, position = 3, Ct = 8, header = FALSE, SDS = FALSE, n.data = 1, samples, na.value = 40, ...)
 }
 
 \arguments{
@@ -21,6 +21,7 @@ readCtData(files, path = NULL, n.features = 384, flag = 4, feature = 6, type = 7
   \item{Ct}{integer indicating the number of column containing information about the Ct values.}
   \item{header}{logical, does the file contain a header row or not.}
   \item{SDS}{logical, is the data in the output format from Sequence Detection Systems (SDS) Software. See Details.}
+  \item{n.data}{integer vector, same length as \code{files}. Indicates the number of samples that are present in each file. For each file n.data*n.features lines will be read.}
  \item{samples}{ character vector with names for each sample. Per default the file names are used.}
   \item{na.value}{integer, a Ct value that will be assigned to all undetermined/NA wells.}
   \item{\dots}{ any other arguments are passed to \code{\link{read.table}}.}

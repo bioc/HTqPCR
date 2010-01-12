@@ -11,7 +11,7 @@ function(q,
 	...) 
 {
 	# Get the data
-	data	<- exprs(q)[,cards]
+	data	<- exprs(q)[,cards,drop=FALSE]
 	if (missing(genes)) {
 		index	<- TRUE	
 	} else if (is.numeric(genes) | is.logical(genes)) {
@@ -24,7 +24,7 @@ function(q,
 	} else {
 		stop("Unknown format of 'genes'")	
 	}
-	data	<- data[index,]
+	data	<- data[index,,drop=FALSE]
 	# If genes are replicated, average across them
 	if (replicates) {
 		feature.split	<- rownames(data)	
@@ -48,10 +48,10 @@ function(q,
   			ciw   <- qt(0.975, n) * stdev / sqrt(n)
   			c(M=means, SD=ciw)
 		})
-	M	<- data.all[grep("M", rownames(data.all)),]
+	M	<- data.all[grep("M", rownames(data.all)),,drop=FALSE]
 	# If calibrator, take the ratio compared to that
 	if (!missing(calibrator)) {
-		cali.mean	<- M[grep(calibrator, rownames(M)),]
+		cali.mean	<- M[grep(calibrator, rownames(M)),drop=FALSE]
 		M	<- t(log2(t(M)/cali.mean))
 		ylab	<- paste("Log2 ratio compared to group", calibrator)
 	} else {
