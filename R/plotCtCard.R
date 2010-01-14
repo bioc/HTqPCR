@@ -17,6 +17,8 @@ function(q,
 	...)
 {
 	# Define the plot layout
+	old.par <- par(no.readonly=TRUE)
+    on.exit(par(old.par))
 	layout(rbind(2,1), widths=5, heights=c(3.5,1), respect=TRUE)
 	# Extract the gene categories
 	if (class(q)=="qPCRset") {

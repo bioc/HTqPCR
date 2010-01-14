@@ -1,4 +1,4 @@
-%\VignetteIndexEntry{HTqPCR - automated high-throughput qPCR analysis}
+%\VignetteIndexEntry{qPCR analysis in R}
 %\VignetteDepends{HTqPCR}
 %\VignetteKeywords{qpcr, preprocessing, normalization}
 %\VignettePackage{HTqPCR} % name of package
@@ -69,7 +69,7 @@ options(width=65)
 set.seed(123)
 @
 
-\title{HTqPCR - automated high-throughput qPCR analysis}
+\title{HTqPCR - high-throughput qPCR analysis in R and Bioconductor}
 \author{Heidi Dvinge}
 %\date{}
 \maketitle
@@ -137,7 +137,9 @@ The data is stored in an object of class \Rclass{qPCRset}, which is similar to t
 
 Generally, information can be handled in the \Rclass{qPCRset} using the same kind of functions as for \Rclass{ExpressionSet}, such as \Rfunction{exprs}, \Rfunction{featureNames} and \Rfunction{featureCategory} for extracting the data, and  \Rfunction{exprs<-}, \Rfunction{featureNames<-} and \Rfunction{featureCategory<-} for replacing or modifying values.
 
-Two \Robject{qPCRset} test objects are included in the package: one containing raw data, and the other containing processed values.
+The use of \Rfunction{exprs} might not be intuitive to users who are not used to dealing with microarray data, and hence \Rclass{ExpressionSet}. The functions \Rfunction{getCt} and \Rfunction{setCt<-} that perform the same operations as \Rfunction{exprs} and \Rfunction{exprs<-} are therefore also included. For the sake of consistency, \Rfunction{exprs} will be used throughout this vignette for accessing the Ct values, but it can be replaced by \Rfunction{getCt} in all examples.
+
+Two \Robject{qPCRset} test objects are included in the package: one containing raw data, and the other containing processed values. An example is shown in figure~\ref{fig:objectfunctions}, along with some of the functions that can typically be used for manipulating \Rclass{qPCRset} objetcs.
 
 <<Load example data>>=
 data(qPCRraw)
@@ -145,6 +147,13 @@ data(qPCRpros)
 class(qPCRraw)
 @
 
+\begin{figure}
+\begin{center}
+	\includegraphics{objects.png}
+\end{center}
+\caption{An example of a \Rclass{qPCRset} object, and some of the functions that can be used to display and/or alter different aspects of the object, i.e.~the accessor and replacement functions.}
+\label{fig:objectfunctions}
+\end{figure}
 
 %%%%%%%%%%%%%%%% DATA INPUT  %%%%%%%%%%%%%%%%%
 
@@ -348,7 +357,11 @@ nr.norm <- normalizeCtData(raw.cat, norm="norm.rank")
 d.norm <- normalizeCtData(raw.cat, norm="deltaCt", deltaCt.genes=c("Gene1", "Gene60"))
 @
 
-Comparing the raw and normalised values gives an idea of how much correction has been performed (Figure~\ref{fig:two}). Note that the scale on the y-axis varies.
+Comparing the raw and normalised values gives an idea of how much correction has been performed (Figure~\ref{fig:two}), as shown below for the \Robject{q.norm} object. Note that the scale on the y-axis varies.
+
+<<Normalisation comparison, include=FALSE>>=
+plot(exprs(raw), exprs(q.norm), pch=20, main="Quantile normalisation", col=rep(brewer.pal(6, "Spectral"), each=384))
+@
 
 \begin{figure}
 \begin{center}
@@ -393,7 +406,15 @@ qFilt   <- filterCtData(nr.norm, remove.category="Undetermined")
 qFilt   <- filterCtData(nr.norm, remove.category="Undetermined", n.category=5)
 @
 
-Another typical filtering step would be to remove features showing little or no variation across samples, prior to testing for statistical significance of genes between samples. Features with relatively constant Ct levels are less likely to be differentially expressed, so including them in the downstream analysis would cause some loss of power when adjusting the p-values for multiple testing (the feature-by-feature hypothesis testing).  Variation across samples can be assessed using for example the interquartile range (IQR) values for each feature (Figure~\ref{fig:IQR}). All features with IQR below a certain threshold can then be filtered out.
+Another typical filtering step would be to remove features showing little or no variation across samples, prior to testing for statistical significance of genes between samples. Features with relatively constant Ct levels are less likely to be differentially expressed, so including them in the downstream analysis would cause some loss of power when adjusting the p-values for multiple testing (the feature-by-feature hypothesis testing).  Variation across samples can be assessed using for example the interquartile range (IQR) values for each feature (Figure~\ref{fig:IQR}). 
+
+<<IQR plot, include=FALSE >>=
+iqr.values <- apply(exprs(nr.norm), 1, IQR)
+hist(iqr.values, n=20, main="", xlab="IQR across samples")
+abline(v=1.5, col=2)
+@
+
+All features with IQR below a certain threshold can then be filtered out.
 
 <<Filter data 3>>=
 qFilt   <- filterCtData(nr.norm, remove.IQR=1.5)
@@ -402,8 +423,7 @@ qFilt   <- filterCtData(nr.norm, remove.IQR=1.5)
 \begin{figure}
 \begin{center}
 <<fig =TRUE , echo =FALSE >>=
-hist(apply(exprs(nr.norm), 1, IQR), n=20, main="", xlab="IQR across samples")
-abline(v=1.5, col=2)
+<<IQR plot>>
 @
 \end{center}
 \caption{Histogram of the IQR values for all features across the samples, including the cut-off used in the filtering example.}
@@ -778,6 +798,6 @@ toLatex(sessionInfo())
 %%%%%%%%%%%%%%%% BIBLIOGRAPHY  %%%%%%%%%%%%%%%%%
 
 \bibliographystyle{abbrvnat}
-\bibliography{HTqPCR-Bibliography}
+\bibliography{HTqPCR-Bibliography.bib}
 
 \end{document}

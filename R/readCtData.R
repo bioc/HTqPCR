@@ -123,12 +123,21 @@ function(files,
 		}
 	}
 	# Provide sample names
-	if (missing(samples) & length(files)==nsamples) {
-		samples	<- gsub("(.+)\\..+", "\\1", files)
-	} else if (length(s.names)==nsamples) {
-		samples	<- s.names
-	} else {
-		samples	<- paste("Sample", 1:nsamples, sep="")
+	if (!missing(samples)) {
+		if (length(samples) < nsamples) {
+			warning("Not enough sample names provided; using Sample1, Sample2, ... instead\n")
+			samples	<- paste("Sample", 1:nsamples, sep="")
+		} else if (length(samples) == nsamples) {
+			samples	<- samples	
+		}
+	} else if (missing(samples)) {
+		if (length(files)==nsamples) {
+			samples	<- gsub("(.+)\\..+", "\\1", files)
+		} else if (length(s.names)==nsamples) {
+			samples	<- s.names
+		} else {
+			samples	<- paste("Sample", 1:nsamples, sep="")
+		}
 	}
 	sampleNames(out)	<- samples
 	colnames(flag(out))	<- samples

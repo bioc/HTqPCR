@@ -109,6 +109,21 @@ function(object) {
 
 
 #------------------------------------------------------------------
+# Ct values (NB: Same as exprs() functions)
+#------------------------------------------------------------------
+
+getCt <- 
+function(object) {x<-object@exprs; 
+          	rownames(x)<-featureNames(object); 
+          	colnames(x)<-sampleNames(object); 
+          	x}
+
+`setCt<-` <- 
+function(object, value) {
+			object@exprs <- value; object}
+
+
+#------------------------------------------------------------------
 # Feature position
 #------------------------------------------------------------------
 
