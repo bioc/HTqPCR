@@ -27,16 +27,17 @@ Note that when there are replicated features in the samples, each feature is ass
 }
 
 \value{A list of data.frames, one for each column in \code{design}, or for each comparison in \code{contrasts} if this matrix is supplied. Each component of the list contains the result of the given comparisons, with one row per gene and has the columns:
-\item{genes }{Feature IDs.}
-\item{feature.pos}{The unique feature IDs from \code{featurePos} of the \code{q} object. Useful if replicates are not collapsed, in which case there might be several features with identical names.}
-\item{t.test }{The result of the t-test.}
-\item{p.value }{The corresponding p.values.}
-\item{adj.p.value }{P-values after correcting for multiple testing using the Benjamini-Holm method.}
-\item{ddCt }{deltadeltaCt values, the log fold changes.}
-\item{meanTest }{The average Ct across the test samples for the given comparison.}
-\item{meanReference }{The average Ct across the reference samples for the given comparison.}
-\item{categoryTest }{The category of the Ct values ("OK", "Undetermined") across the test samples for the given comparison.}
-\item{categoryReference }{The category of the Ct values ("OK", "Undetermined") across the reference samples for the given comparison.}
+	\item{genes }{Feature IDs.}
+	\item{feature.pos}{The unique feature IDs from \code{featurePos} of the \code{q} object. Useful if replicates are not collapsed, in which case there might be several features with identical names.}
+	\item{t.test }{The result of the t-test.}
+	\item{p.value }{The corresponding p.values.}
+	\item{adj.p.value }{P-values after correcting for multiple testing using the Benjamini-Holm method.}
+	\item{ddCt }{The deltadeltaCt values.}
+	\item{FC}{The fold change; 2^(-ddCt).}
+	\item{meanTest }{The average Ct across the test samples for the given comparison.}
+	\item{meanReference }{The average Ct across the reference samples for the given comparison.}
+	\item{categoryTest }{The category of the Ct values ("OK", "Undetermined") across the test samples for the given comparison.}
+	\item{categoryReference }{The category of the Ct values ("OK", "Undetermined") across the reference samples for the given comparison.}
 Also, the last item in the list is called "Summary", and it's the result of calling \code{decideTests} from limma on the fitted data. This is a data frame with one row per feature and one column per comparison, with downregulation, no change and upregulation marked by -1, 0 and 1.
 }
 

@@ -113,7 +113,9 @@ function(q,
 			print(count)			
 		}
 	}
-	# Return the filtred object, if desired
+	# Add to the history of the object
+	out@history	<- rbind(out@history, capture.output(match.call(setCategory)))
+	# Return the filtered object, if desired
 	invisible(out)
 }
 

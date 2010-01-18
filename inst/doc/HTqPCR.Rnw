@@ -132,7 +132,7 @@ The data is stored in an object of class \Rclass{qPCRset}, which is similar to t
     \item[\Robject{featurePos}] Object of class \Rclass{character} representing the location "well" of a gene in case TLDA cards are used, or some other method containing a defined spatial layout of features.
     \item[\Robject{featureClass}] Object of class \Rclass{factor} with some meta-data about the genes, for example if it is a  transcription factor, kinase, marker for different types of cancers or similar. This is typically set by the user.
     \item[\Robject{featureCategory}] Object of class \Rclass{data.frame} representing the quality of the measurement for each Ct value, such as "OK", "Undetermined" or "Unreliable". These can be set using the function \Rfunction{setCategories} depending on a number of parameters, such as how the Ct values are flagged, upper and lower limits of Ct values and variations between technical and biological replicates of the same feature.
-    \item[\Robject{normalized}] Object of class \Rclass{character} indicating if the data has been normalized, and if so then what method was used. Automatically set when function \Rfunction{normalizeCtData} is called.
+    \item[\Robject{history}] Object of class \Rclass{data.frame} indicating what operations have been performed on the \Rclass{qPCRset} object, and what the parameters were. Automatically set when any of the functions on the upper right hand side of figure~\ref{fig:workflow} are called (\Rfunction{readCtData, setCategory, filterCategory, normalizeCtData, filterCtData}).
 \end{description}
 
 Generally, information can be handled in the \Rclass{qPCRset} using the same kind of functions as for \Rclass{ExpressionSet}, such as \Rfunction{exprs}, \Rfunction{featureNames} and \Rfunction{featureCategory} for extracting the data, and  \Rfunction{exprs<-}, \Rfunction{featureNames<-} and \Rfunction{featureCategory<-} for replacing or modifying values.
@@ -651,6 +651,14 @@ show(sr.norm[c6,])
 %%%%%%%%%%%%%%%% DE TESTING %%%%%%%%%%%%%%%%%
 
 \section{Differential expression}
+
+At this stage multiple filterings might have been performed on the data set(s). To remind yourself about those, you can use the \Rfunction{history} function on the \Rclass{qPCRset} object.
+
+<<Object history>>=
+history(sr.norm)
+history(qFilt)
+@
+
 
 In general there are two approaches in \Rpackage{HTqPCR} for testing the significance of differences in Ct values between samples.
 

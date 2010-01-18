@@ -57,8 +57,8 @@ function(q,
 		}
 		# Combine info
 #		res.out	<- cbind(res[,c("ID", "t", "P.Value", "adj.P.Val", "logFC")], meanTest, meanReference, categoryTest, categoryReference)
-		res.out	<- cbind(res$ID, featPos, res[,c("t", "P.Value", "adj.P.Val", "logFC")], both.means, both.cats)
-		colnames(res.out)	<- c("genes", "feature.pos", "t.test", "p.value", "adj.p.value", "ddCt", "meanTarget", "meanCalibrator", "categoryTarget", "categoryCalibrator")
+		res.out	<- cbind(res$ID, featPos, res[,c("t", "P.Value", "adj.P.Val", "logFC")],  2^(-res$logFC), both.means, both.cats)
+		colnames(res.out)	<- c("genes", "feature.pos", "t.test", "p.value", "adj.p.value", "ddCt", "FC", "meanTarget", "meanCalibrator", "categoryTarget", "categoryCalibrator")
 		# Assign to output
 		if (sort)
 			res.out	<- res.out[order(res.out$adj.p.value),]

@@ -33,7 +33,8 @@ Formal class 'qPCRset' [package ".GlobalEnv"] with 9 slots
   .. ..$ X4: chr [1:384] "OK" "OK" "OK" "OK" ...
   .. ..$ X5: chr [1:384] "OK" "OK" "OK" "OK" ...
   .. ..$ X6: chr [1:384] "OK" "OK" "OK" "OK" ...
-  ..@ normalized     : chr "none"
+  ..@ history        :'data.frame':	1 obs. of  1 variable:
+  .. ..$ history: chr "Default HTqPCR qPCRset object with raw data."
 }
 
 \examples{

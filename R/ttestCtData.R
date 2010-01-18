@@ -7,6 +7,7 @@ function(q,
 	replicates	= TRUE,
 	sort	= TRUE,
 	stringent	= TRUE,
+	p.adjust	= "BH",
 	...)
 {
 	# Get the relevant data
@@ -50,10 +51,13 @@ function(q,
 	t.value	<- sapply(t.tests, "[[", "statistic")
 	genes	<- sapply(feats, "[[", 1)
 	featurePos	<- sapply(featPos, paste, collapse=";")
-	# Fold change is calculated as ddCt
+	# Make adjusted p-value
+	adj.p.value	<- p.adjust(p.value, method=p.adjust)
+	# Fold change is calculated as ddCt, as well as 2^(-ddCT)
 	cal	<- grep(calibrator, colnames(means))
 	FC	<- means[, "meanTarget"] - means[, "meanCalibrator"]
-	out	<- data.frame(genes, featurePos, t.value, p.value, FC, means, row.names=1:length(genes))
+	FC2	<- 2^(-FC)
+	out	<- data.frame(genes, featurePos, t.value, p.value, adj.p.value, FC, FC2, means, row.names=1:length(genes))
 	# Indicate reliability of measure
 	for (l in unique(groups)) {
 		new.cat	<- rep("OK", length(data2))
@@ -64,7 +68,7 @@ function(q,
 		out[, paste("category", ifelse(l==calibrator, "Calibrator", "Target"), sep="")]	<- new.cat
 	}
 	# Return output, sorted by p-value if requested
-	names(out)	<- c("genes", "feature.pos", "t.test", "p.value", "ddCt", colnames(means), grep("category", colnames(out), value=TRUE))
+	names(out)	<- c("genes", "feature.pos", "t.test", "p.value", "adj.p.value", "ddCt", "FC", colnames(means), grep("category", colnames(out), value=TRUE))
 	if (sort)
 		out	<- out[order(out$p.value),]
 	out

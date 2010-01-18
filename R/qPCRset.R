@@ -11,8 +11,8 @@ setClass("qPCRset",
 					featurePos	= "character",
 					featureClass	= "factor",
 					featureCategory	= "data.frame",
-					normalized	= "character"),
-	prototype = list(featureNames=character(), sampleNames=character(), exprs=matrix(), flag=data.frame(), featureType=factor(), featurePos=character(), featureClass=factor(), featureCategory=data.frame(), normalized="none")
+					history	= "data.frame"),
+	prototype = list(featureNames=character(), sampleNames=character(), exprs=matrix(), flag=data.frame(), featureType=factor(), featurePos=character(), featureClass=factor(), featureCategory=data.frame(), history=data.frame(stringsAsFactors=FALSE))
 )
 
 
@@ -195,9 +195,9 @@ function(object) nrow(object@exprs)
 
 
 #------------------------------------------------------------------
-# Normalisation
+# History
 #------------------------------------------------------------------
 
-normalized <-
-function(object) object@normalized
+history <-
+function(object) object@history
 

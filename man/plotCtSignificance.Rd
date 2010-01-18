@@ -51,7 +51,7 @@ qDE <- ttestCtData(qPCRpros[,1:4], groups=grp, calibrator="B")
 # Plot
 plotCtSignificance(qDE, q=qPCRpros, groups=grp, target="A", calibrator="B", genes=1:10, jitter=0.2)
 plotCtSignificance(qDE, q=qPCRpros, groups=grp, target="A", calibrator="B", genes=featureNames(qPCRpros)[1:10], jitter=0, un.col="blue")
-plotCtSignificance(qDE, q=qPCRpros, groups=grp, target="A", calibrator="B", p.val=0.001, jitter=0.1)
+plotCtSignificance(qDE, q=qPCRpros, groups=grp, target="A", calibrator="B", p.val=0.05, jitter=0.1)
 }
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the

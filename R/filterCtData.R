@@ -60,6 +60,8 @@ function(q,
 		if (verbose)
 			cat(paste("Removed ", sum(index, na.rm=TRUE), " features with IQR <", remove.IQR, " based on exprs(q).\n", sep=""))
 	}	
+	# Add to the history of the object
+	q@history	<- rbind(q@history, capture.output(match.call(filterCtData)))
 	# Return the filtered object
 	q	
 }

@@ -101,8 +101,8 @@ function(q,
 	)
 	# Replace with the normalised Ct exprs
 	exprs(q)	<- data.norm
-	# Indicate which normalization was used
-	q@normalized	<- method	
+	# Add to the history of the object
+	q@history	<- rbind(q@history, capture.output(match.call(normalizeCtData)))
 	# Return the normalised object
 	q
 }

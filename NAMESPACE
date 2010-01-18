@@ -15,12 +15,12 @@ importFrom(methods, "@<-", new)
 importFrom(RColorBrewer, brewer.pal)
 importFrom(stats, aggregate, approx, as.dist, biplot, cor, density,
            hclust, heatmap, median, prcomp, qnorm, qt, quantile,
-           rect.hclust, sd, t.test, var)
+           rect.hclust, sd, t.test, var, p.adjust)
 importFrom(utils, read.delim)
 
 #exportPattern("^[[:alpha:]]+")
 
-export('clusterCt', 'featureCategory', 'featureCategory<-', 'featureClass', 'featureClass<-', 'featurePos', 'featurePos<-', 'featureType', 'featureType<-', 'filterCategory', 'filterCtData', 'flag', 'flag<-', 'getCt', 'heatmapSig', 'limmaCtData', 'n.samples', 'n.wells', 'normalized', 'normalizeCtData', 'plotCtBoxes', 'plotCtCategory', 'plotCtCor', 'plotCtDensity', 'plotCtHeatmap', 'plotCtHistogram', 'plotCtOverview', 'plotCtPCA', 'plotCtReps', 'plotCtRQ', 'plotCtScatter', 'plotCtSignificance', 'plotCVBoxes', 'plotCtLines', 'plotCtCard', 'readCtData', 'setCategory', 'setCt<-', 'summary', 'ttestCtData', 'plotCtPairs')
+export('clusterCt', 'featureCategory', 'featureCategory<-', 'featureClass', 'featureClass<-', 'featurePos', 'featurePos<-', 'featureType', 'featureType<-', 'filterCategory', 'filterCtData', 'flag', 'flag<-', 'getCt', 'heatmapSig', 'history', 'limmaCtData', 'n.samples', 'n.wells', 'normalizeCtData', 'plotCtBoxes', 'plotCtCategory', 'plotCtCor', 'plotCtDensity', 'plotCtHeatmap', 'plotCtHistogram', 'plotCtOverview', 'plotCtPCA', 'plotCtReps', 'plotCtRQ', 'plotCtScatter', 'plotCtSignificance', 'plotCVBoxes', 'plotCtLines', 'plotCtCard', 'readCtData', 'setCategory', 'setCt<-', 'summary', 'ttestCtData', 'plotCtPairs')
 
 exportMethods(
     "[",

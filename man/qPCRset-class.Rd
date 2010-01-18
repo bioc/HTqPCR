@@ -23,7 +23,7 @@
 \alias{flag<-}
 \alias{n.wells}
 \alias{n.samples}
-\alias{normalized}
+\alias{history}
 \alias{show,qPCRset-method}
 \alias{summary,qPCRset-method}
 
@@ -45,7 +45,7 @@ Objects can be created by calls of the form \code{new("qPCRset", ...)} or using 
     \item{\code{featurePos}:}{Object of class \code{"character"} representing the location "well" of a gene on the card (such as well A1, A2, ...). If data does not come from a card format, the positions will be given consecutive names.}
     \item{\code{featureClass}:}{Object of class \code{"factor"} with some meta-data about the genes, for example if it is a marker, transcription factor or similar.}
     \item{\code{featureCategory}:}{Object of class \code{"data.frame"} representing the quality of the measurement for each Ct value, such as "OK", "Undetermined" or "Unreliable" if the Ct value is considered too migh.}
-    \item{\code{normalized}:}{Object of class \code{"character"} indicating if the data has been normalized, and if so then what method was used.}
+    \item{\code{history}:}{Object of class \code{"data.frame"} indicating how the data has been read in, normalized, filtered etc. Gives the exact commands used during these operations.}
   }
 }
 
@@ -70,7 +70,7 @@ Objects can be created by calls of the form \code{new("qPCRset", ...)} or using 
     \item{featureCategory<-}{\code{signature(object = "qPCRset", value = "data.frame")}: Replaces the category of each Ct value. }
      \item{n.wells}{\code{signature(object = "qPCRset")}: Extracts information about the number of wells on the card. }
      \item{n.samples}{\code{signature(object = "qPCRset")}: Extracts information about the number of samples in the set. }
-     \item{normalized}{\code{signature(object = "qPCRset")}: Extracts information about normalization. }
+     \item{history}{\code{signature(object = "qPCRset")}: Extracts information about the hisotyr of the object (which operations have been performed on it). }
     \item{show}{\code{signature(object = "qPCRset")}: Displays som abbreviated information about the data object.}
     \item{summary}{\code{signature(object = "qPCRset")}: Displays a summary of the Ct values from each sample. }
 	 }
@@ -81,6 +81,7 @@ Objects can be created by calls of the form \code{new("qPCRset", ...)} or using 
 \examples{
 data(qPCRraw)
 show(qPCRraw)
+history(qPCRraw)
 showClass("qPCRset")
 str(qPCRraw)
 }
