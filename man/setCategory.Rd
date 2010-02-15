@@ -2,7 +2,7 @@
 \Rdversion{1.1}
 \alias{setCategory}
 \title{Assign categories to Ct values from qPCR data.}
-\description{Data in qPCRset objects will have feature categories ("Unreliable", "Undtermined") assigned to them based on different Ct criteria. }
+\description{Data in qPCRset objects will have feature categories ("Unreliable", "Undetermined") assigned to them based on different Ct criteria. }
 
 \usage{
 setCategory(q, Ct.max = 35, Ct.min = 10, replicates = TRUE, quantile = 0.9, groups, flag = TRUE, flag.out = "Failed", verbose = TRUE, plot = FALSE, ...)

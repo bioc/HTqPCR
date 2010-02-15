@@ -50,10 +50,10 @@ nrnorm <- normalizeCtData(qPCRraw, norm="norm.rankinvariant")
 srnorm <- normalizeCtData(qPCRraw, norm="scale.rankinvariant")
 # Normalized versus raw data
 cols <- rep(brewer.pal(6, "Spectral"), each=384)
-plot(exprs(qPCRraw), exprs(dnorm), pch=20, col=cols, main="dCt normalization")
+plot(exprs(qPCRraw), exprs(dnorm), pch=20, col=cols, main="deltaCt normalization")
 plot(exprs(qPCRraw), exprs(qnorm), pch=20, col=cols,  main="Quantile normalization")
-plot(exprs(qPCRraw), exprs(nrnorm), pch=20, col=cols,  main="Housekeeping genes normalization")
-plot(exprs(qPCRraw), exprs(srnorm), pch=20, col=cols,  main="Rank invariant normalization")
+plot(exprs(qPCRraw), exprs(nrnorm), pch=20, col=cols,  main="norm.rankinvariant")
+plot(exprs(qPCRraw), exprs(srnorm), pch=20, col=cols,  main="scale.rankinvariant")
 # With or without removing high Ct values
 nrnorm <- normalizeCtData(qPCRraw, norm="norm.rankinvariant")
 nrnorm2 <- normalizeCtData(qPCRraw, norm="norm.rankinvariant", Ct.max=40)

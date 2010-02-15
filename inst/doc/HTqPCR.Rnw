@@ -365,23 +365,31 @@ plot(exprs(raw), exprs(q.norm), pch=20, main="Quantile normalisation", col=rep(b
 
 \begin{figure}
 \begin{center}
-<<fig =TRUE , echo =FALSE >>=
+<<fig =TRUE , echo =FALSE, width=8, height=12>>=
 col <- rep(brewer.pal(6, "Spectral"), each=384)
-par(mfrow=c(2,2), mar=c(2,2,2,1))
+col2 <- brewer.pal(5, "Dark2")
+par(mfrow=c(3,2), mar=c(2,2,2,2))
+# All methods individually
 plot(exprs(raw), exprs(q.norm), pch=20, main="Quantile normalisation", col=col)
 plot(exprs(raw), exprs(sr.norm), pch=20, main="Rank invariant scaling", col=col)
 plot(exprs(raw), exprs(nr.norm), pch=20, main="Rank invariant normalisation", col=col)
 plot(exprs(raw), exprs(d.norm), pch=20, main="deltaCt normalisation", col=col)
+# Just a single sample, across methods
+plot(exprs(raw)[,1], exprs(q.norm)[,1], pch=20, col=col2[1], main="Comparison of methods for sample 1", ylim=c(-10,40))
+points(exprs(raw)[,1], exprs(sr.norm)[,1], pch=20, col=col2[2])
+points(exprs(raw)[,1], exprs(nr.norm)[,1], pch=20, col=col2[3])
+points(exprs(raw)[,1], exprs(d.norm)[,1], pch=20, col=col2[4])
+legend(8, 40, legend=c("Quantile", "Rank.invariant scaling", "Rank.invariant normalization", "deltaCt"), col=col2, lwd=2, bty="n")
 @
 \end{center}
-\caption{Normalized versus raw data, using a separate colour for each sample. The raw data is plotted along the x-axis and the normalised along y.}
+\caption{Normalized versus raw data, using a separate colour for each sample. The raw data is plotted along the x-axis and the normalised along y. The last plot is a comparison between normalization methods for the fist sample, still with the raw Ct values along the x-axis.}
 \label{fig:two}
 \end{figure}
 
 
 %%%%%%%%%%%%%%%% FILTERING %%%%%%%%%%%%%%%%%
 
-\section{Filtering and subsettting the data}
+\section{Filtering and subsetting the data}
 
 At any point during the analysis it's possible to filter out both individual features or groups of features that are either deemed to be of low quality, or not of interest for a particular aspect of the analysis. This can be done using any of the feature characteristics that are included in the \Rfunction{featureNames}, \Rfunction{featureType}, \Rfunction{featureClass} and/or \Rfunction{featureCategory} slots of the data object. Likewise, the \Rfunction{qPCRset} object can be turned into smaller subsets, for example if only a particular class of features are to be used, or some samples should be excluded.
 
@@ -604,10 +612,35 @@ plotCtReps(qPCRraw, card=2, percent=20)
 
 Differences will often arise due to one of the duplicates marked as "Undetermined", thus contributing to an artificially high Ct value, but other known cases exist as well.
 
+\subsection{Coefficients of variation}
+
+The coefficients of variation (CV) can be calculated for each feature across all samples. Stratifying the CV values by  \Rfunction{featureType} or \Rfunction{featureClass} can help to determine whether one class of features is more variable than another (Figure~\ref{fig:CV}). For the example data feature classes have been assigned randomly, and the CVs are therefore similar, whereas for the feature types there's a clear difference between controls and targets.
+
+<<CV across samples, include=FALSE>>=
+plotCVBoxes(qPCRraw, stratify="class")
+plotCVBoxes(qPCRraw, stratify="type")
+@
+
+\begin{figure}
+\begin{center}
+<<fig=TRUE,echo=FALSE, width=10, height=5>>=
+par(mfrow=c(1,2), mar=c(2,2,2,1))
+plotCVBoxes(qPCRraw, stratify="class")
+plotCVBoxes(qPCRraw, stratify="type")
+@
+\end{center}
+\caption{Coefficients of variation for each feature across all samples. }
+\label{fig:CV}
+\end{figure}
+
 
 %%%%%%%%%%%%%%%% CLUSTERING %%%%%%%%%%%%%%%%%
 
-\section{Hierarchical clustering}
+\section{Clustering}
+
+At the moment there are two default methods present in  \Rpackage{HTqPCR} for clustering; hierarchical clustering and principal components analysis (PCA).
+
+\subsection{Hierarchical clustering}
 
 Both features and samples can be subjected to hierarchical clustering using either Euclidean or Pearson correlation distances, to display similarities and differences within groups of data. Individual subclusters can be selected, either using pre-defined criteria such as number of clusters, or interactively by the user. The content of each cluster is then saved to a list, to allow these features to be extracted from the full data set if desired.
 
@@ -645,6 +678,27 @@ show(sr.norm[c6,])
 \end{center}
 \caption{Hierarchical clustering of features, with subclusters marked.}
 \label{fig:cluster2}
+\end{figure}
+
+\subsection{Principal components analysis}
+
+PCA is performed across the selected features and samples (observations and variables), and can be visualized either in a biplot, or showing just the clustering of the samples (Figure~\ref{fig:PCA}). 
+
+<<Principal components analysis, include=FALSE>>=
+plotCtPCA(qPCRraw)
+plotCtPCA(qPCRraw, features=FALSE)
+@
+
+\begin{figure}
+\begin{center}
+<<fig=TRUE,echo=FALSE, width=8, height=4>>=
+par(mfrow=c(1,2), mar=c(2,2,2,1))
+plotCtPCA(qPCRraw)
+plotCtPCA(qPCRraw, features=FALSE)
+@
+\end{center}
+\caption{Left: a biplot including all features, with samples represented by vectors. Right: the same plot, including only the samples.}
+\label{fig:PCA}
 \end{figure}
 
 

@@ -25,9 +25,9 @@ plotCtPairs(q, cards = TRUE, lower.panel = panel.Ct.cor, upper.panel = panel.Ct.
   \item{\dots}{any other arguments are passed to the panel functon or \code{pairs}.}
 }
 
-%\details{
-%%  ~~ If necessary, more details than the description above ~~
-%}
+\details{
+Per default, the lower panels contain the correlations between data sets. For each correlation all complete pairs are used, i.e. NAs are ignored. If there are no complete observations between two samples the correlation will be set to NA.
+}
 
 \value{A figure is generated in the current graphics device.}
 

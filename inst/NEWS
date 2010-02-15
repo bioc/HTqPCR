@@ -1,0 +1,61 @@
+        **************************************************
+        *                                                *
+        *              2.11 SERIES NEWS                  *
+        *                                                *
+        **************************************************
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o Add "history" slot to qPCRset object, instead of "normalized". 
+    This means all operations (filtering, normalization etc.) performed 
+    on the object can be retrieved.
+
+NEW FEATURES
+
+    o n.data parameter to readCtData in case there are results from 
+    multiple cards in each file.
+ 
+    o getCt and setCt added as accessor and replacement functions (alias 
+    for exprs).
+
+    o Add "fold change" to the output from limmaCtData and ttestCtData.
+
+    o Add p-value adjustment to ttestCtData.
+
+    o Expanded functionality of plotCtPCA.
+
+BUG FIXES
+
+    o Fixed a bug in readCtData regarding file paths.
+
+    o Added "fake" featureNames to readCtData if not present in input.
+
+    o Gives error if no column for Ct values is specified.
+
+    o Fix bug in ttestCtData(.., paired=TRUE) (cf Jeremy Hetzel).
+
+    o Added sample names to flag and featureCategory in readCtData.
+
+    o Fixed bugs in plotting functions when exprs() only has 1 column.
+
+    o Reset "par" after using plotCtCard.
+
+    o Fixed bug with parameter "samples" in readCtData.
+
+    o featureCategory only required if unR=TRUE and/or unD=TRUE in 
+    plotCtCard.
+
+    o In plotCtDensity, remove samples were all values=NA.
+
+    o The internal function panel.Ct.cor adjusted to handle NAs.
+
+    o Remove all samples with just NA in plotCtPCA.
+
+
+        **************************************************
+        *                                                *
+        *              2.10 SERIES NEWS                  *
+        *                                                *
+        **************************************************
+
+(first package submission)

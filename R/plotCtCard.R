@@ -20,12 +20,7 @@ function(q,
 	old.par <- par(no.readonly=TRUE)
     on.exit(par(old.par))
 	layout(rbind(2,1), widths=5, heights=c(3.5,1), respect=TRUE)
-	# Extract the gene categories
-	if (class(q)=="qPCRset") {
-		category	<- featureCategory(q)[,card]
-	} 
-	
-	# Ct or other values on a continuous scale (might add other later)
+	# Ct or other values on a continuous scale (might add others later)
 	if (plot %in% c("Ct")) {
 		# Extract the values of interest
 		data	<- exprs(q)[,card]
@@ -108,6 +103,10 @@ function(q,
 	x	<- rep(1:ncol,nrow)/ncol
 	y	<- rep(nrow:1, each=ncol)/nrow
 	plot(x=x, y=y, cex=well.size, xaxt="n", yaxt="n", ylab="", xlab="", main=main, bg=values, pch=21, ...)
+	# Extract/plot the gene categories
+	if (unR | unD) {
+		category	<- featureCategory(q)[,card]
+	} 
 	if (unR) {
 		index	<- category=="Unreliable"
 		points(x=x[index], y=y[index], cex=well.size, pch=4, ...)
