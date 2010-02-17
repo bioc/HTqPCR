@@ -860,6 +860,6 @@ toLatex(sessionInfo())
 %%%%%%%%%%%%%%%% BIBLIOGRAPHY  %%%%%%%%%%%%%%%%%
 
 \bibliographystyle{abbrvnat}
-\bibliography{HTqPCR-Bibliography.bib}
+\bibliography{HTqPCR-Bibliography}
 
 \end{document}
