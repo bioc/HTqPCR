@@ -8,7 +8,7 @@ SIGNIFICANT USER-VISIBLE CHANGES
 
     o Add "history" slot to qPCRset object, instead of "normalized". 
     This means all operations (filtering, normalization etc.) performed 
-    on the object can be retrieved.
+    on the object can be retrieved with getCtHistory.
 
 NEW FEATURES
 
@@ -23,6 +23,13 @@ NEW FEATURES
     o Add p-value adjustment to ttestCtData.
 
     o Expanded functionality of plotCtPCA.
+
+    o Added function changeCtLayout for data containing multiple samples 
+    per 384 well plate.
+
+    o Added rbind and cbind functions for combining qPCRset objects.
+
+    o Added mannwhitneyCtData for Mann-Whitney test between samples.
 
 BUG FIXES
 
@@ -51,6 +58,10 @@ BUG FIXES
 
     o Remove all samples with just NA in plotCtPCA.
 
+    o Fixed bug in ttestCtData (results always reported as "OK" not
+    "Undetermined")
+    o Add sampleNames to flag() and featureCategory()
+
 
         **************************************************
         *                                                *
@@ -58,4 +69,6 @@ BUG FIXES
         *                                                *
         **************************************************
 
-(first package submission)
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o First submission of HTqPCR to BioConductor.

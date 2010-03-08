@@ -99,7 +99,7 @@ function(q,
 			}
 		}
 		# Print summary of how many per sample
-		if (verbose) {
+		if (verbose & !is.null(groups)) {
 			# Count. Don't use apply, since not all samples contain "Unreliable"
 			feats	<- featureCategory(out)
 			cats	<- sort(unique(unlist(feats)))

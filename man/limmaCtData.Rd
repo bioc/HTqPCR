@@ -50,7 +50,7 @@ R. Gentleman, V. Carey, S. Dudoit, R. Irizarry, W. Huber (eds), Springer, New Yo
 
 
 \seealso{
-\code{\link[limma]{lmFit}}, \code{\link[limma]{contrasts.fit}} and \code{\link[limma]{ebayes}} for more information about the underlying limma functions. \code{\link{plotCtRQ}}, \code{\link{heatmapSig}} and \code{\link{plotCtSignificance}} can be used for visualising the results.
+\code{\link[limma]{lmFit}}, \code{\link[limma]{contrasts.fit}} and \code{\link[limma]{ebayes}} for more information about the underlying limma functions. \code{\link{mannwhitneyCtData}} and \code{\link{ttestCtData}} for other functions calculating differential expression of Ct data. \code{\link{plotCtRQ}}, \code{\link{heatmapSig}} and \code{\link{plotCtSignificance}} can be used for visualising the results.
 }
 
 \examples{

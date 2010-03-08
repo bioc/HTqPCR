@@ -152,7 +152,10 @@ function(object, value) {
 #------------------------------------------------------------------
 
 featureCategory <-
-function(object) object@featureCategory
+function(object) {x<-object@featureCategory;
+          	colnames(x)<-sampleNames(object); 
+			x}
+
 
 `featureCategory<-` <-
 function(object, value) {
@@ -176,7 +179,9 @@ function(object, value) {
 #------------------------------------------------------------------
 
 flag <-
-function(object) object@flag
+function(object) {x<-object@flag;
+           	colnames(x)<-sampleNames(object); 
+			x}
 
 `flag<-` <-
 function(object, value) {
@@ -198,6 +203,6 @@ function(object) nrow(object@exprs)
 # History
 #------------------------------------------------------------------
 
-history <-
+getCtHistory <-
 function(object) object@history
 

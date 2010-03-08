@@ -109,6 +109,13 @@ The main functions and their use are outlined in Figure~\ref{fig:workflow}. Note
 \label{fig:workflow}
 \end{figure}
 
+For the full set of available functions type:
+
+<<All functions>>=
+ls("package:HTqPCR")
+@
+
+
 \subsection*{Getting help}
 
 Please send questions about \Rpackage{HTqPCR} to the Bioconductor mailing list.\\
@@ -127,17 +134,19 @@ The data is stored in an object of class \Rclass{qPCRset}, which is similar to t
     \item[\Robject{featureNames}] Object of class \Rclass{character} giving the names of the features (genes, miRNAs) used in the experiment.
     \item[\Robject{sampleNames}] Object of class \Rclass{character} containing the sample names of the individual experiments.
     \item[\Robject{exprs}] Object of class \Rclass{matrix} containing the Ct values.
-    \item[\Robject{flag}] Object of class \Rclass{data.frame} containing the flag for each Ct value, as supplied by the input files. These are typically set during the calculation of Ct values, and indicate whether the results are flagged as e.g.~"Passed" or "Flagged".
+    \item[\Robject{flag}] Object of class \Rclass{data.frame} containing the flag for each Ct value, as supplied by the input files. These are typically set during the calculation of Ct values, and indicate whether the results are flagged as e.g.~``Passed'' or ``Flagged''.
     \item[\Robject{featureType}]Object of class \Rclass{factor} representing the different types of features on the card, such as endogenous controls and target genes.
     \item[\Robject{featurePos}] Object of class \Rclass{character} representing the location "well" of a gene in case TLDA cards are used, or some other method containing a defined spatial layout of features.
     \item[\Robject{featureClass}] Object of class \Rclass{factor} with some meta-data about the genes, for example if it is a  transcription factor, kinase, marker for different types of cancers or similar. This is typically set by the user.
-    \item[\Robject{featureCategory}] Object of class \Rclass{data.frame} representing the quality of the measurement for each Ct value, such as "OK", "Undetermined" or "Unreliable". These can be set using the function \Rfunction{setCategories} depending on a number of parameters, such as how the Ct values are flagged, upper and lower limits of Ct values and variations between technical and biological replicates of the same feature.
-    \item[\Robject{history}] Object of class \Rclass{data.frame} indicating what operations have been performed on the \Rclass{qPCRset} object, and what the parameters were. Automatically set when any of the functions on the upper right hand side of figure~\ref{fig:workflow} are called (\Rfunction{readCtData, setCategory, filterCategory, normalizeCtData, filterCtData}).
+    \item[\Robject{featureCategory}] Object of class \Rclass{data.frame} representing the quality of the measurement for each Ct value, such as ``OK'', ``Undetermined'' or ``Unreliable''. These can be set using the function \Rfunction{setCategories} depending on a number of parameters, such as how the Ct values are flagged, upper and lower limits of Ct values and variations between technical and biological replicates of the same feature.
+    \item[\Robject{history}] Object of class \Rclass{data.frame} indicating what operations have been performed on the \Rclass{qPCRset} object, and what the parameters were. Automatically set when any of the functions on the upper right hand side of figure~\ref{fig:workflow} are called (\Rfunction{readCtData, setCategory, filterCategory, normalizeCtData, filterCtData, changeCtLayout, rbind, cbind}).
 \end{description}
 
 Generally, information can be handled in the \Rclass{qPCRset} using the same kind of functions as for \Rclass{ExpressionSet}, such as \Rfunction{exprs}, \Rfunction{featureNames} and \Rfunction{featureCategory} for extracting the data, and  \Rfunction{exprs<-}, \Rfunction{featureNames<-} and \Rfunction{featureCategory<-} for replacing or modifying values.
 
 The use of \Rfunction{exprs} might not be intuitive to users who are not used to dealing with microarray data, and hence \Rclass{ExpressionSet}. The functions \Rfunction{getCt} and \Rfunction{setCt<-} that perform the same operations as \Rfunction{exprs} and \Rfunction{exprs<-} are therefore also included. For the sake of consistency, \Rfunction{exprs} will be used throughout this vignette for accessing the Ct values, but it can be replaced by \Rfunction{getCt} in all examples.
+
+\Robject{qPCRset} objects can also be combined or reformatted in various ways (see~\ref{SEC:objectmanipulation}).
 
 Two \Robject{qPCRset} test objects are included in the package: one containing raw data, and the other containing processed values. An example is shown in figure~\ref{fig:objectfunctions}, along with some of the functions that can typically be used for manipulating \Rclass{qPCRset} objetcs.
 
@@ -159,10 +168,11 @@ class(qPCRraw)
 
 
 \section{Reading in the raw data}
+\label{SEC:datainput}
 
-\subsection{General data format}
+%\subsection{General data format}
 
-The input consists of tab-delimited text files containing the Ct values for a range of genes. Additional information, such as type of gene (e.g.~target, endogenous control) or groupings of genes into separate classes (e.g.~markers, kinases) can also be read in, or supplied later.
+The standard input consists of tab-delimited text files containing the Ct values for a range of genes. Additional information, such as type of gene (e.g.~target, endogenous control) or groupings of genes into separate classes (e.g.~markers, kinases) can also be read in, or supplied later.
 
 The package comes with example input files (from Applied Biosystem's TLDA cards), along with a text file listing sample file names and biological conditions.  
 
@@ -171,7 +181,7 @@ path <- system.file("exData", package="HTqPCR")
 head(read.delim(file.path(path, "files.txt")))
 @
 
-The data consist of 192 features represented twice on the array and labelled "Gene1", "Gene2", etc. There are three different conditions, "Control", "Starve" and "LongStarve", each having 2 replicates.
+The data consist of 192 features represented twice on the array and labelled ``Gene1'', ``Gene2'', etc. There are three different conditions, ``Control'', ``Starve'' and ``LongStarve'', each having 2 replicates.
 
 The input data consists of tab-delimited text files (one per sample); however, the format is likely to vary depending on the specific platform on which the data were obtained (e.g., TLDA cards, 96-well plates, or some other format). The only requirement is that columns containing the Ct values and feature names are present.
 
@@ -186,23 +196,7 @@ The \Rclass{qPCRset} object looks like:
 show(raw)
 @
 
-\subsection{Sequence Detection Systems format}
-
-The qPCR data might come from Sequence Detection Systems (SDS) software, in which case each file has a header containing some generic information about the initial Ct detection. This header varies in length depending on how many files were analysed simultaneously, and an example is shown below.
-
-%readLines(file.path(path, "SDS_sample.txt"), n=19)
-<<Example SDS data>>=
-path <- system.file("exData", package="HTqPCR")
-cat(paste(readLines(file.path(path, "SDS_sample.txt"), n=19), "\n"))
-@
-
-Only the first 7 columns are shown, since the file shown here contains $>$30 columns (of which many are empty). All columns for the first 20 lines can be seen in an R terminal with the command:
-
-<<Example SDS data 2, results=hide>>=
-readLines(file.path(path, "SDS_sample.txt"), n=20)
-@
-
-For these files the parameter \Rfunction{SDS=TRUE} can be set in \Rfunction{readCtData}. The first 100 lines of each file will be scanned, and all lines preceding the actual data will be skipped (in this case 17), even when the length of the header varies between files.
+NB: This section only deals with data presented in general data format. For notes regarding other types of input data, see section~\ref{SEC:formats}.
 
 
 
@@ -213,7 +207,7 @@ For these files the parameter \Rfunction{SDS=TRUE} can be set in \Rfunction{read
 
 \subsection{Overview of Ct values across all groups}
 
-To get a general overview of the data the (average) Ct values for a set of features across all samples or different condition groups can be displayed. In principle, all features in a sample might be chosen, but to make it less cluttered Figure~\ref{fig:overview} displays only the first 10 features. The top plot was made using just the Ct values, and shows the 95\% confidence interval across replicates within and between samples. The bottom plot represents the same values but relative to a chosen calibrator sample, here the "Control". Confidence intervals can also be added to the relative plot, in which case these will be calculated for all values compared to the average of the calibrator sample per gene.
+To get a general overview of the data the (average) Ct values for a set of features across all samples or different condition groups can be displayed. In principle, all features in a sample might be chosen, but to make it less cluttered Figure~\ref{fig:overview} displays only the first 10 features. The top plot was made using just the Ct values, and shows the 95\% confidence interval across replicates within and between samples. The bottom plot represents the same values but relative to a chosen calibrator sample, here the ``Control''. Confidence intervals can also be added to the relative plot, in which case these will be calculated for all values compared to the average of the calibrator sample per gene.
 
 %<<Ct overview ex 1, label=fig.overview1, include=FALSE>>=
 <<Ct overview ex 1, include=FALSE>>=
@@ -261,7 +255,7 @@ plotCtCard(raw, plot="class", well.size=2.6)
 <<Ct card ex 2>> 
 @
 \end{center}
-\caption{Ct values for the first sample (top), and the location of different feature classes (bottom). Ct values are visualised using colour intensity, and grey circles are features that were marked "undetermined" in the input file.}
+\caption{Ct values for the first sample (top), and the location of different feature classes (bottom). Ct values are visualised using colour intensity, and grey circles are features that were marked ``undetermined'' in the input file.}
 \label{fig:one}
 \end{figure}
 
@@ -272,12 +266,12 @@ plotCtCard(raw, plot="class", well.size=2.6)
 
 \section{Feature categories and filtering}
 
-Each Ct values in HTqPCR has an associated feature category. This is an important component to indicate the reliability of the qPCR data. Aside from the "OK" indicator, there are two other categories: "Undetermined" is used to flag Ct values above a user-selected threshold, and "Unreliable" indicates Ct values that are either so low as to be estimated by the user to be problematic, or that arise from deviation between individual Ct values across replicates.  By default, only Ct values labelled as "undetermined" in the input data files are placed into the "Undetermined" category, and the rest are classified as "OK". However, either before or after normalisation these categories can be altered depending on various criteria. 
+Each Ct values in HTqPCR has an associated feature category. This is an important component to indicate the reliability of the qPCR data. Aside from the ``OK'' indicator, there are two other categories: ``Undetermined'' is used to flag Ct values above a user-selected threshold, and ``Unreliable'' indicates Ct values that are either so low as to be estimated by the user to be problematic, or that arise from deviation between individual Ct values across replicates.  By default, only Ct values labelled as ``undetermined'' in the input data files are placed into the ``Undetermined'' category, and the rest are classified as ``OK''. However, either before or after normalisation these categories can be altered depending on various criteria. 
 
 \begin{description}
-\item[Range of Ct values] Some Ct values might be too high or low to be considered a reliable measure of gene expression in the sample, and should therefore not be marked as "OK".
-\item[Flags] Depending on the qPCR input the values might have associated flags, such as "Passed" or "Failed", which are used for assigning categories.
-\item[Biological and technical replicates] If features are present multiple times within each sample, or if samples are repeated in the form of technical or biological replicates, then these values can be compared. Ct values lying outside a user-selected confidence interval (90\% by default) will be marked as "Unreliable".
+\item[Range of Ct values] Some Ct values might be too high or low to be considered a reliable measure of gene expression in the sample, and should therefore not be marked as ``OK''.
+\item[Flags] Depending on the qPCR input the values might have associated flags, such as ``Passed'' or ``Failed'', which are used for assigning categories.
+\item[Biological and technical replicates] If features are present multiple times within each sample, or if samples are repeated in the form of technical or biological replicates, then these values can be compared. Ct values lying outside a user-selected confidence interval (90\% by default) will be marked as ``Unreliable''.
 \end{description}
 
 <<Set Ct categories>>=
@@ -323,7 +317,7 @@ plotCtCategory(raw.cat, by.feature=TRUE, cexRow=0.1)
 \end{figure}
 
 
-If one doesn't want to include unreliable or undetermined data in part of the analysis, these Ct values can be set to NA using \Rfunction{filterCategory}.  However, the presence of NAs could make the tests for differential expression less robust. When testing for differential expression the result will come with an associated category ("OK" or "Unreliable") that can instead be used to assess the quality of the results. For the final results both "Undetermined" and "Unreliable" are pooled together as being "Unreliable". However, the label for each feature can either be set according to whether half or more of the samples are unreliable, or whether only a single non-"OK" category is present, depending on the level of stringency the user wishes to enforce.
+If one doesn't want to include unreliable or undetermined data in part of the analysis, these Ct values can be set to NA using \Rfunction{filterCategory}.  However, the presence of NAs could make the tests for differential expression less robust. When testing for differential expression the result will come with an associated category (``OK'' or ``Unreliable'') that can instead be used to assess the quality of the results. For the final results both ``Undetermined'' and ``Unreliable'' are pooled together as being ``Unreliable''. However, the label for each feature can either be set according to whether half or more of the samples are unreliable, or whether only a single non-``OK'' category is present, depending on the level of stringency the user wishes to enforce.
 
 
 %%%%%%%%%%%%%%%% DATA NORMALISATION  %%%%%%%%%%%%%%%%%
@@ -346,7 +340,7 @@ of those as a scaling factor for correcting all Ct values.
 \item[deltaCt] Calculates the standard deltaCt values, i.e.~subtracts the mean of the chosen controls from all other values in the feature set.
 \end{description}
 
-For the rank-invariant normalisation methods, Ct values above a given threshold can be excluded from the calculation of a scaling factor or normalisation curve. This is useful so that a high proportion of "Undetermined" Ct values (assigned a value of 40 by default) in a given sample doesn't bias the normalisation of the remaining features.
+For the rank-invariant normalisation methods, Ct values above a given threshold can be excluded from the calculation of a scaling factor or normalisation curve. This is useful so that a high proportion of ``Undetermined'' Ct values (assigned a value of 40 by default) in a given sample doesn't bias the normalisation of the remaining features.
 
 In the example dataset, Gene1 and Gene60 correspond to 18S RNA and GADPH, and are used as endogenous controls. Normalisation methods can be run as follows:
 
@@ -509,7 +503,7 @@ plotCtDensity(nr.norm, main="norm.rankinvariant")
 plotCtDensity(d.norm, main="deltaCt")
 @
 \end{center}
-\caption{Densities of Ct values for all samples after each of the four normalisation methods. The peak at the high end originates from features with "Undetermined" Ct values, which are assigned the Ct value 40 by default. }
+\caption{Densities of Ct values for all samples after each of the four normalisation methods. The peak at the high end originates from features with ``Undetermined'' Ct values, which are assigned the Ct value 40 by default. }
 \label{fig:all.density}
 \end{figure}
 
@@ -610,7 +604,7 @@ plotCtReps(qPCRraw, card=2, percent=20)
 \label{fig:replicates}
 \end{figure}
 
-Differences will often arise due to one of the duplicates marked as "Undetermined", thus contributing to an artificially high Ct value, but other known cases exist as well.
+Differences will often arise due to one of the duplicates marked as ``Undetermined'', thus contributing to an artificially high Ct value, but other known cases exist as well.
 
 \subsection{Coefficients of variation}
 
@@ -706,22 +700,23 @@ plotCtPCA(qPCRraw, features=FALSE)
 
 \section{Differential expression}
 
-At this stage multiple filterings might have been performed on the data set(s). To remind yourself about those, you can use the \Rfunction{history} function on the \Rclass{qPCRset} object.
+At this stage multiple filterings might have been performed on the data set(s). To remind yourself about those, you can use the \Rfunction{getCtHistory} function on the \Rclass{qPCRset} object.
 
 <<Object history>>=
-history(sr.norm)
-history(qFilt)
+getCtHistory(sr.norm)
+getCtHistory(qFilt)
 @
 
 
-In general there are two approaches in \Rpackage{HTqPCR} for testing the significance of differences in Ct values between samples.
+In general there are three approaches in \Rpackage{HTqPCR} for testing the significance of differences in Ct values between samples.
 
 \begin{description}
 \item[ t-test] Performing a standard t-test between two sample groups. This function will incorporate information about replicates to calculate t and p-values. This is a fairly simple approach, typically used when comparing a single treatment and control sample, and multiple pair-wise tests can be carried out one-by-one by the user.
+\item[Mann-Whitney] This is a non-parametric test, also known as a two sample Wilcoxon test. Similar to the t-test, multiple pair-wise tests will have to be carried out one by one if more than two types of samples are present. This is a rank-based test that doesn't make any assumptions about the population distribution of Ct values.
 \item[\Rpackage{limma}] Using a wrapper for functions from the package \Rpackage{limma}~\citep{ref:limma} to calculate more sophisticated t and p-values for any number of groups present across the experiment. This is more flexible in terms of what types of comparisons can be made, but the users need to familiarise themselves with the \Rpackage{limma} conventions for specifying what contrasts are of interest.
 \end{description}
 
-Examples of how to use each of these are given in the next sections. In both cases the output is similar; a data frame containing the test statistics for each feature, along with fold change and information about whether the Ct values are "OK" or "Unreliable". This result can be written to a file using standard functions such as \Rfunction{write.table}.
+Examples of how to use each of these are given in the next sections. In all cases the output is similar; a data frame containing the test statistics for each feature, along with fold change and information about whether the Ct values are ``OK'' or ``Unreliable''. This result can be written to a file using standard functions such as \Rfunction{write.table}.
 
 \subsection{Two sample types - t-test}
 
@@ -731,6 +726,16 @@ This section shows how to compare two samples, e.g.~the control and long starvat
 qDE.ttest <- ttestCtData(sr.norm[,1:4], groups=files$Treatment[1:4], 
 calibrator="Control")
 qDE.ttest[1:10,]
+@
+
+\subsection{Two sample types - Mann-Whitney}
+
+When only two samples are of interest, these can also be compared using a Mann-Whitney test. As is the section above, the function is demonstrated using the control and long starvation samples from the example data. A subset of the \Robject{qPCRset} data is created to encompass only these samples, and a Mann-Whitney test is performed.
+
+<<Perform Mann-Whitney test>>=
+qDE.mwtest <- mannwhitneyCtData(sr.norm[,1:4], groups=files$Treatment[1:4], 
+calibrator="Control")
+qDE.mwtest[1:10,]
 @
 
 \subsection{Multiple sample types - limma}
@@ -760,7 +765,7 @@ names(qDE.limma)
 qDE.limma[["LS-C"]][1:10,]
 @
 
-Furthermore, there is a "Summary" component at the end where each feature is denoted with -1, 0 or 1 to respectively indicate down-regulation, no change, or up-regulation in each of the comparisons.
+Furthermore, there is a ``Summary'' component at the end where each feature is denoted with -1, 0 or 1 to respectively indicate down-regulation, no change, or up-regulation in each of the comparisons.
 
 <<limma summary output, >>=
 qDE.limma[["Summary"]][21:30,]
@@ -809,7 +814,7 @@ The hatching on the bars indicates whether the target and calibrator Ct samples 
 
 \subsection{Fold changes: Detailed visualisation}
 
-In some cases it will be beneficial to more closely examine individual Ct data points from the fold changes, partly to look at the data dispersion, and partly to determine which of these values are in the "OK versus "Unreliable"/"Undetermined" category. The function \Rfunction{plotCtSignificance} will take the result of \Rfunction{ttestCtData} or \Rfunction{limmaCtData}, along with the input data to these functions, and display a combined barplot showing the individual data points and marking those comparisons with a significant p-value.
+In some cases it will be beneficial to more closely examine individual Ct data points from the fold changes, partly to look at the data dispersion, and partly to determine which of these values are in the ``OK'' versus ``Unreliable''/``Undetermined'' category. The function \Rfunction{plotCtSignificance} will take the result of \Rfunction{ttestCtData} or \Rfunction{limmaCtData}, along with the input data to these functions, and display a combined barplot showing the individual data points and marking those comparisons with a significant p-value.
 
 <<Significant Ct, include=FALSE>>=
 plotCtSignificance(qDE.limma, q=sr.norm, 
@@ -823,7 +828,7 @@ calibrator="Control", genes=featureNames(sr.norm)[11:20], un.col="#3288BD", jitt
 <<Significant Ct>> 
 @
 \end{center}
-\caption{Ten genes from the data set, with the average Ct in two groups plotted along with the individual values. Points marked in blue are "Unreliable" or "Undetermined" whereas grey spots are "OK".}
+\caption{Ten genes from the data set, with the average Ct in two groups plotted along with the individual values. Points marked in blue are ``Unreliable'' or ``Undetermined'' whereas grey spots are ``OK''.}
 \label{fig:Ct.significance}
 \end{figure}
 
@@ -844,6 +849,90 @@ heatmapSig(qDE.limma, dist="euclidean")
 \caption{Fold changes across all comparisons, clustered based on Euclidean distance.}
 \label{fig:heatmapsig}
 \end{figure}
+
+
+%%%%%%%%%%%%%%%% INFO ABOUT DATA FORMATS  %%%%%%%%%%%%%%%%%
+
+\section{How to handle different input data}
+\label{SEC:formats}
+
+General information about how to read qPCR data into a \Rclass{qPCRset} object is presented in section~\ref{SEC:datainput}. Below, some more specific cases are illustrated.
+
+\subsection{Sequence Detection Systems format}
+
+The qPCR data might come from Sequence Detection Systems (SDS) software, in which case each file has a header containing some generic information about the initial Ct detection. This header varies in length depending on how many files were analysed simultaneously, and an example is shown below.
+
+<<Example SDS data>>=
+path <- system.file("exData", package="HTqPCR")
+cat(paste(readLines(file.path(path, "SDS_sample.txt"), n=19), "\n"))
+@
+
+Only the first 7 columns are shown, since the file shown here contains $>$30 columns (of which many are empty). All columns for the first 20 lines can be seen in an R terminal with the command:
+
+<<Example SDS data 2, results=hide>>=
+readLines(file.path(path, "SDS_sample.txt"), n=20)
+@
+
+For these files the parameter \Rfunction{SDS=TRUE} can be set in \Rfunction{readCtData}. The first 100 lines of each file will be scanned, and all lines preceding the actual data will be skipped (in this case 17), even when the length of the header varies between files.
+
+%%%%%%%%%%%%%%%% "REFORMATTING" qPCRsets  %%%%%%%%%%%%%%%%%
+
+\section{Manipulating \Robject{qPCRset} objects}
+\label{SEC:objectmanipulation}
+
+Depending on the design of the qPCR card and how the data is to be analysed, it will sometimes be necessary to manipulate the \Robject{qPCRset} objects in different ways, such as by combining several objects or altering the layout of features x samples.
+
+\subsection{Multiple samples present on each plate}
+
+The result from each qPCR run of a given card typically gets presented together, such as in a file with 384 lines, one per feature, for 384 well plates. However, some cards may contain multiple samples, such as commercial cards that are designed to be loaded with two separate samples and then include 192 individual features. 
+
+Per default, \Rfunction{readCtData} reads each card into a \Rclass{qPCRset} object as consisting of a single sample, and hence one column in the Ct data matrix. When this is not the case, the data can subsequently be split into the correct features x samples (rows x columns) dimensions using the function \Rfunction{changeCtLayout}. The parameter \Rfunction{sample.order} is a vector, that for each feature in the \Rclass{qPCRset} indicates what sample it actually belongs to, and reformats all the information in the \Rclass{qPCRset} (\Rfunction{exprs}, \Rfunction{featureCategory}, \Rfunction{flag} etc.) accordingly. The actual biological samples are likely to differ on each card, so \Rfunction{sample.order} merely indicates the \textit{location} of different samples among the features present in the input data. 
+
+
+<<Multiple samples per card>>=
+# Example with 2  or 4 samples per 384 well card.
+sample2.order	<- rep(c("subSampleA", "subSampleB"), each=192)
+sample4.order	<- rep(c("subA", "subB", "subC", "subD"), each=96)
+# Splitting the data into all individual samples
+qPCRnew2 <- changeCtLayout(sr.norm, sample.order=sample2.order)
+show(qPCRnew2)
+qPCRnew4 <- changeCtLayout(sr.norm, sample.order=sample4.order)
+show(qPCRnew4)
+@
+
+As with the other functions that manipulate the Ct data, the operation is stored in the \Rfunction{history} slot of the \Rclass{qPCRset} for future reference.
+
+<<Card history>>=
+getCtHistory(qPCRnew4)
+@
+
+\subsection{Combining multiple \Robject{qPCRset} objects}
+
+
+In some cases it might be desirable to merge multiple qPCRset objects, that have been read into R or processed individually. The \Rpackage{HTqPCR} package contains two functions for combining multiple \Robject{qPCRset} objects into one, by either adding columns (samples) or rows (features). This can be done for either identical samples across multiple different cards (such as a 384 well plate), or if more samples have been run on cards with the same layout.
+
+\begin{description}
+    \item[\Rfunction{cbind}] combines data assuming that all experiments have been carried out on identical cards, i.e.~that \Robject{featureNames, featureType, featurePos} and \Robject{featureClass} is identical across all the qPCRset objects. The number of features in each object much be identical, but number of samples can vary.
+    \item[\Rfunction{rbind}] combines data assuming that the same samples have been analysed using different qPCR cards. The number of samples in each object must be identical, but the number of features can vary.
+\end{description}
+
+Both these functions should be used with some care; consider e.g.~whether to normalize before or after joining the samples, and what method to use.
+
+In the examples here objects with different normalisation are combined, although in a real study the \Robject{qPCRset} objects would typically contain different data. 
+
+<<Combine qPCRset objects>>=
+q.comb	<- cbind(q.norm[,1:3], sr.norm[,4], nr.norm[,c(1,5,6)])
+q.comb
+q.comb2	<- rbind(q.norm, sr.norm[1:4,], nr.norm)
+q.comb2
+@
+
+As with other functions where the \Robject{qPCRset} object is being manipulated, the information is stored in the \Robject{history} slot.
+
+<<Combined card history>>=
+getCtHistory(q.comb)
+@
+
 
 
 %%%%%%%%%%%%%%%% FINISHING  %%%%%%%%%%%%%%%%%

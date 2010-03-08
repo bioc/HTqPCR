@@ -13,8 +13,8 @@ setCategory(q, Ct.max = 35, Ct.min = 10, replicates = TRUE, quantile = 0.9, grou
   \item{Ct.max}{numeric, the maximum tolerated Ct value. Everything above this will be "Undetermined".}
   \item{Ct.min}{numeric, the minimum tolerated Ct value. Everything below this will be "Unreliable".}
   \item{replicates}{logical, should Ct values from genes replicated within each sample be collapsed for the standard deviation.}
-  \item{quantile}{numeric from 0 to 1, the quantile interval accepted for standard deviations. \code{NULL} means that variation between replicates is not used for setting the categories. See details.}
-  \item{groups}{vector, grouping of cards, for example biological or technical replicates}
+  \item{quantile}{numeric from 0 to 1, the quantile interval accepted for standard deviations. See details. \code{NULL} means that variation between replicates is not used for setting the categories. }
+  \item{groups}{vector, grouping of cards, for example biological or technical replicates. \code{NULL} means that variation between groups os samples is not assessed, same as for setting \code{quantile=NULL}.}
   \item{flag}{logical, should categories also be set to "Unreliable" according to the content of \code{flag(q)}.}
   \item{flag.out}{character vector, if \code{flag=TRUE}, what are the flag(s) to be set as "Unreliable".}
   \item{verbose}{logical, should a summary about category counts per sample be printed to the prompt.}

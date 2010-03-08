@@ -1,4 +1,4 @@
-ttestCtData <-
+mannwhitneyCtData <-
 function(q,
 	groups	= NULL,
 	calibrator, 
@@ -32,23 +32,19 @@ function(q,
 		calibrator	<- groups[1]
 	g1	<- groups==calibrator
 	g2	<- groups!=calibrator
-	# Perform the t-test. 
-	t.tests	<- lapply(data2, function(x) {
+	# Perform the Mann-Whitney test. 
+	mw.tests	<- lapply(data2, function(x) {
 		x	<- as.matrix(x)
-		if (all(x==x[1,1])) {
-			# Have to remove samples where all values are identical!
-			list(p.value=1, statistic=NA, estimate=c(x[1,1], x[1,1]))
-		} else {
-			res	<- t.test(x[,g1], x[,g2], alternative=alternative, paired=paired, ...)
-			# Calculate mean for each group (not available if paired=TRUE)
-			res[["estimate"]]	<- c(mean(x[,g1]), mean(x[,g2]))
-			res
-		}})
+		res	<- wilcox.test(x[,g1], x[,g2], alternative=alternative, paired=paired, exact=FALSE, ...)
+		# Calculate mean for each group 
+		res[["estimate"]]	<- c(mean(x[,g1]), mean(x[,g2]))
+		res
+		})
 	# Collect output
-	means	<- t(sapply(t.tests, "[[", "estimate"))
+	means	<- t(sapply(mw.tests, "[[", "estimate"))
 	colnames(means)	<- c("meanCalibrator", "meanTarget")
-	p.value	<- sapply(t.tests, "[[", "p.value")
-	t.value	<- sapply(t.tests, "[[", "statistic")
+	p.value	<- sapply(mw.tests, "[[", "p.value")
+	mw.value	<- sapply(mw.tests, function(x) paste(names(x[["statistic"]]), "=", x[["statistic"]]))
 	genes	<- sapply(feats, "[[", 1)
 	featurePos	<- sapply(featPos, paste, collapse=";")
 	# Make adjusted p-value
@@ -57,7 +53,7 @@ function(q,
 	cal	<- grep(calibrator, colnames(means))
 	FC	<- means[, "meanTarget"] - means[, "meanCalibrator"]
 	FC2	<- 2^(-FC)
-	out	<- data.frame(genes, featurePos, t.value, p.value, adj.p.value, FC, FC2, means, row.names=1:length(genes))
+	out	<- data.frame(genes, featurePos, mw.value, p.value, adj.p.value, FC, FC2, means, row.names=1:length(genes))
 	# Indicate reliability of measure
 	for (l in unique(groups)) {
 		new.cat	<- rep("OK", length(data2))
@@ -68,7 +64,7 @@ function(q,
 		out[, paste("category", ifelse(l==calibrator, "Calibrator", "Target"), sep="")]	<- new.cat
 	}
 	# Return output, sorted by p-value if requested
-	names(out)	<- c("genes", "feature.pos", "t.test", "p.value", "adj.p.value", "ddCt", "FC", colnames(means), grep("category", colnames(out), value=TRUE))
+	names(out)	<- c("genes", "feature.pos", "MW.value", "p.value", "adj.p.value", "ddCt", "FC", colnames(means), grep("category", colnames(out), value=TRUE))
 	if (sort)
 		out	<- out[order(out$p.value),]
 	out

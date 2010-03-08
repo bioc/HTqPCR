@@ -23,7 +23,7 @@
 \alias{flag<-}
 \alias{n.wells}
 \alias{n.samples}
-\alias{history}
+\alias{getCtHistory}
 \alias{show,qPCRset-method}
 \alias{summary,qPCRset-method}
 
@@ -66,11 +66,13 @@ Objects can be created by calls of the form \code{new("qPCRset", ...)} or using 
     \item{featurePos<-}{\code{signature(object = "qPCRset", value = "character")}: Replaces the position of each feature (gene) on the card. }
     \item{featureClass}{\code{signature(object = "qPCRset")}: Extracts the feature class for each gene. }
     \item{featureClass<-}{\code{signature(object = "qPCRset", value = "factor")}: Replaces the feature class for each gene. }
-    \item{featureCategory}{\code{signature(object = "qPCRset")}: Extracts the category of each Ct value. }
+    \item{featureCategory}{\code{signature(object = "qPCRset")}: Extracts the category of each Ct value.}
     \item{featureCategory<-}{\code{signature(object = "qPCRset", value = "data.frame")}: Replaces the category of each Ct value. }
+    \item{flag}{\code{signature(object = "qPCRset")}: Extracts the flag of each Ct value. }
+    \item{flag<-}{\code{signature(object = "qPCRset", value = "data.frame")}: Replaces the flag of each Ct value. }
      \item{n.wells}{\code{signature(object = "qPCRset")}: Extracts information about the number of wells on the card. }
      \item{n.samples}{\code{signature(object = "qPCRset")}: Extracts information about the number of samples in the set. }
-     \item{history}{\code{signature(object = "qPCRset")}: Extracts information about the hisotyr of the object (which operations have been performed on it). }
+     \item{getCtHistory}{\code{signature(object = "qPCRset")}: Extracts information about the hisotyr of the object (which operations have been performed on it). }
     \item{show}{\code{signature(object = "qPCRset")}: Displays som abbreviated information about the data object.}
     \item{summary}{\code{signature(object = "qPCRset")}: Displays a summary of the Ct values from each sample. }
 	 }
@@ -81,7 +83,7 @@ Objects can be created by calls of the form \code{new("qPCRset", ...)} or using 
 \examples{
 data(qPCRraw)
 show(qPCRraw)
-history(qPCRraw)
+getCtHistory(qPCRraw)
 showClass("qPCRset")
 str(qPCRraw)
 }
