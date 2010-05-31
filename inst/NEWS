@@ -1,8 +1,22 @@
-        **************************************************
-        *                                                *
-        *              2.11 SERIES NEWS                  *
-        *                                                *
-        **************************************************
+CHANGES IN VERSION 1.3:
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o 
+
+NEW FEATURES
+
+    o 
+
+BUG FIXES
+
+    o Fixed bug in plotCtOverview affecting sample names starting with "M".
+    o Corrected rbind so all data frames contain characters, not factors.
+    o Changed a "stop" to a "warning" in readCtData.
+    o Corrected qPCRset subsetting when columns are selected multiple times.
+    o Added dupcor parameter to limmaCtData.
+
+CHANGES IN VERSION 1.1:
 
 SIGNIFICANT USER-VISIBLE CHANGES
 
@@ -14,60 +28,36 @@ NEW FEATURES
 
     o n.data parameter to readCtData in case there are results from 
     multiple cards in each file.
- 
-    o getCt and setCt added as accessor and replacement functions (alias 
+     o getCt and setCt added as accessor and replacement functions (alias 
     for exprs).
-
     o Add "fold change" to the output from limmaCtData and ttestCtData.
-
     o Add p-value adjustment to ttestCtData.
-
     o Expanded functionality of plotCtPCA.
-
     o Added function changeCtLayout for data containing multiple samples 
     per 384 well plate.
-
     o Added rbind and cbind functions for combining qPCRset objects.
-
     o Added mannwhitneyCtData for Mann-Whitney test between samples.
 
 BUG FIXES
 
     o Fixed a bug in readCtData regarding file paths.
-
     o Added "fake" featureNames to readCtData if not present in input.
-
     o Gives error if no column for Ct values is specified.
-
     o Fix bug in ttestCtData(.., paired=TRUE) (cf Jeremy Hetzel).
-
     o Added sample names to flag and featureCategory in readCtData.
-
     o Fixed bugs in plotting functions when exprs() only has 1 column.
-
     o Reset "par" after using plotCtCard.
-
     o Fixed bug with parameter "samples" in readCtData.
-
     o featureCategory only required if unR=TRUE and/or unD=TRUE in 
     plotCtCard.
-
     o In plotCtDensity, remove samples were all values=NA.
-
     o The internal function panel.Ct.cor adjusted to handle NAs.
-
     o Remove all samples with just NA in plotCtPCA.
-
     o Fixed bug in ttestCtData (results always reported as "OK" not
     "Undetermined")
     o Add sampleNames to flag() and featureCategory()
 
-
-        **************************************************
-        *                                                *
-        *              2.10 SERIES NEWS                  *
-        *                                                *
-        **************************************************
+CHANGES IN VERSION 1.0:
 
 SIGNIFICANT USER-VISIBLE CHANGES
 

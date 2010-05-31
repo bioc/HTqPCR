@@ -28,8 +28,8 @@ function(..., deparse.level=1) {
 		# Bind together the remaining info - matrix
 		exprs(out)	<- rbind(exprs(out), exprs(qsets[[i]]))
 		# Bind together the remaining info - data frames
-		flag(out)	<- as.data.frame(rbind(as.matrix(flag(out)), as.matrix(flag(qsets[[i]]))))
-		featureCategory(out)	<- as.data.frame(rbind(as.matrix(featureCategory(out)), as.matrix(featureCategory(qsets[[i]]))))
+		flag(out)	<- as.data.frame(rbind(as.matrix(flag(out)), as.matrix(flag(qsets[[i]]))), stringsAsFactors=FALSE)
+		featureCategory(out)	<- as.data.frame(rbind(as.matrix(featureCategory(out)), as.matrix(featureCategory(qsets[[i]]))), stringsAsFactors=FALSE)
 		# Bind together the remaining info - vectors
 		featureNames(out)	<- c(featureNames(out), featureNames(qsets[[i]]))
 		featurePos(out)	<- c(featurePos(out), featurePos(qsets[[i]]))

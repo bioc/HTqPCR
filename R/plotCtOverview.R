@@ -48,7 +48,7 @@ function(q,
   			ciw   <- qt(0.975, n) * stdev / sqrt(n)
   			c(M=means, SD=ciw)
 		})
-	M	<- data.all[grep("M", rownames(data.all)),,drop=FALSE]
+	M	<- data.all[grep("^M", rownames(data.all)),,drop=FALSE]
 	# If calibrator, take the ratio compared to that
 	if (!missing(calibrator)) {
 		cali.mean	<- M[grep(calibrator, rownames(M)),drop=FALSE]

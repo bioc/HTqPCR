@@ -15,7 +15,7 @@ plotCtOverview(q, cards = TRUE, genes, groups, calibrator, replicates = TRUE, co
   \item{q}{object of class qPCRset.}
   \item{cards}{integer, the cards (samples) to use. Defaults to all.}
   \item{genes}{vector selecting the features to show. See Details.}
-  \item{groups}{vector with groups to average the samples across. If missing all the samples are displayed individually.}
+  \item{groups}{vector with groups to average the samples across. If missing all the samples are displayed individually. See Details.}
   \item{calibrator}{the value in \code{groups} to use as calibrator sample. See Details.}
   \item{replicates}{logical, if should values from replicated features in each sample be collapsed or kept separate.}
   \item{col}{colours to use for each sample or group.}
@@ -28,6 +28,8 @@ plotCtOverview(q, cards = TRUE, genes, groups, calibrator, replicates = TRUE, co
 If a calibrator is chosen all values will be displayed relative to this, i.e. as Ct(sample)-Ct(calibrator). If there is no calibrator, the full Ct values are shown, including 95\% confidence interval if selected. For confidence intervals when there is a calibrator, it's the variation across Ct(sample)-average(Ct(calibrator)) that is shown.	
 
 When setting \code{replicates=TRUE} it is often better to specify \code{genes} by name rather than selecting for example the first 10 features using 1:10. This literally only takes the first 10 rows of the data, although some of these features might be replicated elsewhere in the data.
+
+The purpose of \code{group} is to tell plotCtOverview if any of the samples should be treated as biological replicates, in addition to the technical replicates that might be present on each plate. With e.g. 4 samples and \code{groups=c("A", "B", "C", "D")} they're each treated individually, and only replicates features on each plate are considered. However, \code{groups=c("WT", "WT", "WT", "mutant")} means that the first 3 are treated as biological replicates; hence for each gene in the barplot there'll be one bar for WT and one for mutant.
 }
 
 \value{A figure is produced in the current graphics device.}

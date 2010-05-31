@@ -5,7 +5,7 @@
 \description{Function for detecting differentially expressed genes from high-throughput qPCR Ct values, based on the framework from the \code{limma} package. Multiple comparisons can be performed, and across more than two groups of samples.}
 
 \usage{
-limmaCtData(q, design = NULL, contrasts, sort = TRUE, stringent = TRUE, ndups = 1, spacing = NULL, ...)
+limmaCtData(q, design = NULL, contrasts, sort = TRUE, stringent = TRUE, ndups = 1, spacing = NULL, dupcor, ...)
 }
 
 \arguments{
@@ -16,6 +16,7 @@ limmaCtData(q, design = NULL, contrasts, sort = TRUE, stringent = TRUE, ndups = 
   \item{stringent}{boolean, for flagging results as "Undetermined". See details.}
   \item{ndups}{integer, the number of times each feature is present on the card.}
   \item{spacing}{integer, the spacing between duplicate spots, spacing=1 for consecutive spots}
+  \item{dupcor}{list, the output from \code{duplicateCorrelation}. See details.}
   \item{\dots}{any other arguments are passed to \code{lmFit}, \code{contrasts.fit},  \code{eBayes} or \code{decideTests}.}
 }
 
@@ -24,6 +25,8 @@ limmaCtData(q, design = NULL, contrasts, sort = TRUE, stringent = TRUE, ndups = 
 All results are assigned to a category, either "OK" or "Unreliable" depending on the input Ct values. If \code{stringent=TRUE} any unreliable or undetermined measurements among technical and biological replicates will result in the final result being "Undetermined". For \code{stringent=FALSE} the result will be "OK" unless at least half of the Ct values for a given gene are unreliable/undetermined.
 
 Note that when there are replicated features in the samples, each feature is assumed to be present the same number of times, and with regular spacing between replicates. Reordering the sample by \code{featureNames} and setting \code{spacing=1} is recommendable.
+
+If technical sample replicates are available, \code{dupcor} can be used. It is a list containing the estimated correlation between replicates. \code{limmaCtData} will then take this correlation into account when fitting a model for each gene. It can be calculate using the function \code{\link[limma]{duplicateCorrelation}}. Technical replicates and duplicated spots can't be assessed at the same time though, so if \code{dupcor} is used, \code{ndups} should be 1. 
 }
 
 \value{A list of data.frames, one for each column in \code{design}, or for each comparison in \code{contrasts} if this matrix is supplied. Each component of the list contains the result of the given comparisons, with one row per gene and has the columns:

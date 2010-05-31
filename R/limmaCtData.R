@@ -6,18 +6,21 @@ function(q,
 	stringent	= TRUE,
 	ndups	= 1,
 	spacing	= NULL,
+	dupcor,
 	...)
 {
 	# Get the data
 	data	<- exprs(q)
 	featPos	<- featurePos(q)
-	# If there are duplicates, calculate the correlation between them
-	if (ndups>1) {
-		dup.cor <- duplicateCorrelation(data, ndups=ndups, spacing=spacing, design=design)
-		temp	<- unwrapdups(featPos, ndups=ndups, spacing=spacing)
-		featPos	<- apply(temp, 1, paste, collapse=";")
-	} else {
-		dup.cor <- NULL
+	# If there are duplicates, calculate the correlation between them, unless there are technical replicates
+	if (missing(dupcor)) {
+		if (ndups>1) {
+			dup.cor <- duplicateCorrelation(data, ndups=ndups, spacing=spacing, design=design)
+			temp	<- unwrapdups(featPos, ndups=ndups, spacing=spacing)
+			featPos	<- apply(temp, 1, paste, collapse=";")
+		} else {
+			dup.cor <- NULL
+		}
 	}
 	# Do the limma fitting
 	fit	<- lmFit(data, design=design, ndups=ndups, spacing=spacing, correlation=dup.cor$consensus, ...)

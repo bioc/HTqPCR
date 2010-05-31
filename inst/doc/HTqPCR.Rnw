@@ -146,7 +146,7 @@ Generally, information can be handled in the \Rclass{qPCRset} using the same kin
 
 The use of \Rfunction{exprs} might not be intuitive to users who are not used to dealing with microarray data, and hence \Rclass{ExpressionSet}. The functions \Rfunction{getCt} and \Rfunction{setCt<-} that perform the same operations as \Rfunction{exprs} and \Rfunction{exprs<-} are therefore also included. For the sake of consistency, \Rfunction{exprs} will be used throughout this vignette for accessing the Ct values, but it can be replaced by \Rfunction{getCt} in all examples.
 
-\Robject{qPCRset} objects can also be combined or reformatted in various ways (see~\ref{SEC:objectmanipulation}).
+\Robject{qPCRset} objects can also be combined or reformatted in various ways (see section~\ref{SEC:objectmanipulation}).
 
 Two \Robject{qPCRset} test objects are included in the package: one containing raw data, and the other containing processed values. An example is shown in figure~\ref{fig:objectfunctions}, along with some of the functions that can typically be used for manipulating \Rclass{qPCRset} objetcs.
 
@@ -196,7 +196,7 @@ The \Rclass{qPCRset} object looks like:
 show(raw)
 @
 
-NB: This section only deals with data presented in general data format. For notes regarding other types of input data, see section~\ref{SEC:formats}.
+NB: This section only deals with data presented in general data format. For notes regarding other types of input data, see section~\ref{SEC:formats}. This section also briefly deals with other types of qPCR results besides Ct data, notably the Cp values reported by the LightCycler System from Roche.
 
 
 
@@ -725,7 +725,7 @@ This section shows how to compare two samples, e.g.~the control and long starvat
 <<Perform standard t-test>>=
 qDE.ttest <- ttestCtData(sr.norm[,1:4], groups=files$Treatment[1:4], 
 calibrator="Control")
-qDE.ttest[1:10,]
+head(qDE.ttest)
 @
 
 \subsection{Two sample types - Mann-Whitney}
@@ -735,7 +735,7 @@ When only two samples are of interest, these can also be compared using a Mann-W
 <<Perform Mann-Whitney test>>=
 qDE.mwtest <- mannwhitneyCtData(sr.norm[,1:4], groups=files$Treatment[1:4], 
 calibrator="Control")
-qDE.mwtest[1:10,]
+head(qDE.mwtest)
 @
 
 \subsection{Multiple sample types - limma}
@@ -762,7 +762,7 @@ The result is a list with one component per comparison. Each component is simila
 <<limma test output>>=
 class(qDE.limma)
 names(qDE.limma)
-qDE.limma[["LS-C"]][1:10,]
+head(qDE.limma[["LS-C"]])
 @
 
 Furthermore, there is a ``Summary'' component at the end where each feature is denoted with -1, 0 or 1 to respectively indicate down-regulation, no change, or up-regulation in each of the comparisons.
@@ -875,6 +875,13 @@ readLines(file.path(path, "SDS_sample.txt"), n=20)
 
 For these files the parameter \Rfunction{SDS=TRUE} can be set in \Rfunction{readCtData}. The first 100 lines of each file will be scanned, and all lines preceding the actual data will be skipped (in this case 17), even when the length of the header varies between files.
 
+\subsection{Non-Ct data}
+
+Some qPCR systems, such as the LightCycler from Roche, don't provide the results as Ct values, but instead as crossing points (Cp).
+Ct values are measured at the exponential phase of amplification by drawing a line parallel to the x-axis of the real-time fluorescence intensity curve (fit point method), whereas Cp  (second derivative method) calculates the fractional cycle where the second derivative of the real-time fluorescence intensity curve reaches the maximum value~\citep{Luu-The:2005}.
+
+As long as all samples and features are quantified using the same method,  it shouldn't matter whether Ct or Cp values are being used to test for significant differences between samples. The analysis of e.g.~LightCycler Cp data can therefore proceed as outlined in this vignette. One thing to bear in mind though, is that for Ct values a value of 40 generally means NA, and above 35 is considered unreliable, however these numbers will be different for Cp. When using the filtering methods to set results as being ``OK", ``Unreliable" and ``Undetermined",  the parameters in e.g.~\Rfunction{setCategory(..., Ct.max = 35, Ct.min = 10, ...)} and \Rfunction{readCtData(..., na.value, ...)} will need to be adjusted accordingly.
+
 %%%%%%%%%%%%%%%% "REFORMATTING" qPCRsets  %%%%%%%%%%%%%%%%%
 
 \section{Manipulating \Robject{qPCRset} objects}
@@ -940,6 +947,11 @@ getCtHistory(q.comb)
 \newpage
 \section{Concluding remarks}
 
+Use the function \Rfunction{news} to see what bug fixes and updates have been incorporated into \Rpackage{HTqPCR}. For example:
+<<Check HTqPCR news>>=
+news(Version>1.2, package="HTqPCR")
+@
+
 This vignette was generated using:
 
 <<sessionInfo, echo=FALSE,results=tex>>=
@@ -948,6 +960,7 @@ toLatex(sessionInfo())
 
 %%%%%%%%%%%%%%%% BIBLIOGRAPHY  %%%%%%%%%%%%%%%%%
 
+\newpage
 \bibliographystyle{abbrvnat}
 \bibliography{HTqPCR-Bibliography}
 

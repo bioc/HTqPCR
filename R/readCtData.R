@@ -50,7 +50,7 @@ function(files,
 		sample	<- read.delim(file=readfile, header=header)
 		nspots	<- nrow(sample)
 		if (nspots != n.features*n.data[1])
-			stop(paste(n.features, "gene names (rows) expected, got", nspots))
+			warning(paste(n.features, "gene names (rows) expected, got", nspots))
 	}
 	nspots	<- n.features
 	# Initializing qPCRset object.

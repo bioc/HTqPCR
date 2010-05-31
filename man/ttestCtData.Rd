@@ -37,7 +37,7 @@ The argument \code{p.adjust} is passed on to the \code{\link{p.adjust}} function
 	\item{ddCt}{The delta delta Ct values.}
 	\item{FC}{The fold change; 2^(-ddCt).}
 	\item{meanCalibrator}{The average expression level of each gene in the calibrator sample(s).}
-	\item{meanTarget)}{The average expression level of each gene in the target sample(s).}
+	\item{meanTarget}{The average expression level of each gene in the target sample(s).}
 	\item{categoryCalibrator}{The category of the Ct values ("OK", "Undetermine") across the calibrator.}
 	\item{categoryTarget}{Ditto for the target.}
 }
