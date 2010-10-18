@@ -1,7 +1,7 @@
 Package: HTqPCR
 Type: Package
 Title: Automated analysis of high-throughput qPCR data
-Version: 1.4.0
+Version: 1.5.0
 Author: Heidi Dvinge, Paul Bertone
 Maintainer: Heidi Dvinge <heidi@ebi.ac.uk>
 Description: Analysis of Ct values from quantitative real-time PCR (qPCR) assays. Data can be analyzed in high throughput across multiple conditions or replicates, and in spatially-defined formats such ABI TaqMan Low Density Arrays and conventional 96- or 384-well plates. HTqPCR handles data loading, quality assessment, normalization, visualization and parametric or non-parametric testing for statistical significance in Ct values between features (e.g. genes, microRNAs).
