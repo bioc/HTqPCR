@@ -20,7 +20,7 @@ importFrom(utils, read.delim)
 
 #exportPattern("^[[:alpha:]]+")
 
-export('cbind.qPCRset', 'changeCtLayout', 'clusterCt', 'featureCategory', 'featureCategory<-', 'featureClass', 'featureClass<-', 'featurePos', 'featurePos<-', 'featureType', 'featureType<-', 'filterCategory', 'filterCtData', 'flag', 'flag<-', 'getCt', 'getCtHistory', 'heatmapSig', 'limmaCtData', 'mannwhitneyCtData', 'n.samples', 'n.wells', 'normalizeCtData', 'plotCtBoxes', 'plotCtCategory', 'plotCtCor', 'plotCtDensity', 'plotCtHeatmap', 'plotCtHistogram', 'plotCtOverview', 'plotCtPCA', 'plotCtReps', 'plotCtRQ', 'plotCtScatter', 'plotCtSignificance', 'plotCtVariation', 'plotCVBoxes', 'plotCtLines', 'plotCtCard', 'rbind.qPCRset', 'readCtData', 'setCategory', 'setCt<-', 'summary', 'ttestCtData', 'plotCtPairs')
+export('cbind.qPCRset', 'changeCtLayout', 'clusterCt', 'featureCategory', 'featureCategory<-', 'featureClass', 'featureClass<-', 'featurePos', 'featurePos<-', 'featureType', 'featureType<-', 'filterCategory', 'filterCtData', 'flag', 'flag<-', 'getCt', 'getCtHistory', 'heatmapSig', 'limmaCtData', 'mannwhitneyCtData', 'n.samples', 'n.wells', 'normalizeCtData', 'plotCtArray', 'plotCtBoxes', 'plotCtCategory', 'plotCtCor', 'plotCtDensity', 'plotCtHeatmap', 'plotCtHistogram', 'plotCtOverview', 'plotCtPCA', 'plotCtReps', 'plotCtRQ', 'plotCtScatter', 'plotCtSignificance', 'plotCtVariation', 'plotCVBoxes', 'plotCtLines', 'plotCtCard', 'rbind.qPCRset', 'readCtData', 'setCategory', 'setCt<-', 'summary', 'ttestCtData', 'plotCtPairs')
 
 exportMethods(
     "[",

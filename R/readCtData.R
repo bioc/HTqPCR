@@ -47,7 +47,7 @@ function(files,
 	if (!SDS) {
 		# Read a single file, to get dimensions etc.
 		readfile	<- ifelse(is.null(path), files[1], file.path(path, files[1]))
-		sample	<- read.delim(file=readfile, header=header)
+		sample	<- read.delim(file=readfile, header=header, ...)
 		nspots	<- nrow(sample)
 		if (nspots != n.features*n.data[1])
 			warning(paste(n.features, "gene names (rows) expected, got", nspots))
@@ -91,7 +91,7 @@ function(files,
 		if (is.null(na.value)) {
  			data[data=="Undetermined"]	<- NA
  		} else {
- 			data[data %in% c("Undetermined", "No Ct")] <- na.value
+ 			data[data %in% c("Undetermined", "No Ct", "999")] <- na.value
  		}
 		out@exprs[,cols]	<- apply(data, 2, function(x) as.numeric(as.character(x)))
 		if (!is.null(flag)) {
@@ -109,10 +109,10 @@ function(files,
 			# Add default values if any are missing from file
 			featPos	<- paste("feature", 1:nspots, sep="")
 			if (!is.null(position))
-				featPos	<- as.character(sample[,position])
+				featPos	<- as.character(sample[1:nspots,position])
 			featType	<- factor(rep("Target", nspots))
 			if (!is.null(type))		
-				featType	<- sample[,type]
+				featType	<- sample[1:nspots,type]
 			featName	<- paste("feature", 1:nspots, sep="")
 			if (!is.null(feature)) 
 				featName	<- as.character(sample[1:nspots,feature])

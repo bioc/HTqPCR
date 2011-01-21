@@ -19,9 +19,9 @@ function(q,
 	}
     # Plotting parameters
     if (missing(col))
-    	col	<- colorRampPalette(brewer.pal(11, "Spectral"))(ncol(data))
+    		col	<- colorRampPalette(brewer.pal(11, "Spectral"))(ncol(data))
     if (missing(names))
-    	names	<- sampleNames(q)[cards]
+    		names	<- sampleNames(q)[cards]
     par(mar=mar, ...)
     # Plotting stritified by spot type, gene class or simple version
     if (!is.null(stratify)) {

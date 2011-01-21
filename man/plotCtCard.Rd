@@ -30,15 +30,13 @@ plotCtCard(q, card = 1, plot = "Ct", main, nrow = 16, ncol = 24, col, col.range,
 
 \details{This function may be used to plot the values of any well-specific information, such as the raw or normalized Ct values, or categorical data such as flag, gene class etc. The image follows the layout of an actual HTqPCR card. 
 	
-%The color range is used to represent the range of values for the statistic. Especially for dCt and ddCt it can be an advantage to set zero.center=TRUE to make the colour scale symmetric around 0.
-
 If \code{unR=TRUE} these will wells will be crossed out using a diagonal cross (X), whereas \code{unD=TRUE} will be marked with a horisontal/vertical cross.}
 
 \value{A plot is created on the current graphics device.}
 
 \author{Heidi Dvinge}
 
-\seealso{\code{\link{image}}}
+\seealso{\code{\link{image}}, and \code{\link{plotCtArray}} for plotting data from other high-throughput qPCR platforms (e.g. Fluidigm arrays).}
 
 \examples{
 # Load some example data
