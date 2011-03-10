@@ -16,6 +16,9 @@ BUG FIXES
 
     o Fixed bug in readCtData causing repeats of featureType and featurePos
     when n.data>1.
+    o Corrected bugs for subsetting when flag() or featureCategory() are 
+    missing.
+    o Modified "history" slot for manually created qPCRset objects.
 
 CHANGES IN VERSION 1.3:
 

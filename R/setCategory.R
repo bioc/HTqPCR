@@ -114,6 +114,8 @@ function(q,
 		}
 	}
 	# Add to the history of the object
+	if (nrow(getCtHistory(out))==0)
+		out@history	<- data.frame(history="Manually created qPCRset object.", stringsAsFactors=FALSE)
 	out@history	<- rbind(out@history, capture.output(match.call(setCategory)))
 	# Return the filtered object, if desired
 	invisible(out)

@@ -66,7 +66,7 @@ function(q,
 			if (add.featurenames)
 				text(ct.mean[,i+1], ct.var[,i+1], ct.mean[,1], pch=NULL, ...)
 		} # for i	
-	} # if type	
+	} # if type
 	# Return the results if desired
 	invisible(list(Var=ct.var, Mean=ct.mean))	
 }

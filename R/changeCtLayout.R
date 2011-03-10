@@ -21,6 +21,10 @@ function(q, sample.order) {
 	featureNames(out)	<- featureNames(q)[as.numeric(sample.order)==1]
 	featureType(out)	<- featureType(q)[as.numeric(sample.order)==1]
 	featureClass(out)	<- featureClass(q)[as.numeric(sample.order)==1]
+	
+	# Opdate "history" slot
+	if (nrow(getCtHistory(q))==0)
+		q@history	<- data.frame(history="Manually created qPCRset object.", stringsAsFactors=FALSE)
 	out@history	<- rbind(q@history, capture.output(match.call(changeCtLayout)))
 
 	# Return the new object

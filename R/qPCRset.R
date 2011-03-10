@@ -63,18 +63,22 @@ setMethod("[", "qPCRset",
 function(x, i, j, drop=FALSE) {
 	if(!missing(i)) {
 		exprs(x) <- exprs(x)[i, , drop=FALSE]
+		if (nrow(featureCategory(x))>0)
+			featureCategory(x) <- featureCategory(x)[i, , drop=FALSE]
+		if (nrow(flag(x))>0)
+			flag(x)	<- flag(x)[i, , drop=FALSE]
 		featureNames(x) <- featureNames(x)[i]
 		featureType(x) <- featureType(x)[i]
 		featurePos(x) <- featurePos(x)[i]
 		featureClass(x) <- featureClass(x)[i]
-		featureCategory(x) <- featureCategory(x)[i, , drop=FALSE]
-		flag(x)	<- flag(x)[i, , drop=FALSE]
 	}
 	if(!missing(j)) {
 		exprs(x) <- exprs(x)[, j, drop=FALSE]
+		if (ncol(featureCategory(x))>0)
+			featureCategory(x)	<- featureCategory(x)[, j, drop=FALSE]
+		if (ncol(flag(x))>0)
+			flag(x)	<- flag(x)[, j, drop=FALSE]
 		sampleNames(x)	<- sampleNames(x)[j]
-		featureCategory(x)	<- featureCategory(x)[, j, drop=FALSE]
-		flag(x)	<- flag(x)[, j, drop=FALSE]
 	}
 	return(x)
 })
@@ -153,7 +157,11 @@ function(object, value) {
 
 featureCategory <-
 function(object) {x<-object@featureCategory;
-          	colnames(x)<-sampleNames(object); 
+			if (sum(dim(x))!=0) {
+				if (length(featureNames(object))==nrow(x))
+          			rownames(x)<-make.unique(featureNames(object)); 
+          		colnames(x)<-sampleNames(object);
+          	} 
 			x}
 
 
@@ -180,7 +188,10 @@ function(object, value) {
 
 flag <-
 function(object) {x<-object@flag;
-           	colnames(x)<-sampleNames(object); 
+			if (sum(dim(x))!=0) {
+          		rownames(x)<-make.unique(featureNames(object)); 
+          		colnames(x)<-sampleNames(object);
+          	}
 			x}
 
 `flag<-` <-

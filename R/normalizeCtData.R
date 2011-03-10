@@ -102,6 +102,8 @@ function(q,
 	# Replace with the normalised Ct exprs
 	exprs(q)	<- data.norm
 	# Add to the history of the object
+	if (nrow(getCtHistory(q))==0)
+		q@history	<- data.frame(history="Manually created qPCRset object.", stringsAsFactors=FALSE)
 	q@history	<- rbind(q@history, capture.output(match.call(normalizeCtData)))
 	# Return the normalised object
 	q

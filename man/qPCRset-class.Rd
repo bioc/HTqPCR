@@ -72,8 +72,8 @@ Objects can be created by calls of the form \code{new("qPCRset", ...)} or using 
     \item{flag<-}{\code{signature(object = "qPCRset", value = "data.frame")}: Replaces the flag of each Ct value. }
      \item{n.wells}{\code{signature(object = "qPCRset")}: Extracts information about the number of wells on the card. }
      \item{n.samples}{\code{signature(object = "qPCRset")}: Extracts information about the number of samples in the set. }
-     \item{getCtHistory}{\code{signature(object = "qPCRset")}: Extracts information about the hisotyr of the object (which operations have been performed on it). }
-    \item{show}{\code{signature(object = "qPCRset")}: Displays som abbreviated information about the data object.}
+     \item{getCtHistory}{\code{signature(object = "qPCRset")}: Extracts information about the history of the object (which operations have been performed on it). }
+    \item{show}{\code{signature(object = "qPCRset")}: Displays some abbreviated information about the data object.}
     \item{summary}{\code{signature(object = "qPCRset")}: Displays a summary of the Ct values from each sample. }
 	 }
 }
