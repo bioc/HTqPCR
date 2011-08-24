@@ -1,4 +1,4 @@
-normalizeCtData <-
+normalizeCtData	<- 
 function(q, 
 	norm	= "deltaCt",
 	deltaCt.genes	= NULL,
@@ -24,6 +24,9 @@ function(q,
 		} else if (rank.type=="pseudo.mean") {
 			ref.data	<- apply(data.Ctmax, 1, mean, na.rm=TRUE)
 		}
+		# Mark + replace NA values with something temporary
+		na.index	<- is.na(ref.data)
+		ref.data[na.index] <- 30
 		# Run the rank.invariant function
 		data.rankinvar	<- apply(data, 2, normalize.invariantset, ref=ref.data)
 	}
@@ -38,6 +41,8 @@ function(q,
 			ri.genes	<- sapply(data.rankinvar, "[[", "i.set")
 			# Remove those with too high Ct values
 			ri.genes[Ct.index]	<- FALSE
+			# Remove those that were all NA for potentially other reasons
+			ri.genes[na.index,]	<- FALSE
 			# Select those to use here
 			ri.count	<- rowSums(ri.genes)
 			if (missing(scale.rank.samples)) 
@@ -67,6 +72,8 @@ function(q,
 				ri.genes	<- ri.sub[["i.set"]]
 				# Remove those that don't pass the Ct.max criteria
 				ri.genes[Ct.index[,i]]	<- FALSE
+				# Remove those that are NA for other reasons
+				ri.genes[na.index]	<- FALSE
 				if (sum(ri.genes)==0) {
 	           		warning(paste("\tNo rank invariant genes were found for sample ", sampleNames(q)[i], "; sample not normalized\n", sep=""))
 	           		next
@@ -108,4 +115,3 @@ function(q,
 	# Return the normalised object
 	q
 }
-

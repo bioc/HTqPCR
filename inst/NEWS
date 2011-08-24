@@ -1,3 +1,17 @@
+CHANGES IN VERSION 1.7:
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o 
+
+NEW FEATURES
+
+    o 
+
+BUG FIXES
+
+    o Check for all-NA features in normalizeCtData rank-invariant methods.
+
 CHANGES IN VERSION 1.5:
 
 SIGNIFICANT USER-VISIBLE CHANGES
