@@ -1,4 +1,4 @@
-plotCtCategory <-
+plotCtCategory	<- 
 function(q,
 	cards	= TRUE,
 	by.feature	= FALSE,
@@ -9,18 +9,25 @@ function(q,
 	...) 
 {
 	# Get the data
-	data	<- featureCategory(q)[,cards]
+	data	<- featureCategory(q)[,cards,drop=FALSE]
 	colnames(data)	<- sampleNames(q)[cards]
 	# Count categories. NB: Not every category always present.
 	cats	<- sort(unique(unlist(data)))
 	temp	<- array(0, c(length(cats), ncol(data)), list(cats, colnames(data)))
-	count <- sapply(1:ncol(data), function(x) {xx <- table(data[,x]); temp[names(xx),x] <- xx; temp[,x]})
+	if (length(temp)==1) {
+		count <- matrix(nrow(data), dimnames=list(cats, colnames(data)))
+	} else {
+		count <- sapply(1:ncol(data), function(x) {xx <- table(data[,x]); temp[names(xx),x] <- xx; temp[,x]})
+	}
 	colnames(count)	<- colnames(data)
 	# Various plotting parameters
 	if (missing(col))
-		col	<- c("#66C2A5", "#9E0142", "#FEE08B")
+		col	<- c("#66C2A5", "#9E0142", "#FEE08B", "grey", "lightblue", "orange")
 	if (missing(main))
 		main	<- "Feature categories"
+	# Adjust colours so they're consistent even if not all categories are represented
+	all.cat.levels	<- sort(unique(unlist(featureCategory(q))))
+	col	<- col[1:length(all.cat.levels)][all.cat.levels %in% cats] 
 	# If features rather than samples is to be plotted
 	if (by.feature) {
 		data.num	<- apply(data, 2, function(x) as.numeric(as.factor(x)))
@@ -59,4 +66,3 @@ function(q,
 		barplot(count, col=col, las=2, legend.text=cats, xlim=xlim, main=main, ...)
 	}
 }
-

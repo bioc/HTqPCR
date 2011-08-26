@@ -5,13 +5,14 @@ function(q,
 	scale.rank.samples,
 	rank.type	= "pseudo.median",
 	Ct.max	= 35,
+	geo.mean.ref,
 	verbose	= TRUE) 
 {
 	# Extract the data
 	data	<- exprs(q)
 	data.norm	<- data
 	# Get the normalisation method
-	method	<- match.arg(norm, c("quantile", "scale.rankinvariant", "norm.rankinvariant", "deltaCt"))
+	method	<- match.arg(norm, c("quantile", "scale.rankinvariant", "norm.rankinvariant", "deltaCt", "geometric.mean"))
 	# Some general stuff that will be used by both rank.invariant methods
 	if (method %in% c("scale.rankinvariant", "norm.rankinvariant")) {
 		# Index to use for too high Ct values
@@ -59,7 +60,7 @@ function(q,
 			if (verbose) {
 				cat(c("Scaling Ct values\n\tUsing rank invariant genes:", paste(featureNames(q)[ri.index], collapse=" "), "\n"))
 				cat(c("\tScaling factors:", format(ri.scale, digits=3), "\n"))
-				}
+			}
 		},
 		norm.rankinvariant = {
 			# Print info
@@ -104,7 +105,24 @@ function(q,
 				if (verbose)
 					cat(paste("\tCard ", c, ":\tMean=", format(refCt, dig=4), "\tStdev=", format(refsd, dig=3), "\n", sep=""))
 			}
-		}
+		},
+		geometric.mean = {
+			# For each column, calculate the geometric mean of Ct values<Ct.max
+			geo.mean	<- apply(data, 2, function(x) {
+									xx <- log2(subset(x, x<Ct.max))
+									2^mean(xx)})
+			# Which sample to scale to
+			if (missing(geo.mean.ref))
+				geo.mean.ref <- 1
+			# Calculate the scaling factor
+			geo.scale	<- geo.mean/geo.mean[geo.mean.ref]
+			# Adjust the data accordingly
+			data.norm <- t(t(data) * geo.scale)
+			if (verbose) {
+				cat(c("Scaling Ct values\n\tUsing geometric mean within each sample\n"))
+				cat(c("\tScaling factors:", format(geo.scale, digits=3), "\n"))
+			}
+		} # switch 
 	)
 	# Replace with the normalised Ct exprs
 	exprs(q)	<- data.norm

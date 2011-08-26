@@ -389,8 +389,8 @@ If one doesn't want to include unreliable or undetermined data in part of the an
 
 \section{Normalisation}
 
-Four different normalisation methods are currently implemented in \Rpackage{HTqPCR}. Two of these 
-(\Rfunction{scale.rankinvariant} and \Rfunction{deltaCt}) will scale each individual sample by a given value, whereas the remaining two will change the distribution of Ct values. 
+Five different normalisation methods are currently implemented in \Rpackage{HTqPCR}. Three of these 
+(\Rfunction{scale.rankinvariant},  \Rfunction{deltaCt} and \Rfunction{geometric.mean}) will scale each individual sample by a given value, whereas the remaining two will change the distribution of Ct values. 
 
 \begin{description}
 \item[quantile] Will make the distribution of Ct values more or less identical across samples.
@@ -402,9 +402,10 @@ applied to the entire sample.
 only the features found in a certain number of samples, and used the average Ct value 
 of those as a scaling factor for correcting all Ct values.
 \item[deltaCt] Calculates the standard deltaCt values, i.e.~subtracts the mean of the chosen controls from all other values in the feature set.
+\item[geometric.mean] Calculates the average Ct value for each sample, and scales all Ct values according to the ratio of these mean Ct values across samples. There are some indications that this is beneficial for e.g.~miRNA studies~\citep{Mestdagh:2009}.
 \end{description}
 
-For the rank-invariant normalisation methods, Ct values above a given threshold can be excluded from the calculation of a scaling factor or normalisation curve. This is useful so that a high proportion of ``Undetermined'' Ct values (assigned a value of 40 by default) in a given sample doesn't bias the normalisation of the remaining features.
+For the rank-invariant normalisation and geometric mean methods, Ct values above a given threshold can be excluded from the calculation of a scaling factor or normalisation curve. This is useful so that a high proportion of ``Undetermined'' Ct values (assigned a value of 40 by default) in a given sample doesn't bias the normalisation of the remaining features.
 
 In the example dataset, Gene1 and Gene60 correspond to 18S RNA and GADPH, and are used as endogenous controls. Normalisation methods can be run as follows:
 
@@ -413,6 +414,7 @@ q.norm <- normalizeCtData(raw.cat, norm="quantile")
 sr.norm <- normalizeCtData(raw.cat, norm="scale.rank")
 nr.norm <- normalizeCtData(raw.cat, norm="norm.rank")
 d.norm <- normalizeCtData(raw.cat, norm="deltaCt", deltaCt.genes=c("Gene1", "Gene60"))
+g.norm <- normalizeCtData(raw.cat, norm="geometric.mean")
 @
 
 Comparing the raw and normalised values gives an idea of how much correction has been performed (Figure~\ref{fig:two}), as shown below for the \Robject{q.norm} object. Note that the scale on the y-axis varies.
@@ -432,15 +434,17 @@ plot(exprs(raw), exprs(q.norm), pch=20, main="Quantile normalisation", col=col)
 plot(exprs(raw), exprs(sr.norm), pch=20, main="Rank invariant scaling", col=col)
 plot(exprs(raw), exprs(nr.norm), pch=20, main="Rank invariant normalisation", col=col)
 plot(exprs(raw), exprs(d.norm), pch=20, main="deltaCt normalisation", col=col)
+plot(exprs(raw), exprs(g.norm), pch=20, main="Geometric mean normalisation", col=col)
 # Just a single sample, across methods
-plot(exprs(raw)[,1], exprs(q.norm)[,1], pch=20, col=col2[1], main="Comparison of methods for sample 1", ylim=c(-10,40))
-points(exprs(raw)[,1], exprs(sr.norm)[,1], pch=20, col=col2[2])
-points(exprs(raw)[,1], exprs(nr.norm)[,1], pch=20, col=col2[3])
-points(exprs(raw)[,1], exprs(d.norm)[,1], pch=20, col=col2[4])
-legend(8, 40, legend=c("Quantile", "Rank.invariant scaling", "Rank.invariant normalization", "deltaCt"), col=col2, lwd=2, bty="n")
+plot(exprs(raw)[,3], exprs(q.norm)[,3], pch=20, col=col2[1], main="Comparison of methods for sample 1", ylim=c(-10,40))
+points(exprs(raw)[,3], exprs(sr.norm)[,3], pch=20, col=col2[2])
+points(exprs(raw)[,3], exprs(nr.norm)[,3], pch=20, col=col2[3])
+points(exprs(raw)[,3], exprs(d.norm)[,3], pch=20, col=col2[4])
+points(exprs(raw)[,3], exprs(g.norm)[,3], pch=20, col=col2[5])
+legend(8, 40, legend=c("Quantile", "Rank.invariant scaling", "Rank.invariant normalization", "deltaCt", "Geometric.mean"), col=col2, lwd=2, bty="n")
 @
 \end{center}
-\caption{Normalized versus raw data, using a separate colour for each sample. The raw data is plotted along the x-axis and the normalised along y. The last plot is a comparison between normalization methods for the fist sample, still with the raw Ct values along the x-axis.}
+\caption{Normalized versus raw data, using a separate colour for each sample. The raw data is plotted along the x-axis and the normalised along y. The last plot is a comparison between normalization methods for the third sample, still with the raw Ct values along the x-axis.}
 \label{fig:two}
 \end{figure}
 
@@ -563,14 +567,16 @@ Plotting the densities of the different normalisation methods lends insight into
 \begin{figure}
 \begin{center}
 <<fig =TRUE , echo =FALSE >>=
-par(mfrow=c(2,2), mar=c(2,2,2,1))
+par(mfrow=c(3,2), mar=c(2,2,2,1))
+plotCtDensity(qPCRraw, main="Raw Ct values")
 plotCtDensity(q.norm, main="quantile")
 plotCtDensity(sr.norm, main="scale.rankinvariant")
 plotCtDensity(nr.norm, main="norm.rankinvariant")
 plotCtDensity(d.norm, main="deltaCt")
+plotCtDensity(g.norm, main="geometric.mean")
 @
 \end{center}
-\caption{Densities of Ct values for all samples after each of the four normalisation methods. The peak at the high end originates from features with ``Undetermined'' Ct values, which are assigned the Ct value 40 by default. }
+\caption{Densities of Ct values for all samples before and after each of the normalisation methods. The peak at the high end originates from features with ``Undetermined'' Ct values, which are assigned the Ct value 40 by default. }
 \label{fig:all.density}
 \end{figure}
 
