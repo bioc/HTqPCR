@@ -1,4 +1,4 @@
-normalizeCtData	<- 
+normalizeCtData <-
 function(q, 
 	norm	= "deltaCt",
 	deltaCt.genes	= NULL,
@@ -97,7 +97,7 @@ function(q,
 			# Run though all cards; perform internal normalisation
 			for (c in 1:ncol(data)) {
 				# Calculate the control genes
-				refCt	<- mean(data[c.index,c])
+				refCt	<- mean(data[c.index,c], na.rm=TRUE)
 				refsd	<- sd(data[c.index,c], na.rm=TRUE)
 				# Difference for target and controls
 				data.norm[,c] <- data[,c]-refCt
@@ -133,3 +133,4 @@ function(q,
 	# Return the normalised object
 	q
 }
+

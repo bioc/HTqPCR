@@ -142,6 +142,9 @@ function(files,
 	sampleNames(out)	<- samples
 	colnames(flag(out))	<- samples
 	colnames(featureCategory(out))	<- samples
+	# Add warnings if there are any NAs
+	if (any(is.na(exprs(out))))
+		warning("One or more samples contain NAs. Consider replacing these with e.g. Ct=40 now.")
 	# Add to the history of the object
 	out@history	<- data.frame(history=capture.output(match.call(readCtData)), stringsAsFactors=FALSE)
 	# Return the object	

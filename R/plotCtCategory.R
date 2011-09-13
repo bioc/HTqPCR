@@ -1,4 +1,4 @@
-plotCtCategory	<- 
+plotCtCategory <-
 function(q,
 	cards	= TRUE,
 	by.feature	= FALSE,
@@ -66,3 +66,4 @@ function(q,
 		barplot(count, col=col, las=2, legend.text=cats, xlim=xlim, main=main, ...)
 	}
 }
+

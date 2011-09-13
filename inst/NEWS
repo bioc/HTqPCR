@@ -6,11 +6,16 @@ SIGNIFICANT USER-VISIBLE CHANGES
 
 NEW FEATURES
 
-    o 
+    o Added "geometric.mean" as a normalisation method.
 
 BUG FIXES
 
     o Check for all-NA features in normalizeCtData rank-invariant methods.
+    o Modified plotCtCategory to handle cases with only 1 sample.
+    o Modified plotCtCategory to make colours more consistent.
+    o Fix in deltaCt for normalization with NAs
+    o Added warning in readCtData if there are NAs in input
+
 
 CHANGES IN VERSION 1.5:
 
@@ -42,7 +47,7 @@ SIGNIFICANT USER-VISIBLE CHANGES
 
 NEW FEATURES
 
-    o 
+    o Added dupcor parameter to limmaCtData.
 
 BUG FIXES
 
@@ -50,7 +55,6 @@ BUG FIXES
     o Corrected rbind so all data frames contain characters, not factors.
     o Changed a "stop" to a "warning" in readCtData.
     o Corrected qPCRset subsetting when columns are selected multiple times.
-    o Added dupcor parameter to limmaCtData.
 
 CHANGES IN VERSION 1.1:
 
