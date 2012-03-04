@@ -16,6 +16,7 @@ importFrom(RColorBrewer, brewer.pal)
 importFrom(stats, aggregate, approx, as.dist, biplot, cor, density,
            hclust, heatmap, median, prcomp, qnorm, qt, quantile,
            rect.hclust, sd, t.test, var, p.adjust)
+importFrom(stats4, summary)
 importFrom(utils, read.delim)
 
 #exportPattern("^[[:alpha:]]+")

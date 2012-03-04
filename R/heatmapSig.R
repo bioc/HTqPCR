@@ -23,7 +23,7 @@ function(qDE,
  	}
 	# Set margin sizes
 	if (missing(mar)) {
-		mar	<- c(0.4*max(nchar(colnames(data)))+5, 0.4*max(nchar(qDE[[1]][,"genes"]))+1)
+		mar	<- c(0.4*max(nchar(colnames(data)))+5, 0.4*max(nchar(as.character(qDE[[1]][,"genes"])))+1)
 	}
 	# Set clustering method
 	if (dist=="pearson") {
