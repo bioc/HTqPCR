@@ -14,8 +14,8 @@ function(q,
 	} else {
 		stop("Data is of wrong format, only qPCRsets and matrices are supported.\n")
 	}
-	# Calculate the correlation
-	c	<- cor(data)
+	# Calculate 1 minus the correlation
+	x	<- 1-cor(data)
 	# Set the colours
 	if (missing(col)) {
 		col	<- colorRampPalette(brewer.pal(11, "Spectral"))(20)
@@ -32,6 +32,5 @@ function(q,
 		mar	<- c(mar, mar)
 	}
 	# Plot
-	heatmap.2(c, col=col, breaks=b, scale="none", dendrogram="row", trace="none", main=main, density.info="none", mar=mar, ...)
+	heatmap.2(x, col=col, breaks=b, scale="none", dendrogram="row", trace="none", main=main, density.info="none", mar=mar, ...)
 }
-

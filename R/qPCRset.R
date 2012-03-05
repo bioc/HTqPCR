@@ -2,18 +2,7 @@
 # Define the class
 #------------------------------------------------------------------
 
-setClass("qPCRset",
-	representation(featureNames	= "character",
-					sampleNames	= "character",
-					exprs	= "matrix",
-					flag	= "data.frame",
-					featureType	= "factor",
-					featurePos	= "character",
-					featureClass	= "factor",
-					featureCategory	= "data.frame",
-					history	= "data.frame"),
-	prototype = list(featureNames=character(), sampleNames=character(), exprs=matrix(), flag=data.frame(), featureType=factor(), featurePos=character(), featureClass=factor(), featureCategory=data.frame(), history=data.frame(stringsAsFactors=FALSE))
-)
+setClass("qPCRset", contains = "eSet", representation(CtHistory="data.frame"))
 
 
 #------------------------------------------------------------------
@@ -21,20 +10,17 @@ setClass("qPCRset",
 # Accessors 
 #------------------------------------------------------------------
 
-setMethod("exprs",
-          signature(object="qPCRset"),
-          function(object) {x<-object@exprs; 
-          					rownames(x)<-featureNames(object); 
-          					colnames(x)<-sampleNames(object); 
-          					x})
+setMethod("exprs", signature(object="qPCRset"), definition = 
+    function (object) {x <- assayDataElement(object, "exprs"); rownames(x) <- featureNames(object); x}
+)
 
 setMethod("featureNames",
           signature(object="qPCRset"),
-          function(object) object@featureNames)
+          function(object) as.character(fData(object)$featureNames))
 
 setMethod("sampleNames",
           signature(object="qPCRset"),
-          function(object) object@sampleNames)
+          function(object) colnames(exprs(object)))
 
 
 #------------------------------------------------------------------
@@ -42,17 +28,17 @@ setMethod("sampleNames",
 # Replacement methods
 #------------------------------------------------------------------
 
-setReplaceMethod("exprs", 
-			signature(object="qPCRset", value="matrix"),
-			function(object, value) {object@exprs <- value; object})
+setReplaceMethod("exprs", signature(object="qPCRset"), definition = 
+    function (object, value) assayDataElementReplace(object, "exprs", value)
+)
 
 setReplaceMethod("featureNames",
 			signature(object="qPCRset", value="character"),
-			function(object, value) {object@featureNames <- value; object})
+			function(object, value) {fData(object)[,"featureNames"]<- value; object})
 
 setReplaceMethod("sampleNames",
 			signature(object="qPCRset", value="character"),
-			function(object, value) {object@sampleNames <- value; object})
+			function(object, value) {colnames(exprs(object))<-value; object})
 
 
 #------------------------------------------------------------------
@@ -67,10 +53,7 @@ function(x, i, j, drop=FALSE) {
 			featureCategory(x) <- featureCategory(x)[i, , drop=FALSE]
 		if (nrow(flag(x))>0)
 			flag(x)	<- flag(x)[i, , drop=FALSE]
-		featureNames(x) <- featureNames(x)[i]
-		featureType(x) <- featureType(x)[i]
-		featurePos(x) <- featurePos(x)[i]
-		featureClass(x) <- featureClass(x)[i]
+		featureData(x) <- featureData(x)[i,,drop=FALSE]
 	}
 	if(!missing(j)) {
 		exprs(x) <- exprs(x)[, j, drop=FALSE]
@@ -78,7 +61,7 @@ function(x, i, j, drop=FALSE) {
 			featureCategory(x)	<- featureCategory(x)[, j, drop=FALSE]
 		if (ncol(flag(x))>0)
 			flag(x)	<- flag(x)[, j, drop=FALSE]
-		sampleNames(x)	<- sampleNames(x)[j]
+		phenoData(x)	<- phenoData(x)[j,,drop=FALSE]
 	}
 	return(x)
 })
@@ -94,9 +77,10 @@ function(object) {
 	cat("Size: ", length(featureNames(object)), "features,", ncol(exprs(object)), "samples\n")
 	cat("Feature types:\t\t", paste(levels(featureType(object)), collapse=", "), "\n")
 	cat("Feature names:\t\t", featureNames(object)[1:3], "...\n")
-	cat("Feature classes:\t", paste(levels(featureClass(object)), collapse=", "), "\n")
+	cat("Feature classes:\t\t", paste(levels(featureClass(object)), collapse=", "), "\n")
 	cat("Feature categories:\t", paste(unique(unlist(featureCategory(object))), collapse=", "), "\n")
-	cat("Sample names:\t\t", sampleNames(object)[1:3], "...\n")
+	n	<- ifelse(length(sampleNames(object))>2, 3, length(sampleNames(object)))
+	cat("Sample names:\t\t\t", sampleNames(object)[1:n], "...\n")
 })
 
 setMethod("summary","qPCRset",
@@ -117,86 +101,75 @@ function(object) {
 #------------------------------------------------------------------
 
 getCt <- 
-function(object) {x<-object@exprs; 
-          	rownames(x)<-featureNames(object); 
-          	colnames(x)<-sampleNames(object); 
-          	x}
+function(object) {exprs(object)}
 
-`setCt<-` <- 
-function(object, value) {
-			object@exprs <- value; object}
+`setCt<-`	<- 
+function (object, value) {exprs(object)<-value; object}
 
 
 #------------------------------------------------------------------
 # Feature position
 #------------------------------------------------------------------
 
-featurePos <-
-function(object) object@featurePos
+setMethod("featurePos", signature = "qPCRset", definition = 
+    function (object) as.character(fData(object)$featurePos)
+)
 
-`featurePos<-` <-
-function(object, value) {
-			object@featurePos <- value; object}
+setReplaceMethod("featurePos", signature = "qPCRset", definition = 
+    function (object, value) {fData(object)[,"featurePos"] <- value; object}
+)
 
 
 #------------------------------------------------------------------
 # Feature types
 #------------------------------------------------------------------
 
-featureType <-
-function(object) object@featureType
+setMethod("featureType", signature = "qPCRset", definition = 
+    function (object) as.character(fData(object)$featureType)
+)
 
-`featureType<-` <-
-function(object, value) {
-			object@featureType <- value; object}
+setReplaceMethod("featureType", signature = "qPCRset", definition = 
+    function (object, value) {fData(object)[,"featureType"] <- value; object}
+)
 
 
 #------------------------------------------------------------------
 # Feature categories
 #------------------------------------------------------------------
 
-featureCategory <-
-function(object) {x<-object@featureCategory;
-			if (sum(dim(x))!=0) {
-				if (length(featureNames(object))==nrow(x))
-          			rownames(x)<-make.unique(featureNames(object)); 
-          		colnames(x)<-sampleNames(object);
-          	} 
-			x}
+setMethod("featureCategory", signature = "qPCRset", definition = 
+    function (object) {x <-assayDataElement(object, "featureCategory"); rownames(x) <- make.unique(featureNames(object)); x}
+)
 
-
-`featureCategory<-` <-
-function(object, value) {
-			object@featureCategory <- value; object}
+setReplaceMethod("featureCategory", signature = "qPCRset", definition = 
+    function (object, value) assayDataElementReplace(object, "featureCategory", value)
+)
 
 
 #------------------------------------------------------------------
 # Feature classes
 #------------------------------------------------------------------
 
-featureClass <-
-function(object) object@featureClass
+setMethod("featureClass", signature = "qPCRset", definition = 
+    function (object) as.character(fData(object)$featureClass)
+)
 
-`featureClass<-` <-
-function(object, value) {
-			object@featureClass <- value; object}
+setReplaceMethod("featureClass", signature = "qPCRset", definition = 
+    function (object, value) {fData(object)[,"featureClass"] <- value; object}
+)
 
 
 #------------------------------------------------------------------
 # Flags
 #------------------------------------------------------------------
 
-flag <-
-function(object) {x<-object@flag;
-			if (sum(dim(x))!=0) {
-          		rownames(x)<-make.unique(featureNames(object)); 
-          		colnames(x)<-sampleNames(object);
-          	}
-			x}
+setMethod("flag", signature = "qPCRset", definition = 
+    function (object) {x <-assayDataElement(object, "flag"); rownames(x) <- make.unique(featureNames(object)); x}
+)
 
-`flag<-` <-
-function(object, value) {
-			object@flag <- value; object}
+setReplaceMethod("flag", signature = "qPCRset", definition = 
+    function (object, value) assayDataElementReplace(object, "flag", value)
+)
 
 
 #------------------------------------------------------------------
@@ -204,10 +177,10 @@ function(object, value) {
 #------------------------------------------------------------------
 
 n.samples <-
-function(object) ncol(object@exprs)
+function(object) ncol(exprs(object))
 
 n.wells <-
-function(object) nrow(object@exprs)
+function(object) nrow(exprs(object))
 
 
 #------------------------------------------------------------------
@@ -215,5 +188,7 @@ function(object) nrow(object@exprs)
 #------------------------------------------------------------------
 
 getCtHistory <-
-function(object) object@history
+function(object) object@CtHistory
 
+`setCtHistory<-`	<- 
+function(object, value) {object@CtHistory <- value; object} 

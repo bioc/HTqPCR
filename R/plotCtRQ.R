@@ -63,7 +63,7 @@ function(qDE,
 	old.par <- par(no.readonly = TRUE)
 	on.exit(par(old.par))
 	if (missing(mar)) {
-		max	<- max(nchar(as.character(data$genes[index])))
+		max	<- max(nchar(data$genes[index]))
 		mar	<- c(0.5*max+3,3,2,1)
 	}
 	if (missing(main))

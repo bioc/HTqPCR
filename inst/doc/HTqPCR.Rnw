@@ -1018,7 +1018,9 @@ n	<- 48
 mat	<- matrix(as.numeric(temp$Value), ncol=n, nrow=n, byrow=FALSE)
 mat[mat>40]	<- NA
 # Create qPCRset
-raw <- new("qPCRset", exprs=mat, sampleNames=paste("S", 1:n, sep=""), featureNames=paste("A", 1:n, sep=""), featureCategory=as.data.frame(array("OK", c(n,n))))
+raw <- new("qPCRset", exprs=mat, featureCategory=as.data.frame(array("OK", c(n,n))))
+sampleNames(raw) <- paste("S", 1:n, sep="") 
+featureNames(raw)	<- paste("A", 1:n, sep="")
 @
 
 Alternatively, the data can be read directly into a \Robject{qPCRset} in a 1x2304 format using \Rfunction{readCtData}, and then re-formatted into 48x48. This will automatically read in additional information such as feature names, positions and categories (Failed/Passed) if available.
@@ -1058,7 +1060,7 @@ Functions specifically designed for such qPCR platforms are still on a test stag
 
 Use the function \Rfunction{news} to see what bug fixes and updates have been incorporated into \Rpackage{HTqPCR}. For example:
 <<Check HTqPCR news>>=
-news(Version>1.3, package="HTqPCR")
+news(Version>1.5, package="HTqPCR")
 @
 
 This vignette was generated using:

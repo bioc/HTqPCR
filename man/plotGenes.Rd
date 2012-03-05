@@ -40,7 +40,8 @@ samples <- exFiles <- read.delim(file.path(system.file("exData", package="HTqPCR
 # Draw dfferent plots
 plotCtLines(qPCRraw, genes=1:10)
 plotCtLines(qPCRraw, genes=1:10, groups=samples$Treatment, xlim=c(0,3))
-plotCtLines(qPCRraw, genes=1:10, col=as.numeric(featureType(qPCRraw)[1:10]))
+feat	<- as.numeric(as.factor(featureType(qPCRraw)[1:10]))
+plotCtLines(qPCRraw, genes=1:10, col=feat)
 }
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the

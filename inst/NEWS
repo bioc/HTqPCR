@@ -1,3 +1,20 @@
+CHANGES IN VERSION 1.9:
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o Altered plotCtCor to plot 1-correlation instead of correlation.
+    o Altered qPCRset object to inherit from eSet. This extends the range
+    of (meta) data that can be included.
+
+NEW FEATURES
+
+    o qPCRset now contains slots for phenoData, featureData, protocol
+    experiment etc. inherited from eSet.
+
+BUG FIXES
+
+    o 
+
 CHANGES IN VERSION 1.7:
 
 SIGNIFICANT USER-VISIBLE CHANGES

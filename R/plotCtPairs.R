@@ -17,11 +17,15 @@ function(q,
 	# Prepare colours
 	col.selection	<- brewer.pal(10, "Spectral")[c(1,8,9,5,10,3,7,2,4,6)]
 	if (length(col)==1 & col=="class") {
-		colours	<- col.selection[as.numeric(featureClass(q))]
-		col.names	<- levels(featureClass(q))
+		feat	<- as.factor(featureClass(q))
+		if (length(feat)==0)
+			stop("No featureClass available for object 'q'")
+		colours	<- col.selection[as.numeric(feat)]
+		col.names	<- levels(feat)
 	} else if (length(col)==1 & col=="type") {
-		colours	<- col.selection[as.numeric(featureType(q))]
-		col.names	<- levels(featureType(q)) 
+		feat	<- as.factor(featureType(q))
+		colours	<- col.selection[as.numeric(feat)]
+		col.names	<- levels(feat)
 	} else {
 		colours	<- col	
 	}

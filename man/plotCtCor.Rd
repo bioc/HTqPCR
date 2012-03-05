@@ -18,7 +18,9 @@ plotCtCor(q, col, col.range = c(0, 1), main, mar, ...)
   \item{\dots}{any other arguments will be passed to the \code{heatmap.2} function.}
 }
 
-\details{This function may be used to cluster the samples based on Ct values and present the result in a heatmap. Per default the colours are a rainbow scale from 0 to 1.
+\details{This function may be used to cluster the samples based on Ct values and present the result in a heatmap. Per default the colours are a rainbow scale from 0 to 1. 
+
+The correlation is calculated as 1 - the 'Pearson' method. Prior to version 1.9.1 the value plotted was the correlation directly, rather than 1-correlation.
 	
 A standard heatmap is drawn, but this can be modified extensively using the arguments available in the \code{heatmap.2} function.}
 
@@ -32,7 +34,7 @@ A standard heatmap is drawn, but this can be modified extensively using the argu
 \examples{
 data(qPCRraw)
 plotCtCor(qPCRraw)
-plotCtCor(qPCRraw, col.range=c(0.5,0.8))
+plotCtCor(qPCRraw, col.range=c(0,0.6))
 }
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the

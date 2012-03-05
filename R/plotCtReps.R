@@ -14,7 +14,7 @@ function(q,
 	} else {
 		stop("Data is of wrong format, only qPCRsets and matrices are supported.\n")
 	}
-	genes	<- rownames(data)
+	genes	<- featureNames(q)
 	data	<- data[,card]
 	# Split the data by replicated genes
 	split.data	<- split(data, genes)

@@ -28,13 +28,17 @@ function(q,
     	groups	<- list(dat=c(data), sample=rep(sampleNames(q)[cards], each=nrow(data)))
     	# Divide the data
  	    if (stratify=="type") {
- 	    	groups[["strat"]]	<- rep(featureType(q), ncol(data))
-  			n	<- length(levels(featureType(q)))
-  			lev	<- levels(featureType(q))
+ 	    	feat	<- as.factor(featureType(q))
+ 	    	groups[["strat"]]	<- rep(feat, ncol(data))
+  			n	<- length(levels(feat))
+  			lev	<- levels(feat)
   		} else if (stratify=="class") {
- 	    	groups[["strat"]]	<- rep(featureClass(q), ncol(data))
-  			n	<- length(levels(featureClass(q)))
-  			lev	<- levels(featureClass(q))
+  			feat	<- as.factor(featureClass(q))
+  			if (length(feat)==0)
+				stop("No featureClass available for object 'q'")
+ 	    	groups[["strat"]]	<- rep(feat, ncol(data))
+  			n	<- length(levels(feat))
+  			lev	<- levels(feat)
 		} else {
 			stop(paste("Plot type \'", stratify, "\'isn't implemented\n"))
 		}

@@ -62,9 +62,8 @@ function(q,
 	}	
 	# Add to the history of the object
 	if (nrow(getCtHistory(q))==0)
-		q@history	<- data.frame(history="Manually created qPCRset object.", stringsAsFactors=FALSE)
-	q@history	<- rbind(q@history, capture.output(match.call(filterCtData)))
+		setCtHistory(q)	<- data.frame(history="Manually created qPCRset object.", stringsAsFactors=FALSE)
+	setCtHistory(q)	<- rbind(getCtHistory(q), capture.output(match.call(filterCtData)))
 	# Return the filtered object
 	q	
 }
-

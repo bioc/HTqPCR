@@ -4,38 +4,68 @@
 \docType{data}
 
 \title{Example processed qPCR data}
-\description{Processed version of the raw data in qPCRraw, to be used as example data in the HTqPCR package. The data has been processed with \code{setCategory} to mark the feature categories, and with \code{normalizaHTqPCRCard} using rank invariant normalisation.}
+\description{Processed version of the raw data in qPCRraw, to be used as example data in the HTqPCR package. The data has been processed with \code{setCategory} to mark the feature categories, and with \code{normalizeCtData} using rank invariant normalisation.}
 
 \usage{data(qPCRpros)}
 
 \format{
   The format is:
-Formal class 'qPCRset' [package ".GlobalEnv"] with 9 slots
-  ..@ featureNames   : chr [1:384] "Gene1" "Gene2" "Gene3" "Gene4" ...
-  ..@ sampleNames    : chr [1:6] "sample1" "sample2" "sample3" "sample4" ...
-  ..@ exprs          : num [1:384, 1:6] 11.5 33.9 28 26.9 25 ...
-  .. ..- attr(*, "dimnames")=List of 2
-  .. .. ..$ : chr [1:384] "Gene1" "Gene2" "Gene3" "Gene4" ...
-  .. .. ..$ : chr [1:6] "sample1" "sample2" "sample3" "sample4" ...
-  ..@ flag           :'data.frame':	384 obs. of  6 variables:
-  .. ..$ V1: chr [1:384] "Passed" "Passed" "Passed" "Passed" ...
-  .. ..$ V2: chr [1:384] "Passed" "Passed" "Passed" "Passed" ...
-  .. ..$ V3: chr [1:384] "Passed" "Passed" "Passed" "Passed" ...
-  .. ..$ V4: chr [1:384] "Flagged" "Flagged" "Passed" "Passed" ...
-  .. ..$ V5: chr [1:384] "Passed" "Passed" "Passed" "Passed" ...
-  .. ..$ V6: chr [1:384] "Passed" "Passed" "Passed" "Passed" ...
-  ..@ featureType    : Factor w/ 2 levels "Endogenous Control",..: 1 2 2 2 2 2 2 2 2 2 ...
-  ..@ featurePos     : chr [1:384] "A1" "A2" "A3" "A4" ...
-  ..@ featureClass   : Factor w/ 3 levels "Kinase","Marker",..: 3 3 2 1 2 3 1 3 3 3 ...
-  ..@ featureCategory:'data.frame':	384 obs. of  6 variables:
-  .. ..$ X1: chr [1:384] "Unreliable" "OK" "OK" "OK" ...
-  .. ..$ X2: chr [1:384] "Unreliable" "Undetermined" "OK" "OK" ...
-  .. ..$ X3: chr [1:384] "Unreliable" "OK" "OK" "OK" ...
-  .. ..$ X4: chr [1:384] "OK" "OK" "OK" "OK" ...
-  .. ..$ X5: chr [1:384] "Unreliable" "Undetermined" "OK" "OK" ...
-  .. ..$ X6: chr [1:384] "OK" "OK" "OK" "OK" ...
-  ..@ history        :'data.frame':	1 obs. of  1 variable:
-  .. ..$ history: chr "Default HTqPCR qPCRset object with processed data."
+Formal class 'qPCRset' [package ".GlobalEnv"] with 8 slots
+  ..@ CtHistory        :'data.frame':	3 obs. of  1 variable:
+  .. ..$ history: chr [1:3] "readCtData(files = exFiles$File, path = exPath)" "setCategory(q = qPCRraw, groups = exFiles$Treatment)" "normalizeCtData(q = qPCRpros, norm = \"norm.rankinvariant\")"
+  ..@ assayData        :<environment: 0x1180c9400> 
+  ..@ phenoData        :Formal class 'AnnotatedDataFrame' [package "Biobase"] with 4 slots
+  .. .. ..@ varMetadata      :'data.frame':	1 obs. of  1 variable:
+  .. .. .. ..$ labelDescription: chr "Sample numbering"
+  .. .. ..@ data             :'data.frame':	6 obs. of  1 variable:
+  .. .. .. ..$ sample: int [1:6] 1 2 3 4 5 6
+  .. .. ..@ dimLabels        : chr [1:2] "sampleNames" "sampleColumns"
+  .. .. ..@ .__classVersion__:Formal class 'Versions' [package "Biobase"] with 1 slots
+  .. .. .. .. ..@ .Data:List of 1
+  .. .. .. .. .. ..$ : int [1:3] 1 1 0
+  ..@ featureData      :Formal class 'AnnotatedDataFrame' [package "Biobase"] with 4 slots
+  .. .. ..@ varMetadata      :'data.frame':	4 obs. of  1 variable:
+  .. .. .. ..$ labelDescription: chr [1:4] NA NA NA NA
+  .. .. ..@ data             :'data.frame':	384 obs. of  4 variables:
+  .. .. .. ..$ featureNames: Factor w/ 191 levels "Gene1","Gene10",..: 1 104 115 126 137 148 159 170 181 2 ...
+  .. .. .. ..$ featureType : Factor w/ 2 levels "Endogenous Control",..: 1 2 2 2 2 2 2 2 2 2 ...
+  .. .. .. ..$ featurePos  : Factor w/ 384 levels "A1","A10","A11",..: 1 12 18 19 20 21 22 23 24 2 ...
+  .. .. .. ..$ featureClass: Factor w/ 3 levels "Kinase","Marker",..: 1 2 1 3 2 2 2 3 1 2 ...
+  .. .. ..@ dimLabels        : chr [1:2] "featureNames" "featureColumns"
+  .. .. ..@ .__classVersion__:Formal class 'Versions' [package "Biobase"] with 1 slots
+  .. .. .. .. ..@ .Data:List of 1
+  .. .. .. .. .. ..$ : int [1:3] 1 1 0
+  ..@ experimentData   :Formal class 'MIAME' [package "Biobase"] with 13 slots
+  .. .. ..@ name             : chr ""
+  .. .. ..@ lab              : chr ""
+  .. .. ..@ contact          : chr ""
+  .. .. ..@ title            : chr ""
+  .. .. ..@ abstract         : chr ""
+  .. .. ..@ url              : chr ""
+  .. .. ..@ pubMedIds        : chr ""
+  .. .. ..@ samples          : list()
+  .. .. ..@ hybridizations   : list()
+  .. .. ..@ normControls     : list()
+  .. .. ..@ preprocessing    : list()
+  .. .. ..@ other            : list()
+  .. .. ..@ .__classVersion__:Formal class 'Versions' [package "Biobase"] with 1 slots
+  .. .. .. .. ..@ .Data:List of 2
+  .. .. .. .. .. ..$ : int [1:3] 1 0 0
+  .. .. .. .. .. ..$ : int [1:3] 1 1 0
+  ..@ annotation       : chr(0) 
+  ..@ protocolData     :Formal class 'AnnotatedDataFrame' [package "Biobase"] with 4 slots
+  .. .. ..@ varMetadata      :'data.frame':	0 obs. of  1 variable:
+  .. .. .. ..$ labelDescription: chr(0) 
+  .. .. ..@ data             :'data.frame':	6 obs. of  0 variables
+  .. .. ..@ dimLabels        : chr [1:2] "sampleNames" "sampleColumns"
+  .. .. ..@ .__classVersion__:Formal class 'Versions' [package "Biobase"] with 1 slots
+  .. .. .. .. ..@ .Data:List of 1
+  .. .. .. .. .. ..$ : int [1:3] 1 1 0
+  ..@ .__classVersion__:Formal class 'Versions' [package "Biobase"] with 1 slots
+  .. .. ..@ .Data:List of 3
+  .. .. .. ..$ : int [1:3] 2 14 0
+  .. .. .. ..$ : int [1:3] 2 14 0
+  .. .. .. ..$ : int [1:3] 1 3 0
 }
 
 \examples{

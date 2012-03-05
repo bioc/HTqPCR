@@ -13,6 +13,7 @@ function(files,
 	n.data	= 1,
 	samples,
 	na.value	= 40,
+	sample.info,
 	...)
 {
 	# Initial checks
@@ -28,21 +29,6 @@ function(files,
 	nsamples	<- sum(n.data)
 	ncum	<- cumsum(n.data)
 	s.names	<- NULL
-#	# If the files are from a particular manufacturer, set the corresponding parameters
-#	if (format=="tlda") {
-#		flag	= 4
-#		feature	= 6
-#		type	= 7
-#		position= 3
-#		Ct		= 8
-#	} else if (format=="stratagene") {
-#		flag	= "Final Call (dR)"
-#		feature	= "Well Name"
-#		type	= "Well Type"
-#		position= "Well"
-#		Ct		= "Ct (dR)"
-#		header	= TRUE
-#	}
 	# If all files are "easy" format
 	if (!SDS) {
 		# Read a single file, to get dimensions etc.
@@ -53,10 +39,10 @@ function(files,
 			warning(paste(n.features, "gene names (rows) expected, got", nspots))
 	}
 	nspots	<- n.features
-	# Initializing qPCRset object.
+	# Initializing data required for qPCRset object.
 	X <- matrix(0,nspots,nsamples)
-	cat <- data.frame(matrix("OK", ncol=nsamples, nrow=nspots), stringsAsFactors=FALSE)
-	out <- new("qPCRset", exprs=X, flag=as.data.frame(X), featureCategory=cat)
+	X.flags	<- as.data.frame(X)
+	X.cat <- data.frame(matrix("OK", ncol=nsamples, nrow=nspots), stringsAsFactors=FALSE)
 	# Read through all files (assume features are sorted based on position)
 	for (i in 1:length(files)) {
 		# Which columns of the qPCRset object are to be filled out
@@ -87,24 +73,24 @@ function(files,
 		# Assign Ct values to object
 		data	<- matrix(sample[,Ct], ncol=n.data[i])
 		undeter	<- apply(data, 2, function(x) x %in% c("Undetermined", "No Ct"))
-  		featureCategory(out)[,cols][undeter] <- "Undetermined"
+  		X.cat[,cols][undeter] <- "Undetermined"
 		if (is.null(na.value)) {
  			data[data=="Undetermined"]	<- NA
  		} else {
  			data[data %in% c("Undetermined", "No Ct", "999")] <- na.value
  		}
-		out@exprs[,cols]	<- apply(data, 2, function(x) as.numeric(as.character(x)))
+		X[,cols]	<- apply(data, 2, function(x) as.numeric(as.character(x)))
 		if (!is.null(flag)) {
 			flags	<-  matrix(sample[,flag], ncol=n.data[i])
 			flags[flags=="-"]	<- "Failed"
 			flags[flags=="+"]	<- "Passed"
-			out@flag[,cols]	<- flags
+			X.flags[,cols]	<- flags
 		} else {
-			out@flag[,cols]	<- "Passed"
+			X.flags[,cols]	<- "Passed"
 		}
 		# Get sample names if present
 		s.names	<- c(s.names, unique(sample[,2]))
-		# Add the additional info to the qPCRset
+		# Assemble the feature data info to the qPCRset
 		if (i==1) {
 			# Add default values if any are missing from file
 			featPos	<- paste("feature", 1:nspots, sep="")
@@ -116,10 +102,13 @@ function(files,
 			featName	<- paste("feature", 1:nspots, sep="")
 			if (!is.null(feature)) 
 				featName	<- as.character(sample[1:nspots,feature])
-			# Add the data
-			featureNames(out)	<- featName
-			featureType(out)	<- as.factor(featType)
-			featurePos(out)	<- featPos
+			# Create feature data object
+			df <- data.frame(featureNames=featName, featureType=as.factor(featType), featurePos=featPos)
+			metaData <- data.frame(labelDescription=c(
+               	"Name of the qPCR feature (gene)",
+               	"Type pf feature",
+               	"Position on assay"))
+			featData	<- AnnotatedDataFrame(data=df, varMetaData=metaData)
 		}
 	}
 	# Provide sample names
@@ -139,14 +128,19 @@ function(files,
 			samples	<- paste("Sample", 1:nsamples, sep="")
 		}
 	}
-	sampleNames(out)	<- samples
-	colnames(flag(out))	<- samples
-	colnames(featureCategory(out))	<- samples
 	# Add warnings if there are any NAs
-	if (any(is.na(exprs(out))))
+	if (any(is.na(X)))
 		warning("One or more samples contain NAs. Consider replacing these with e.g. Ct=40 now.")
-	# Add to the history of the object
-	out@history	<- data.frame(history=capture.output(match.call(readCtData)), stringsAsFactors=FALSE)
+	# Add some sort of phenoData
+	if (missing(sample.info)) {
+		pdata <- data.frame(sample=1:length(samples), row.names=samples)
+		sample.info <- new("AnnotatedDataFrame", data = pdata,
+            varMetadata = data.frame(labelDescription = "Sample numbering", row.names = "Sample names"))
+	}
+	# Define the 'history'
+	X.hist	<- data.frame(history=capture.output(match.call(readCtData)), stringsAsFactors=FALSE)
+	# Create the qPCRset object
+    out	<- new("qPCRset", exprs=X, phenoData=sample.info, featureData=featData, featureCategory=X.cat, flag=X.flags, CtHistory=X.hist)
 	# Return the object	
 	out
 }

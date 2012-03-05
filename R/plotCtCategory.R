@@ -42,7 +42,7 @@ function(q,
 			stop(paste("Plot type \'", stratify, "\'isn't implemented\n"))
 		}
 		# Divide data into stratified parts
-		l.strat	<- length(levels(strat))
+		l.strat	<- length(unique(strat))
 		s.data	<- list()
 		for (i in 1:ncol(data)) {
 			s.list	<- split(data[,i], strat)

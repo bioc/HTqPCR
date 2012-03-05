@@ -7,11 +7,11 @@ This function will read tab separated text files with Ct values and feature meta
 }
 
 \usage{
-readCtData(files, path = NULL, n.features = 384, flag = 4, feature = 6, type = 7, position = 3, Ct = 8, header = FALSE, SDS = FALSE, n.data = 1, samples, na.value = 40, ...)
+readCtData(files, path = NULL, n.features = 384, flag = 4, feature = 6, type = 7, position = 3, Ct = 8, header = FALSE, SDS = FALSE, n.data = 1, samples, na.value = 40, sample.info, ...)
 }
 
 \arguments{
-  \item{files}{ character vector witht he names of the files to be read.}
+  \item{files}{ character vector with the names of the files to be read.}
   \item{path}{ character string with the path to the folder containing the data files.}
   \item{n.features}{integer, number of features present in each file.}
   \item{flag}{ integer indicating the number of column containing information about the flags. See Details.}
@@ -24,6 +24,7 @@ readCtData(files, path = NULL, n.features = 384, flag = 4, feature = 6, type = 7
   \item{n.data}{integer vector, same length as \code{files}. Indicates the number of samples that are present in each file. For each file n.data*n.features lines will be read.}
  \item{samples}{ character vector with names for each sample. Per default the file names are used.}
   \item{na.value}{integer, a Ct value that will be assigned to all undetermined/NA wells.}
+  \item{sample.info}{object of class \code{AnnotatedDataFrame}, given the phenoData of the object. Can be added later.}
   \item{\dots}{ any other arguments are passed to \code{\link{read.table}}.}
 }
 
@@ -52,6 +53,7 @@ exFiles <- read.delim(file.path(exPath, "files.txt"))
 raw <- readCtData(files=exFiles$File, path=exPath)
 # Example of adding missing information (random data in this case)
 featureClass(raw)	<- factor(rep(c("A", "B", "C"), each=384/3))
+pData(raw)[,"rep"] 	<- c(1,1,2,2,3,3)
 }
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the

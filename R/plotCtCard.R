@@ -66,9 +66,9 @@ function(q,
 		if (plot=="flag") {
 			data	<- as.factor(flag(q)[,card]) 
 		} else if (plot=="type") {
-			data	<- featureType(q) 
+			data	<- as.factor(featureType(q)) 
 		} else if (plot=="class") {
-			data	<- featureClass(q)
+			data	<- as.factor(featureClass(q))
 		} else if (plot=="category") {
 			data	<- as.factor(featureCategory(q)[,card])
 		} else {

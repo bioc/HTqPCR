@@ -32,17 +32,18 @@ function(..., deparse.level=1) {
 		exprs(out)	<- cbind(exprs(out), exprs(qsets[[i]]))
 		flag(out)	<- cbind(flag(out), flag(qsets[[i]]))
 		featureCategory(out)	<- cbind(featureCategory(out), featureCategory(qsets[[i]]))
-		sampleNames(out)	<- c(sampleNames(out), sampleNames(qsets[[i]]))
+		phenoData(out)	<- AnnotatedDataFrame(rbind(pData(out), pData(qsets[[i]])))
+		#sampleNames(out)	<- c(sampleNames(out), sampleNames(qsets[[i]]))
 	} # for i in qsets
 	# Update the history slot
 	for (q in seq_along(qsets)) {
 		if (nrow(getCtHistory(qsets[[q]]))==0)
-			qsets[[q]]@history	<- data.frame(history="Manually created qPCRset object.", stringsAsFactors=FALSE)
+			setCtHistory(qsets[[q]])	<- data.frame(history="Manually created qPCRset object.", stringsAsFactors=FALSE)
 	}
 	all.hist	<- sapply(qsets, getCtHistory)
 	new.hist	<- paste(rep(qset.names, times=sapply(all.hist, length)), unlist(all.hist), sep=": ")
 	new.hist	<- data.frame(history=new.hist, stringsAsFactors=FALSE)
-	out@history	<- rbind(new.hist, capture.output(match.call(cbind)))
+	setCtHistory(out)	<- rbind(new.hist, capture.output(match.call(cbind)))
 
 	# Return object
 	out

@@ -23,29 +23,29 @@ function(..., deparse.level=1) {
 		if (!all(sampleNames(qsets[[i]])==sampleNames(qsets[[1]])))
 			warning(paste("Sample names in", qset.names[i], "are not identical to", qset.names[1]))
 #		# Bind together the remaining info - factors
-		featureType(out)	<- factor(c(as.vector(featureType(out)), as.vector(featureType(qsets[[i]]))))
-		featureClass(out)	<- factor(c(as.vector(featureClass(out)), as.vector(featureClass(qsets[[i]]))))
+#		featureType(out)	<- factor(c(as.vector(featureType(out)), as.vector(featureType(qsets[[i]]))))
+#		featureClass(out)	<- factor(c(as.vector(featureClass(out)), as.vector(featureClass(qsets[[i]]))))
 		# Bind together the remaining info - matrix
 		exprs(out)	<- rbind(exprs(out), exprs(qsets[[i]]))
 		# Bind together the remaining info - data frames
 		flag(out)	<- as.data.frame(rbind(as.matrix(flag(out)), as.matrix(flag(qsets[[i]]))), stringsAsFactors=FALSE)
 		featureCategory(out)	<- as.data.frame(rbind(as.matrix(featureCategory(out)), as.matrix(featureCategory(qsets[[i]]))), stringsAsFactors=FALSE)
 		# Bind together the remaining info - vectors
-		featureNames(out)	<- c(featureNames(out), featureNames(qsets[[i]]))
-		featurePos(out)	<- c(featurePos(out), featurePos(qsets[[i]]))
+		#featureNames(out)	<- c(featureNames(out), featureNames(qsets[[i]]))
+		#featurePos(out)	<- c(featurePos(out), featurePos(qsets[[i]]))
+		featureData(out)	<- AnnotatedDataFrame(rbind(fData(out), fData(qsets[[i]])))
 
 	} # for i in qsets
 	# Update the history slot
 	for (q in seq_along(qsets)) {
 		if (nrow(getCtHistory(qsets[[q]]))==0)
-			qsets[[q]]@history	<- data.frame(history="Manually created qPCRset object.", stringsAsFactors=FALSE)
+			setCtHistory(qsets[[q]])	<- data.frame(history="Manually created qPCRset object.", stringsAsFactors=FALSE)
 	}
 	all.hist	<- sapply(qsets, getCtHistory)
 	new.hist	<- paste(rep(qset.names, times=sapply(all.hist, length)), unlist(all.hist), sep=": ")
 	new.hist	<- data.frame(history=new.hist, stringsAsFactors=FALSE)
-	out@history	<- rbind(new.hist, capture.output(match.call(rbind)))
+	setCtHistory(out)	<- rbind(new.hist, capture.output(match.call(rbind)))
 
 	# Return object
 	out
 }
-
