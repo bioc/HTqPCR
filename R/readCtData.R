@@ -108,7 +108,7 @@ function(files,
                	"Name of the qPCR feature (gene)",
                	"Type pf feature",
                	"Position on assay"))
-			featData	<- AnnotatedDataFrame(data=df, varMetaData=metaData)
+			featData	<- AnnotatedDataFrame(data=df, varMetadata=metaData)
 		}
 	}
 	# Provide sample names
@@ -134,9 +134,8 @@ function(files,
 	# Add some sort of phenoData
 	if (missing(sample.info)) {
 		pdata <- data.frame(sample=1:length(samples), row.names=samples)
-#		sample.info <- new("AnnotatedDataFrame", data = pdata,
-#           varMetadata = data.frame(labelDescription = "Sample numbering", row.names = "Sample names"))
-		sample.info <- new("AnnotatedDataFrame", data = pdata)
+		sample.info <- new("AnnotatedDataFrame", data = pdata,
+           varMetadata = data.frame(labelDescription = "Sample numbering", row.names = "Sample names"))
 	}
 	# Define the 'history'
 	X.hist	<- data.frame(history=capture.output(match.call(readCtData)), stringsAsFactors=FALSE)
