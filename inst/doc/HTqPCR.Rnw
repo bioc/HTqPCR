@@ -31,6 +31,7 @@ raiselinks,plainpages,pdftex]{hyperref}
 \newcommand{\Rfunction}[1]{{\texttt{#1}}}
 \newcommand{\Rpackage}[1]{{\textit{#1}}}
 \newcommand{\Rclass}[1]{{\textit{#1}}}
+\newcommand{\Rcode}[1]{{\textit{#1}}}
 \newcommand{\Rmethod}[1]{{\textit{#1}}}
 \newcommand{\Rfunarg}[1]{{\texttt{#1}}}
 \newcommand{\phead}[1]{{\flushleft \sf \small \textbf{#1} \quad}}
@@ -78,7 +79,7 @@ set.seed(123)
 
 The package \Rpackage{HTqPCR} is designed for the analysis of cycle threshold (Ct) values from quantitative real-time PCR data. The main areas of functionality comprise data import, quality assessment, normalisation, data visualisation, and testing for statistical significance in Ct values between different features (genes, miRNAs).
 
-Example data is included from TaqMan Low Density Arrays (TLDA), a proprietary format of Applied Biosystems, Inc. However, most functions can be applied to any kind of qPCR data, regardless of the nature of the experimental samples and whether genes or miRNAs were measured. Section~\ref{SEC:formats} gives some examples of how to handle other input data, including data from a non-well based microfluidic system (Dynamic Arrays from Fluidigm Corporation).
+The example data used throughout this vignette is from from TaqMan Low Density Arrays (TLDA), a proprietary format of Applied Biosystems, Inc. However, most functions can be applied to any kind of qPCR data, regardless of the nature of the experimental samples and whether genes or miRNAs were measured. Section~\ref{SEC:formats} gives some examples of how to handle other types of input data, including output formats from other qPCR assay vendors (e.g. Roche Applied Science and Bio-Rad) and data from non-well based microfluidic systems (e.g. BioMark from Fluidigm Corporation).
 
 <<Load package, results=hide>>=
 library("HTqPCR")
@@ -987,11 +988,13 @@ getCtHistory(q.comb)
 \section{How to handle different input data}
 \label{SEC:formats}
 
-General information about how to read qPCR data into a \Rclass{qPCRset} object is presented in section~\ref{SEC:datainput}. Below, some more specific cases are illustrated.
+General information about how to read qPCR data into a \Rclass{qPCRset} object is presented in section~\ref{SEC:datainput}. Below, some more specific cases are illustrated. Functions specifically designed for such qPCR platforms are still on a test stage in \Rpackage{HTqPCR}, and will be expanded (/corrected/modified) depending on demand.
 
 \subsection{Sequence Detection Systems format}
 
-The qPCR data might come from Sequence Detection Systems (SDS) software, in which case each file has a header containing some generic information about the initial Ct detection. This header varies in length depending on how many files were analysed simultaneously, and an example is shown below.
+The qPCR data might come from Sequence Detection Systems (SDS) software. The is supplied with most instruments from Applied Biosystems, but the software can also be used for assays from other vendors, such as the miRCURY LNA Universal RT microRNA PCR system from Exiqon.
+
+For SDS output, each file has a header containing some generic information about the initial Ct detection. This header varies in length depending on how many files were analysed simultaneously, and an example is shown below.
 
 <<Example SDS data>>=
 path <- system.file("exData", package="HTqPCR")
@@ -1004,26 +1007,96 @@ Only the first 7 columns are shown, since the file shown here contains $>$30 col
 readLines(file.path(path, "SDS_sample.txt"), n=20)
 @
 
-For these files the parameter \Rfunction{SDS=TRUE} can be set in \Rfunction{readCtData}. The first 100 lines of each file will be scanned, and all lines preceding the actual data will be skipped (in this case 17), even when the length of the header varies between files.
+For these files the parameter \Rfunction{for="SDS"} can be set in \Rfunction{readCtData}. The first 100 lines of each file will be scanned, and all lines preceding the actual data will be skipped (in this case 17), even when the length of the header varies between files.
 
-\subsection{Non-Ct data}
+<<SDS format>>=
+path <- system.file("exData", package = "HTqPCR")
+raw <- readCtData(files="SDS_sample.txt", path=path, format="SDS")
+show(raw)
+@
 
-Some qPCR systems, such as the LightCycler from Roche, don't provide the results as Ct values, but instead as crossing points (Cp).
-Ct values are measured at the exponential phase of amplification by drawing a line parallel to the x-axis of the real-time fluorescence intensity curve (fit point method), whereas Cp  (second derivative method) calculates the fractional cycle where the second derivative of the real-time fluorescence intensity curve reaches the maximum value~\citep{Luu-The:2005}.
+\subsection{LightCycler format}
+
+Some qPCR systems, such as the LightCycler from Roche, don't provide the results as Ct values, but instead as crossing points (Cp). Ct values are measured at the exponential phase of amplification by drawing a line parallel to the x-axis of the real-time fluorescence intensity curve (fit point method), whereas Cp  (second derivative method) calculates the fractional cycle where the second derivative of the real-time fluorescence intensity curve reaches the maximum value~\citep{Luu-The:2005}.
 
 As long as all samples and features are quantified using the same method,  it shouldn't matter whether Ct or Cp values are being used to test for significant differences between samples. The analysis of e.g.~LightCycler Cp data can therefore proceed as outlined in this vignette. One thing to bear in mind though, is that for Ct values a value of 40 generally means NA, and above 35 is considered unreliable, however these numbers will be different for Cp. When using the filtering methods to set results as being ``OK", ``Unreliable" and ``Undetermined",  the parameters in e.g.~\Rfunction{setCategory(..., Ct.max = 35, Ct.min = 10, ...)} and \Rfunction{readCtData(..., na.value, ...)} will need to be adjusted accordingly.
 
-\subsection{Microfluidic devices}
+\Rpackage{HTqPCR} contains example data from the LightCycler 480 Real-Time PCR System, however not all wells were used during that particular experiment.
 
-In addition to multi-well microtitre plates, other assay formats have also  emerged for performing high-throughput qPCR analysis. These include for example the 48.48 and 96.96 Dynamic Array from Fluidigm Corporation. For the 48.48 assay, 48 individual samples are loaded onto a plate along with qPCR primers for 48 genes. Using microfluidic channels all possible sample $\times$ primer reactions are assayed in a combinatorial manner using  2,304 individual reaction chambers, to generate e.g.~48 real-time curves for each of 48 samples. Results are then reported in a single file with 2304 rows of data.
+<<SDS format>>=
+path <- system.file("exData", package = "HTqPCR")
+raw <- readCtData(files="LightCycler_sample.txt", path=path, format="LightCycler")
+show(raw)
+@
 
-\Rpackage{HTqPCR} includes a comma-separated file containing example data from a Fluidigm 48.48 array. Since the data format differs slightly from some other qPCR platforms, it'll currently need to be transformed into a \Robject{qPCRset} object in one of two ways.  First, \Robject{qPCRset} can be constructed indirectly, by reading the data into a data frame, creating a 48x48 matrix manually, and generating a new \Robject{qPCRset}. The file was inspected first, and turned out to have an 11 line header plus a header line, which have to be skipped when reading the data into \Rpackage{HTqPCR}.
+\subsection{CFX format}
 
+The CFX Connect Real-Time PCR Detection System from Bio-Rad laboratories is another qPCR system based on microtitre plates, such as the CFX96 and CFX384 Touch. The example file included into \Rpackage{HTqPCR} is incomplete and only contains information from 36 of the wells on the plate, hence \Rcode{n.features} is set accordingly.
+
+<<CFX format>>=
+path <- system.file("exData", package = "HTqPCR")
+raw <- readCtData(files="CFX_sample.txt", path=path, format="CFX", n.features=36)
+show(raw)
+@
+
+\subsection{BioMark format}
+
+In addition to multi-well microtitre plates, other assay formats have also  emerged for performing high-throughput qPCR analysis. These include for example the 48.48 and 96.96 BioMark HD System from Fluidigm Corporation. For the 48.48 assay, 48 individual samples are loaded onto a plate along with qPCR primers for 48 genes. Using microfluidic channels all possible sample $\times$ primer reactions are assayed in a combinatorial manner using  2,304 individual reaction chambers, to generate e.g.~48 real-time curves for each of 48 samples. Results are then reported in a single file with 2304 rows of data.
+
+\Rpackage{HTqPCR} includes a comma-separated file containing example data from a BioMark 48.48 array. The data can be read in two way. Setting n.features=2304 will read in all the information and create a \Robject{qPCRset} object with dimensions 2304x1. Setting n.data=48 and n.features=48 will however automatically convert this into a 48x48 \Robject{qPCRset}. The latter is typically what will be required for doing statistical tests of differences between samples. However, in some cases when results are combined across multiple arrays it may be advantageous to keep these arrays as separate columns in the \Robject{qPCRset} object initially, in case it's necessary to perform an array-based normalisation.
+
+<<BioMark format>>=
+exPath <- system.file("exData", package="HTqPCR")
+raw1 <- readCtData(files="BioMark_sample.csv", path=exPath, format="BioMark", n.features=48, n.data=48) 
+dim(raw1)
+raw2 <- readCtData(files="BioMark_sample.csv", path=exPath, format="BioMark", n.features=48*48, n.data=1) 
+dim(raw2)
+@
+
+If array-specific effects are likely to be present, a useful normalisation strategy might be to combine the data into a \Robject{qPCRset} object containing one column for each array, and 48x48 or 96x96 samples. That way overall differences between the arrays can be removed, and afterwards the data can be split with \Rfunction{changeCtLayout} to generate one column per individual sample rather than one column per array.
+
+The column ``Call'' in the sample file contains information about the result of the qPCR reaction. Per default, a call of ``Pass'' is translated into ``OK'' in the  \Rcode{featureCategory}, and ``Fail'' as ``Undetermined''.
+
+The assay readouts are Ct values, which can be analysis using \texttt{HTqPCR} in a similar fashion to Ct values from other technologies, both regarding the statistical analysis and data visualisation. The function \Rfunction{plotCtArray} can be used for displaying the layout of the qPCR results instead of \Rfunction{plotCtCard} (Figure~\ref{fig:fluidigm}).
+
+<<Ct microfluidic array, include=FALSE>>=
+plotCtArray(raw1)
+@
+
+\begin{figure}
+\begin{center}
+<<fig=TRUE,echo=FALSE>>=
+<<Ct microfluidic array>> 
+@
+\end{center}
+\caption{Ct values for a test Fluidigm 48.48 Array. 48 samples are loaded into rows, and 48 PCR primers into columns, resulting in 2,304 combinatorial qPCR reactions. Four individual genes were added in 12 replicates each into the 48 columns to assess technical variability. Grey corresponds to ``NA''.}
+\label{fig:fluidigm}
+\end{figure}
+
+\subsection{OpenArray format}
+
+Like the BioMark output from Fluidigm, files from the OpenArray Real-Time PCR System from Applied Biosystems contains multiple samples per plate, currently up to 48. As mentioned in the section on BioMark, this can be used either in a \Robject{qPCRset} object with one column per plate, or with one column per sample. A comma-separated example file is included in \Rpackage{HTqPCR}:
+
+<<OpenArray format>>=
+exPath <- system.file("exData", package="HTqPCR")
+raw1 <- readCtData(files="OpenArray_sample.csv", path=exPath, format="OpenArray", n.features=846, n.data=6) 
+dim(raw1)
+raw2 <- readCtData(files="OpenArray_sample.csv", path=exPath, format="OpenArray", n.features=846*6, n.data=1) 
+dim(raw2)
+@
+
+The column ``ThroughHole.Outlier'' in the sample file indicates the quality of the qPCR measurement. Per default, if the Ct value is an outlier it is translated into having  \Rcode{featureCategory} ``Unreliable'', otherwise it's ``OK''.
+
+\subsection{Additional devices}
+
+More assays for high-throughput real-time qPCR systems are constantly emerging. In case of systems based on standard microtitre plates, these can still be imported by \Rpackage{HTqPCR}, even if they are not specifically included into \Rcode(readCtData). The results need to be converted into tab-separated text, and read using \Rcode{format="plain"}. Some assays are more esoteric, or contain multiple samples on each plates, which need to be re-formatted into a matrix in \Rcode{R}. Below, a BioMark file from Fluidigm is used as an example of how to do this. This file can be read automatically by setting \Rcode{format="BioMark"}, but it's here used to illustrate how the same thing can be done manually, and be transformed into a \Robject{qPCRset} object in one of two ways.  
+
+First, \Robject{qPCRset} can be constructed indirectly, by reading the data into a data frame, creating a 48x48 matrix manually, and generating a new \Robject{qPCRset}. The file was inspected first, and turned out to have an 11 line header plus a header line, which have to be skipped when reading the data into \Rpackage{HTqPCR}.
 
 <<Create Fluidigm set 1>>=
 # Get example data
 exPath <- system.file("exData", package="HTqPCR")
-exFiles <- "fluidigm_sample.csv"
+exFiles <- "BioMark_sample.csv"
 # Reading data into a data frame
 temp	<- read.delim(file.path(exPath, exFiles), skip=11, sep=",", colClasses="character")
 n	<- 48
@@ -1040,30 +1113,12 @@ Alternatively, the data can be read directly into a \Robject{qPCRset} in a 1x230
 
 <<Create Fluidigm set 2>>=
 # Create qPCRset object
-temp	<- readCtData(exFiles, path=exPath, n.features=48*48, flag=9, feature=5, type=6, Ct=7, position=1, skip=12, sep=",")
+temp	<- readCtData(exFiles, path=exPath, n.features=48*48, column.info=list(flag=9, feature=5, type=6, Ct=7, position=1), skip=12, sep=",")
 # Re-format from 1x2304 samples in input file into 48x48 as on array
 raw	<- changeCtLayout(temp, sample.order=rep(1:48, each=48))
 @
 
-Information from multiple microfluidic devices can then subsequently be combined using \Rfunction{cbind} and \Rfunction{rbind}. If array-specific effects are likely to be present, a useful normalisation strategy might be to combine the data into a \Robject{qPCRset} object containing one column for each array, and 48x48 or 96x96 samples. That way overall differences between the arrays can be removed, and afterwards the data can be split with \Rfunction{changeCtLayout} to generate one column per individual sample rather than one column per array.
-
-The assay readouts are Ct values, which can be analysis using \texttt{HTqPCR} in a similar fashion to Ct values from other technologies, both regarding the statistical analysis and data visualisation. The function \Rfunction{plotCtArray} can be used for displaying the layout of the qPCR results instead of \Rfunction{plotCtCard} (Figure~\ref{fig:fluidigm}).
-
-<<Ct microfluidic array, include=FALSE>>=
-plotCtArray(raw)
-@
-
-\begin{figure}
-\begin{center}
-<<fig=TRUE,echo=FALSE>>=
-<<Ct microfluidic array>> 
-@
-\end{center}
-\caption{Ct values for a test Fluidigm 48.48 Array. 48 samples are loaded into rows, and 48 PCR primers into columns, resulting in 2,304 combinatorial qPCR reactions. Four individual genes were added in 12 replicates each into the 48 columns to assess technical variability. Grey corresponds to ``NA''.}
-\label{fig:fluidigm}
-\end{figure}
-
-Functions specifically designed for such qPCR platforms are still on a test stage in \Rpackage{HTqPCR}, and will be expanded depending on demand.
+Information from multiple microfluidic devices can then subsequently be combined using \Rfunction{cbind} and \Rfunction{rbind}.  
 
 
 %%%%%%%%%%%%%%%% FINISHING  %%%%%%%%%%%%%%%%%

@@ -10,6 +10,8 @@ NEW FEATURES
 
     o qPCRset now contains slots for phenoData, featureData, protocol
     experiment etc. inherited from eSet.
+    o readCtData has been expanded to include file formats from multiple
+    qPCR detection systems and vendors.
 
 BUG FIXES
 

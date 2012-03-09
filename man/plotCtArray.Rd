@@ -2,7 +2,7 @@
 \alias{plotCtArray}
 
 \title{Image plot of qPCR Ct values from an array format}
-\description{Function for plotting high-throughput qPCR Ct values from a platform with a defined spatial layout, such as Fluidigm Dynamic Arrays. The location of Ct values in the plot corresponds to the position of each well on the array.}
+\description{Function for plotting high-throughput qPCR Ct values from a platform with a defined spatial layout, such as Fluidigm Dynamic Arrays (BioMark) or OpenArray from Applied Biosystems. The location of Ct values in the plot corresponds to the position of each well on the array.}
 
 \usage{
 plotCtArray(q, plot = "Ct", main, col, col.range, na.col = "grey", na.value = 40, chamber.size, ...)
@@ -34,11 +34,9 @@ plotCtArray(q, plot = "Ct", main, col, col.range, na.col = "grey", na.value = 40
 	
 # Locate example data
 exPath <- system.file("exData", package="HTqPCR")
-exFiles <- "fluidigm_sample.csv"
+exFiles <- "BioMark_sample.csv"
 # Create qPCRset object
-temp	<- readCtData(exFiles, path=exPath, n.features=48*48, flag=9, feature=5, type=6, Ct=7, position=1, skip=12, sep=",")
-# Re-format from 1x2304 samples in input file into 48x48 as on array
-raw	<- changeCtLayout(temp, sample.order=rep(1:48, each=48))
+raw	<- readCtData(exFiles, path=exPath, n.features=48, n.data=48, format="BioMark")
 # Plot
 plotCtArray(raw)
 # Change colour and range
