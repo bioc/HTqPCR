@@ -113,7 +113,7 @@ function(files,
                	"Name of the qPCR feature (gene)",
                	"Type pf feature",
                	"Position on assay"))
-			featData	<- AnnotatedDataFrame(data=df, varMetaData=metaData)
+			featData	<- AnnotatedDataFrame(data=df, varMetadata=metaData)
 		}
 	}
 	# Provide sample names
