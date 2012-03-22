@@ -1031,13 +1031,15 @@ show(raw)
 
 \subsection{CFX format}
 
-The CFX Connect Real-Time PCR Detection System from Bio-Rad laboratories is another qPCR system based on microtitre plates, such as the CFX96 and CFX384 Touch. The example file included into \Rpackage{HTqPCR} is incomplete and only contains information from 36 of the wells on the plate, hence \Rcode{n.features} is set accordingly.
+The CFX Connect Real-Time PCR Detection System from Bio-Rad laboratories is another qPCR system based on microtitre plates, such as the CFX96 and CFX384 Touch. The output values from the software are ``Cq'', the quantification cycle values. This is the cycle number where the fluorescence increases above a given threshold, i.e.~equivalent to Ct values. The example file included into \Rpackage{HTqPCR} contains a number of empty wells. Per default, these are excluded from the output file, and hence \Rcode{n.features} has to be set accordingly.
 
 <<CFX format>>=
 path <- system.file("exData", package = "HTqPCR")
-raw <- readCtData(files="CFX_sample.txt", path=path, format="CFX", n.features=36)
+raw <- readCtData(files="CFX_sample.txt", path=path, format="CFX", n.features=330)
 show(raw)
 @
+
+The file is expected to contain comma-separated values, rather than tab-separated, although the file ending can be either of .txt and .csv. In some (mainly older versions) of CFX files, ``,'' is the character used for decimal points rather than ``.'', so the Cq values can be for example ``25,3'' instead of ``25.3''. If this is the case, the parameters \Rcode{dec=``,''} needs to be added to \Rcode{readCtData}.
 
 \subsection{BioMark format}
 
@@ -1075,7 +1077,7 @@ plotCtArray(raw1)
 
 \subsection{OpenArray format}
 
-Like the BioMark output from Fluidigm, files from the OpenArray Real-Time PCR System from Applied Biosystems contains multiple samples per plate, currently up to 48. As mentioned in the section on BioMark, this can be used either in a \Robject{qPCRset} object with one column per plate, or with one column per sample. A comma-separated example file is included in \Rpackage{HTqPCR}:
+Like the BioMark output from Fluidigm, files from the OpenArray Real-Time PCR System from Applied Biosystems contains multiple samples per plate, currently up to 48. As mentioned in the section on BioMark, this can be used either in a \Robject{qPCRset} object with one column per plate, or with one column per sample. A comma-separated example file is included in \Rpackage{HTqPCR}, where a plate with 5076 qPCR reactions contains 846 features measured across 6 separate samples:
 
 <<OpenArray format>>=
 exPath <- system.file("exData", package="HTqPCR")
@@ -1128,7 +1130,7 @@ Information from multiple microfluidic devices can then subsequently be combined
 
 Use the function \Rfunction{news} to see what bug fixes and updates have been incorporated into \Rpackage{HTqPCR}. For example:
 <<Check HTqPCR news>>=
-news(Version>1.5, package="HTqPCR")
+news(Version>1.7, package="HTqPCR")
 @
 
 This vignette was generated using:

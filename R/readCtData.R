@@ -43,7 +43,7 @@ function(files,
 			plain	= list(flag=4, feature=6, type=7, position=3, Ct=8),
 			SDS	= list(flag=4, feature=6, type=7, position=3, Ct=8),
 			LightCycler	= list(feature="Name", position="Pos", Ct="Cp"),
-			CFX	= list(feature="Content", position="Well", Ct="C.t..Mean"),
+			CFX	= list(feature="Content", position="Well", Ct="Cq.Mean"),
 			OpenArray	= list(flag="ThroughHole.Outlier", feature="Assay.Assay.ID", type="Assay.Assay.Type", position="ThroughHole.Address", Ct="ThroughHole.Ct"),
 			BioMark	= list(flag="Call", feature="Name.1", position="ID", Ct="Value"))
 	}
@@ -73,10 +73,11 @@ function(files,
 		data	<- matrix(sample[,column.info[["Ct"]]], ncol=n.data[i])
 		undeter	<- apply(data, 2, function(x) x %in% c("Undetermined", "No Ct"))
   		X.cat[,cols][undeter] <- "Undetermined"
+  		nas	<- c("Undetermined", "No Ct", "999", "N/A")
 		if (is.null(na.value)) {
- 			data[data=="Undetermined"]	<- NA
+ 			data[data %in% nas | data==0]	<- NA
  		} else {
- 			data[data %in% c("Undetermined", "No Ct", "999")] <- na.value
+ 			data[data %in% nas | is.na(data) | data==0] <- na.value
  		}
 		X[,cols]	<- apply(data, 2, function(x) as.numeric(as.character(x)))
 		if ("flag" %in% names(column.info)) {
@@ -189,11 +190,10 @@ function(readfile=readfile, n.data=n.data, i=i, nspots=nspots, ...)
 	out
 } # .readCtLightCycler
 
-.readCtCFX	<- 
-function(readfile=readfile, n.data=n.data, i=i, nspots=nspots, ...)
+.readCtCFX	<- function(readfile=readfile, n.data=n.data, i=i, nspots=nspots, ...)
 {
 	# Read data, skip the required lines
-	out	<- read.delim(file=readfile, header=TRUE, as.is=TRUE, nrows=nspots*n.data[i], strip.white=TRUE, dec = ",", ...)
+	out	<- read.csv(file=readfile, header=TRUE, as.is=TRUE, nrows=nspots*n.data[i], strip.white=TRUE, ...)
 	# Return
 	out
 } # .readCtCFX
