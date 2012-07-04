@@ -18,7 +18,7 @@ plotCtOverview(q, cards = TRUE, genes, groups, calibrator, replicates = TRUE, co
   \item{groups}{vector with groups to average the samples across. If missing all the samples are displayed individually. See Details.}
   \item{calibrator}{the value in \code{groups} to use as calibrator sample. See Details.}
   \item{replicates}{logical, if should values from replicated features in each sample be collapsed or kept separate.}
-  \item{col}{colours to use for each sample or group.}
+  \item{col}{colours to use for each sample or group. Per default a maximum of 10 colours are used, so this parameter should be set if more than 10 groups are present.}
   \item{conf.int}{logical, should the 95 percent confidence interval be shown. See Details.}
   \item{legend}{logical, should a legend be included in the plot.}
   \item{\dots}{further arguments passed to \code{barplot}.}
@@ -50,6 +50,9 @@ plotCtOverview(qPCRraw, genes=g, xlim=c(0,60), groups=samples$Treatment, conf.in
 plotCtOverview(qPCRraw, genes=g, groups=samples$Treatment, calibrator="Control")
 plotCtOverview(qPCRraw, genes=g, groups=samples$Treatment, calibrator="Control", conf.int=TRUE, ylim=c(-0.5,0.5))
 plotCtOverview(qPCRraw, genes=g, groups=samples$Treatment, calibrator="LongStarve")
+# Plotting just some of the groups. The qPCRraw object has to be subsetted. 
+ex	<- samples$Treatment %in% c("Control", "LongStarve")
+plotCtOverview(qPCRraw[,ex], genes=g, groups=samples$Treatment[ex])
 }
 
 

@@ -16,7 +16,7 @@ normalizeCtData(q, norm = "deltaCt", deltaCt.genes = NULL, scale.rank.samples, r
   \item{scale.rank.samples}{integer, for the "scale.rankinvariant" method, how many samples should a feature be rank invariant across to be included. Defaults to number of samples-1.}
   \item{rank.type}{string, the reference sample for the rank invariant normalisation. Either "pseudo.median" or "pseudo.mean" for using the median or mean across samples as a pseudo-reference sample.}
   \item{Ct.max}{numeric, Ct values above this will be ignored when identifying rank invariant genes.}
-  \item{geo.mean.ref}{numeric, the reference sample to scale to for the "geometric.mean" method. Defaults tot he first sample..}
+  \item{geo.mean.ref}{numeric, the reference sample to scale to for the "geometric.mean" method. Defaults to sample number 1.}
   \item{verbose}{boolean, should some information be printed to the prompt.}
 }
 

@@ -25,6 +25,12 @@ function(q,
 		stop("Unknown format of 'genes'")	
 	}
 	data	<- data[index,,drop=FALSE]
+	# Some checks
+	if (!missing(groups)) {
+		groups	<- as.character(groups)
+		if (length(groups)!=ncol(data))
+			stop("Length of 'groups' not equal to number of samples in 'q'\n")
+	}
 	# If genes are replicated, average across them
 	if (replicates) {
 		feature.split	<- rownames(data)	
