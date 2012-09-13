@@ -19,7 +19,7 @@ readCtData(files, path = NULL, n.features = 384, format="plain", column.info, fl
 \arguments{
   \item{files}{ character vector with the names of the files to be read.}
   \item{path}{ character string with the path to the folder containing the data files.}
-  \item{n.features}{integer, number of features present in each file.}
+  \item{n.features}{integer, number of features present on each array (e.g. 384). See details.}
   \item{format}{character, the format of the input file. Options are "plain", "SDS", "LightCycler", "CFX", "OpenArray" and "BioMark". See Details. }
   \item{column.info}{list, indicating which column number or name the information of interest is in. It is set automatically by \code{format}, but this can be overridden manually. The names list slots can be 'flag', 'feature', 'position', 'type and 'Ct'. See Details. Note than when indicating column names, these are sometimes changed by R to be syntactically valid, so replacing e.g. brackets by dots. }
   \item{flag,feature,
@@ -61,6 +61,8 @@ Per default, this information is assumed to be in certain columns depending on t
 The BioMark and OpenArray assays always contain information multiple samples on each assay, such as 48 features for 48 samples for the BioMark 48.48. The results across these samples are always present in a single file, e.g. with 48x48=2304 rows. Setting n.features=2304 will read in all the information and create a \code{qPCRset} object with dimensions 2304x1. Setting n.data=48 and n.features=48 will however automatically convert this into a 48x48 \code{qPCRset}. See \code{openVignette(package="HTqPCR")} for examples. The samples are being read in the order in which they're present in the file, i.e. from row 1 onwards, regardless of how they're loaded onto the particular platform.
 
 If the data was analysed using for example SDS Software it may contain a variable length header specifying parameters for files that were analysed at the same time. If \code{format="SDS"} then \code{readCtData} will scan through the first 100 lines of each file, and skip all lines until (and including) the line beginning with "#", which is the header. The end of the file might also contain some plate ID information, but only the number of lines specified in \code{n.features} will be read.
+
+\code{n.features} indicates the number of features present on each array. For example, for a 384 well plate with just 1 sample, the number would be 382. For a plate with 2 individual samples loaded onto it, \code{n.features=196} and \code{n.data=2}. For 1 file with 5 plates and 2 samples per plate, the numbers are \code{n.features=196} and \code{n.data=10}. n.features*n.data must correspond to the total number of lines to be read from each file.
 }                               
 
 \section{Warnings}{
