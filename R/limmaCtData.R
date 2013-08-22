@@ -40,7 +40,7 @@ function(q,
 	for (coef in coefs) {
 		# The actual results
 		res	<- topTable(fit2, coef=coef, number=nrow(fit2), sort.by="none", ...)
-		both.means	<- both.cats <- array(0, c(nrow(res), 2), list(res$ID, c("Test", "Reference")))
+		both.means	<- both.cats <- array(0, c(nrow(res), 2), list(rownames(res), c("Test", "Reference")))
 		# Additional info
 		for (i in c(-1,1)) {
 			sample	<- ifelse(i==1, "Test", "Reference")
@@ -60,7 +60,7 @@ function(q,
 		}
 		# Combine info
 #		res.out	<- cbind(res[,c("ID", "t", "P.Value", "adj.P.Val", "logFC")], meanTest, meanReference, categoryTest, categoryReference)
-		res.out	<- cbind(res$ID, featPos, res[,c("t", "P.Value", "adj.P.Val", "logFC")],  2^(-res$logFC), both.means, both.cats)
+		res.out	<- cbind(rownames(res), featPos, res[,c("t", "P.Value", "adj.P.Val", "logFC")],  2^(-res$logFC), both.means, both.cats)
 		colnames(res.out)	<- c("genes", "feature.pos", "t.test", "p.value", "adj.p.value", "ddCt", "FC", "meanTarget", "meanCalibrator", "categoryTarget", "categoryCalibrator")
 		# Assign to output
 		if (sort)
@@ -69,7 +69,7 @@ function(q,
 	}
 	# Brief summary across all contrasts/tests
 	res	<- decideTests(fit2, ...)
-	rownames(res)	<- topTable(fit2, sort="none", n=nrow(fit2))$ID
+	rownames(res)	<- rownames(topTable(fit2, sort="none", n=nrow(fit2)))
 	out[["Summary"]]	<- res
 	# Return output
 	out

@@ -894,7 +894,7 @@ calibrator="Control", genes=featureNames(sr.norm)[11:20], un.col="#3288BD", jitt
 
 \begin{figure}
 \begin{center}
-<<fig=TRUE,echo=FALSE, height=6, width=6>>=
+<<fig=TRUE, echo=FALSE, height=6, width=6>>=
 <<Significant Ct>> 
 @
 \end{center}

@@ -41,6 +41,10 @@ function(qDE,
 		if (is.numeric(genes)) {
 			index	<- 1:nrow(data) %in% genes
 		} else if (is.character(genes)) {
+			if (!any(grepl("Gene", data$genes)))
+			{
+				data$genes <- paste0("Gene", data$genes)
+			}
 			index	<- data$genes %in% genes
 		} else {
 			index	<- genes
