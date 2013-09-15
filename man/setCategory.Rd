@@ -24,7 +24,7 @@ setCategory(q, Ct.max = 35, Ct.min = 10, replicates = TRUE, quantile = 0.9, grou
 
 \details{Categories can be assigned to the \code{featureCategory} of the qPCRset using either just simple criteria (max/min of Ct values or \code{flag} of \code{q}) or by looking at the standard deviation of Ct values across biological and technical replicates for each gene.
 
-When looking at replicates, the standard deviation and mean are calculated and a normal distribution following these parameters is generated. Individual Ct values that are outside the interval set by \code{quantile} are set as "Unreliable". %This interval means whether they eviate from the e.g. 90\% quantile estimeated from a normal distribution of the given mena and standard deviation.
+When looking at replicates, the standard deviation and mean are calculated and a normal distribution following these parameters is generated. Individual Ct values that are outside the interval set by \code{quantile} are set as "Unreliable". %This interval means whether they deviate from the e.g. 90\% quantile estimated from a normal distribution of the given mean and standard deviation.
 So if e.g. \code{quantile=90} the values outside the top 5\% and lower 5\% of the normal distribution with the given mean and standard deviation are removed. 
 
 "Undetermined" has priority over "Unreliable", so if a value is outside \code{quantile} but also above \code{Ct.max} it will be "Undetermined".
@@ -33,7 +33,7 @@ NB: When setting categories based on replicates, the Ct values are assumed to fo
 
 If the number of replicates vary significantly between biological groups, this will influence the thresholds used for determining the range of "OK" Ct values.}
 
-\value{If \code{plot=TRUE} one figure per sample grous is returned to the current graphics device.
+\value{If \code{plot=TRUE} one figure per sample group is returned to the current graphics device.
 A qPCRset with the new feature categories is returned invisibly.}
 
 %\references{

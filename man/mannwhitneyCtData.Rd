@@ -17,7 +17,7 @@ mannwhitneyCtData(q, groups = NULL, calibrator, alternative = "two.sided", paire
   \item{replicates}{logical, if replicated genes are present on the array, the statistics will be calculated for all the replicates combined, rather than the individual wells.}
     \item{sort}{boolean, should the output be sorted by p-values.}
   \item{stringent}{boolean, for flagging results as "Undetermined". See details.}
-  \item{p.adjust}{character string, which method to use for p-value adjsutment for multiple testing. See details.}
+  \item{p.adjust}{character string, which method to use for p-value adjustment for multiple testing. See details.}
   \item{\dots}{any other arguments will be passed to the \code{\link{wilcox.test}} function.}
 }
 
@@ -40,7 +40,7 @@ The argument \code{p.adjust} is passed on to the \code{\link{p.adjust}} function
 	\item{FC}{The fold change; 2^(-ddCt).}
 	\item{meanCalibrator}{The average expression level of each gene in the calibrator sample(s).}
 	\item{meanTarget}{The average expression level of each gene in the target sample(s).}
-	\item{categoryCalibrator}{The category of the Ct values ("OK", "Undetermine") across the calibrator.}
+	\item{categoryCalibrator}{The category of the Ct values ("OK", "Undetermined") across the calibrator.}
 	\item{categoryTarget}{Ditto for the target.}
 }
 
@@ -57,7 +57,7 @@ diff.exp <- mannwhitneyCtData(qPCRpros[,1:4], groups=factor(c("A", "B", "B", "A"
 diff.exp[1:10,]
 # The same test, taking replicated features individually
 diff.exp <- mannwhitneyCtData(qPCRpros[,1:4], groups=factor(c("A", "B", "B", "A")), calibrator="B", replicates=FALSE)
-# Using another method for p-value ajustment
+# Using another method for p-value adjustment
 diff.exp <- mannwhitneyCtData(qPCRpros[,1:4], groups=factor(c("A", "B", "B", "A")), calibrator="B", p.adjust="holm")
 }
 

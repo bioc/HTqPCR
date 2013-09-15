@@ -3,7 +3,7 @@
 \alias{clusterCt}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Clustering of qPCR Ct values}
-\description{Hierarchical clustering of samples or genes from high-throuhgput qPCR experiments, such as the TaqMan Low Density Array platform. Individual clusters can be selected, and the features within them listed in the given order.}
+\description{Hierarchical clustering of samples or genes from high-throughput qPCR experiments, such as the TaqMan Low Density Array platform. Individual clusters can be selected, and the features within them listed in the given order.}
 
 \usage{
 clusterCt(q, main = NULL, type = "genes", dist = "pearson", xlab = "Cluster dendrogram", n.cluster, h.cluster, select.cluster = FALSE, ...)
@@ -25,9 +25,9 @@ clusterCt(q, main = NULL, type = "genes", dist = "pearson", xlab = "Cluster dend
 
 The \code{n.cluster} and \code{h.cluster} parameters are from the \code{rect.hclust} function and can be used to divide the dendrogram into subclusters based on either number of clusters or height of branch, drawing boxes around subclusters. The members of each cluster can be returned (see value). If \code{n.cluster} is specified \code{h.cluster} will be ignored.
 
-If \code{select.cluster} is chosen individual subclusters can be selected and marked by a box by clicking on their highest comment branch with the (first) mouse buttom. Multiple clusters can be selected until any mouse button other than the first is pressed, and the function can be used in conjunction with either \code{n.cluster} or \code{h.cluster}. The members of each cluster will likewise be returned, in the order they were selected.}
+If \code{select.cluster} is chosen individual subclusters can be selected and marked by a box by clicking on their highest comment branch with the (first) mouse button. Multiple clusters can be selected until any mouse button other than the first is pressed, and the function can be used in conjunction with either \code{n.cluster} or \code{h.cluster}. The members of each cluster will likewise be returned, in the order they were selected.}
 
-\value{A plot is created on the current graphics device. If any subclusters are marked, these will be returned invisibly in a list, with one component for each subcluster. The individual slots in the list contain the names og the genes, and their position in the original input data (row number).}
+\value{A plot is created on the current graphics device. If any subclusters are marked, these will be returned invisibly in a list, with one component for each subcluster. The individual slots in the list contain the names of the genes, and their position in the original input data (row number).}
 
 \author{Heidi Dvinge}
 

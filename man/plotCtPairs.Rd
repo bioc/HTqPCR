@@ -22,7 +22,7 @@ plotCtPairs(q, cards = TRUE, lower.panel = panel.Ct.cor, upper.panel = panel.Ct.
   \item{cex.cor}{numeric, the expansion factor for the text in \code{panel.Ct.cor}.}
   \item{cex.pch}{numeric, the expansion factor for the points in \code{panel.Ct.scatter}.}
   \item{diag}{logical, should the diagonal line y=x be plotted.}
-  \item{\dots}{any other arguments are passed to the panel functon or \code{pairs}.}
+  \item{\dots}{any other arguments are passed to the panel function or \code{pairs}.}
 }
 
 \details{

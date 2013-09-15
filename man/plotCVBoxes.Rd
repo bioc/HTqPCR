@@ -19,7 +19,7 @@ plotCVBoxes(q, cards = TRUE, xlab = "", ylab = "CV", col = brewer.pal(5, "Spectr
   \item{\dots}{any other arguments will be passed to the \code{boxplot} function.}
 }
 
-\details{The CV is calculated across all the selected cards based on each well position, without taking possibly replicated genes on the cards into consideration. "type" and "class" are automaticalle extracted from the qPCRset using \code{featureType} and \code{featureClass}.}
+\details{The CV is calculated across all the selected cards based on each well position, without taking possibly replicated genes on the cards into consideration. "type" and "class" are automatically extracted from the qPCRset using \code{featureType} and \code{featureClass}.}
 
 \value{A plot is created on the current graphics device. The CV values are returned invisibly.}
 

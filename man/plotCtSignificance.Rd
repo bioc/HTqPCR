@@ -31,7 +31,7 @@ plotCtSignificance(qDE, q, comparison = 1, genes, p.val = 0.1, groups, calibrato
   \item{\dots}{any other arguments will be passed to the \code{barplot} function.}
 }
 
-\details{This function will make a barplot with the average Ct values for the test and reference samples for the selected genes. All the individual Ct values are plotted on top of the bars though, and the "Unreliable" or "Undetermined" ones are marked, to do a visual assesment of the impact of non-valid measurements on the average.
+\details{This function will make a barplot with the average Ct values for the test and reference samples for the selected genes. All the individual Ct values are plotted on top of the bars though, and the "Unreliable" or "Undetermined" ones are marked, to do a visual assessment of the impact of non-valid measurements on the average.
 	
 It's up to the user to specify the correct \code{calibrator} and \code{target} for the given comparison; no checking is done.	
 }

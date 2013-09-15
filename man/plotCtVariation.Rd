@@ -23,7 +23,7 @@ plotCtVariation(q, cards = TRUE, variation = "var", type = "summary", sample.rep
 
 \details{It is often useful to examine the data to determine if some samples are inherently more variable than other, or if the concordance between replicates on each qPCR card is acceptable. Using \code{type="summary"} generates a boxplot with all the variation values, either across genes (if \code{sample.reps} is set) or with each samples (default, or if \code{feature.reps} is set). That way the general distribution of variation or standard deviation values can be compared quickly.
 	
-If it looks like there's an unacceptable (or interesting) difference in teh variation, this can be further investigated using \code{type="detail"}. This will generate multiple sub-plots, containing a single scatterplot of variation versus mean for each gene (if \code{sample.reps} is set) or each sample (default, or if \code{feature.reps} is set). Including the mean in the plot can be used to assess heteroskedasticity in the data. }
+If it looks like there's an unacceptable (or interesting) difference in the variation, this can be further investigated using \code{type="detail"}. This will generate multiple sub-plots, containing a single scatterplot of variation versus mean for each gene (if \code{sample.reps} is set) or each sample (default, or if \code{feature.reps} is set). Including the mean in the plot can be used to assess heteroskedasticity in the data. }
 
 \value{A plot is created on the current graphics device. The variation and mean across each type of replicate is returned invisibly in a list with "Var" and "Mean" slots.}
 

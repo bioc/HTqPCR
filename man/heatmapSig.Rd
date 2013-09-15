@@ -10,7 +10,7 @@ heatmapSig(qDE, comparison = "all", col, zero.center = TRUE, mar, dist = "pearso
 
 \arguments{
   \item{qDE}{data.frame or list, as created by \code{ttestCtData} or \code{limmaCtData}.}
-  \item{comparison}{integers or the names of the comparisons to include in the plot. Deaults to all results in the \code{qDE} data, but a minimum of two is required.}
+  \item{comparison}{integers or the names of the comparisons to include in the plot. Defaults to all results in the \code{qDE} data, but a minimum of two is required.}
   \item{col}{colour scheme to use for the plot.}
   \item{zero.center}{logical, should the colour scale be centered around 0.}
   \item{mar}{vector of length two, the bottom and right side margins mof the heatmap.}

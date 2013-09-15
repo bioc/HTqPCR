@@ -3,7 +3,7 @@
 \alias{plotCtRQ}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Plot the relative quantification of Ct values from qPCR experiments.}
-\description{Function for plotting the relative quantification (RQ) between two groups of data, whose Ct valuse have been tested for significant differential expression.}
+\description{Function for plotting the relative quantification (RQ) between two groups of data, whose Ct values have been tested for significant differential expression.}
 
 \usage{
 plotCtRQ(qDE, comparison = 1, genes, transform = "log2", p.val = 0.1, mark.sig = TRUE, p.sig = 0.05, p.very.sig = 0.01, mark.un = TRUE, un.tar = "black", un.cal = "black", col, legend = TRUE, xlim, mar, main, ...)

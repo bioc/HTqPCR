@@ -41,7 +41,7 @@ If technical sample replicates are available, \code{dupcor} can be used. It is a
 	\item{meanReference }{The average Ct across the reference samples for the given comparison.}
 	\item{categoryTest }{The category of the Ct values ("OK", "Undetermined") across the test samples for the given comparison.}
 	\item{categoryReference }{The category of the Ct values ("OK", "Undetermined") across the reference samples for the given comparison.}
-Also, the last item in the list is called "Summary", and it's the result of calling \code{decideTests} from limma on the fitted data. This is a data frame with one row per feature and one column per comparison, with downregulation, no change and upregulation marked by -1, 0 and 1.
+Also, the last item in the list is called "Summary", and it's the result of calling \code{decideTests} from limma on the fitted data. This is a data frame with one row per feature and one column per comparison, with down-regulation, no change and up-regulation marked by -1, 0 and 1.
 }
 
 \references{
