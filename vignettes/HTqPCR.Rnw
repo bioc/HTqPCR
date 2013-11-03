@@ -91,8 +91,8 @@ The package employs functions from other packages of the Bioconductor project \c
 
 This vignette was developed in Sweave, so the embedded R code was compiled when the PDF was generated, and its output produced the results and plots that appear throughout the document. The following commands will extract all of the code from this file:
 
-<<Extract R code, results=hide>>=
-all.R.commands <- system.file("vignettes", "HTqPCR.Rnw", package = "HTqPCR")
+<<Extract R code, results=hide, eval=FALSE>>=
+all.R.commands <- system.file("doc", "HTqPCR.Rnw", package = "HTqPCR")
 Stangle(all.R.commands)
 @
 
