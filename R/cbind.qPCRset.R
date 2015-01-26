@@ -1,5 +1,6 @@
 cbind.qPCRset <-
 function(..., deparse.level=1) {
+	dotsenv <- parent.frame()
 	# Make list of all the qPCRsets to be combined
 	qsets	<- list(...)
 	n.qsets	<- length(qsets)
@@ -43,7 +44,7 @@ function(..., deparse.level=1) {
 	all.hist	<- sapply(qsets, getCtHistory)
 	new.hist	<- paste(rep(qset.names, times=sapply(all.hist, length)), unlist(all.hist), sep=": ")
 	new.hist	<- data.frame(history=new.hist, stringsAsFactors=FALSE)
-	setCtHistory(out)	<- rbind(new.hist, capture.output(match.call(cbind)))
+	setCtHistory(out)	<- rbind(new.hist, capture.output(match.call(envir=dotsenv)))
 
 	# Return object
 	out
