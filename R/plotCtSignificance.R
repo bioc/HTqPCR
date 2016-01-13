@@ -62,7 +62,7 @@ function(qDE,
 	old.par <- par(no.readonly = TRUE)
 	on.exit(par(old.par))
 	if (missing(mar)) {
-		max	<- max(nchar(colnames(exprs(q))[index]))
+		max	<- max(nchar(colnames(exprs(q))[index]), na.rm=TRUE)
 		mar	<- c(0.4*max+2,3,2,1)
 	}
 	if (missing(main))
