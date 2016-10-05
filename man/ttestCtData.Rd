@@ -47,15 +47,16 @@ The argument \code{p.adjust} is passed on to the \code{\link{p.adjust}} function
 \seealso{\code{\link{t.test}}, \code{\link{limmaCtData}}, \code{\link{mannwhitneyCtData}}. \code{\link{plotCtRQ}} and \code{\link{plotCtSignificance}} can be used for visualising the results.}
 
 \examples{
-# Load example preprocessed data
-data(qPCRpros)
-# Test between two groups, collapsing replicated features
-diff.exp <- ttestCtData(qPCRpros[,1:4], groups=factor(c("A", "B", "B", "A")), calibrator="B")
-diff.exp[1:10,]
-# The same test, taking replicated features individually
-diff.exp <- ttestCtData(qPCRpros[,1:4], groups=factor(c("A", "B", "B", "A")), calibrator="B", replicates=FALSE)
-# Using another method for p-value adjustment
-diff.exp <- ttestCtData(qPCRpros[,1:4], groups=factor(c("A", "B", "B", "A")), calibrator="B", p.adjust="holm")
 }
+
+%# Load example preprocessed data
+%data(qPCRpros)
+%# Test between two groups, collapsing replicated features
+%diff.exp <- ttestCtData(qPCRpros[,1:4], groups=factor(c("A", "B", "B", "A")), calibrator="B")
+%diff.exp[1:10,]
+%# The same test, taking replicated features individually
+%diff.exp <- ttestCtData(qPCRpros[,1:4], groups=factor(c("A", "B", "B", "A")), calibrator="B", replicates=FALSE)
+%# Using another method for p-value adjustment
+%diff.exp <- ttestCtData(qPCRpros[,1:4], groups=factor(c("A", "B", "B", "A")), calibrator="B", p.adjust="holm")
 
 \keyword{htest }

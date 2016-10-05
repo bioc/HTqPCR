@@ -50,11 +50,11 @@ plotCtOverview(qPCRraw, genes=g, xlim=c(0,60), groups=samples$Treatment, conf.in
 plotCtOverview(qPCRraw, genes=g, groups=samples$Treatment, calibrator="Control")
 plotCtOverview(qPCRraw, genes=g, groups=samples$Treatment, calibrator="Control", conf.int=TRUE, ylim=c(-0.5,0.5))
 plotCtOverview(qPCRraw, genes=g, groups=samples$Treatment, calibrator="LongStarve")
-# Plotting just some of the groups. The qPCRraw object has to be subsetted.
-ex <- samples$Treatment %in% c("Control", "LongStarve")
-plotCtOverview(qPCRraw[,ex], genes=g, groups=samples$Treatment[ex])
 }
 
+%# Plotting just some of the groups. The qPCRraw object has to be subsetted.
+%ex <- samples$Treatment %in% c("Control", "LongStarve")
+%plotCtOverview(qPCRraw[,ex], genes=g, groups=samples$Treatment[ex])
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

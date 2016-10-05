@@ -33,21 +33,22 @@ For both functions, the \code{getCtHistory} of all the individual objects will b
 
 
 \examples{
-# Load some example data and split into multiple qPCRset objects
-data(qPCRraw)
-q1 <- qPCRraw[,1:2]
-q2 <- qPCRraw[,2:4]
-q3 <- qPCRraw[,5:6]
-# Combine together by samples
-q.samples <- cbind(q1,q3,q2)
-n.wells(q.samples)
-n.samples(q.samples)
-# Combine as if the same samples had been run on multiple different cards
-sampleNames(q3) <- sampleNames(q1)
-q.features <- rbind(q1,q3)
-n.wells(q.features)
-n.samples(q.features)
 }
+
+%# Load some example data and split into multiple qPCRset objects
+%data(qPCRraw)
+%q1 <- qPCRraw[,1:2]
+%q2 <- qPCRraw[,2:4]
+%q3 <- qPCRraw[,5:6]
+%# Combine together by samples
+%q.samples <- cbind(q1,q3,q2)
+%n.wells(q.samples)
+%n.samples(q.samples)
+%# Combine as if the same samples had been run on multiple different cards
+%sampleNames(q3) <- sampleNames(q1)
+%q.features <- rbind(q1,q3)
+%n.wells(q.features)
+%n.samples(q.features)
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

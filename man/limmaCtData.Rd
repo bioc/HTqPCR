@@ -68,14 +68,16 @@ contrasts <- makeContrasts(LongStarve-Control, LongStarve-Starve, Starve-Control
 diff.exp <- limmaCtData(qPCRpros, design=design, contrasts=contrasts)
 # Some of the results
 diff.exp[["LongStarve - Control"]][1:10,]
-# Example with duplicate genes on card.
-# Reorder data to get the genes in consecutive rows
-temp <- qPCRpros[order(featureNames(qPCRpros)),]
-diff.exp <- limmaCtData(temp, design=design, contrasts=contrasts, ndups=2, spacing=1)
-# Some of the results
-names(diff.exp)
-diff.exp[["LongStarve - Control"]][1:10,]
-diff.exp[["Summary"]][1:10,]
 }
+
+%# Example with duplicate genes on card.
+%# Reorder data to get the genes in consecutive rows
+%temp <- qPCRpros[order(featureNames(qPCRpros)),]
+%diff.exp <- limmaCtData(temp, design=design, contrasts=contrasts, ndups=2, spacing=1)
+%# Some of the results
+%names(diff.exp)
+%diff.exp[["LongStarve - Control"]][1:10,]
+%diff.exp[["Summary"]][1:10,]
+
 
 \keyword{ htest }

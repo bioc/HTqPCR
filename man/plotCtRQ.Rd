@@ -44,17 +44,18 @@ If \code{mark.un=TRUE}, those bars where either the calibrator or target sample 
 }
 
 \examples{
-# Load example data and calculate differential expression
-data(qPCRpros)
-qDE <- ttestCtData(qPCRpros[,1:4], groups=factor(c("A", "B", "B", "A")), calibrator="B")
-# Plotting the top 10 results or first 10 genes
-plotCtRQ(qDE, genes=1:10)
-plotCtRQ(qDE, genes=featureNames(qPCRpros)[1:10])
-# Plot all results with p-value below 0.08
-plotCtRQ(qDE, p.val=0.08, transform="none")
-plotCtRQ(qDE, p.val=0.08, transform="log10")
 
 }
+
+%# Load example data and calculate differential expression
+%data(qPCRpros)
+%qDE <- ttestCtData(qPCRpros[,1:4], groups=factor(c("A", "B", "B", "A")), calibrator="B")
+%# Plotting the top 10 results or first 10 genes
+%plotCtRQ(qDE, genes=1:10)
+%plotCtRQ(qDE, genes=featureNames(qPCRpros)[1:10])
+%# Plot all results with p-value below 0.08
+%plotCtRQ(qDE, p.val=0.08, transform="none")
+%plotCtRQ(qDE, p.val=0.08, transform="log10")
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

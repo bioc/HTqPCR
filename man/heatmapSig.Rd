@@ -29,21 +29,22 @@ This function can be useful if multiple conditions are compared, for detecting f
 }
 
 \examples{
-# Load example preprocessed data
-data(qPCRpros)
-samples <- read.delim(file.path(system.file("exData", package="HTqPCR"), "files.txt"))
-# Define design and contrasts
-design <- model.matrix(~0+samples$Treatment)
-colnames(design) <- c("Control", "LongStarve", "Starve")
-contrasts <- makeContrasts(LongStarve-Control, LongStarve-Starve, Starve-Control, levels=design)
-# Reorder data to get the genes in consecutive rows
-temp <- qPCRpros[order(featureNames(qPCRpros)),]
-# The actual test
-qDE <- limmaCtData(temp, design=design, contrasts=contrasts, ndups=2, spacing=1)
-# Plotting the heatmap
-heatmapSig(qDE)
-heatmapSig(qDE, dist="euclidean")
 }
+
+%# Load example preprocessed data
+%data(qPCRpros)
+%samples <- read.delim(file.path(system.file("exData", package="HTqPCR"), "files.txt"))
+%# Define design and contrasts
+%design <- model.matrix(~0+samples$Treatment)
+%colnames(design) <- c("Control", "LongStarve", "Starve")
+%contrasts <- makeContrasts(LongStarve-Control, LongStarve-Starve, Starve-Control, levels=design)
+%# Reorder data to get the genes in consecutive rows
+%temp <- qPCRpros[order(featureNames(qPCRpros)),]
+%# The actual test
+%qDE <- limmaCtData(temp, design=design, contrasts=contrasts, ndups=2, spacing=1)
+%# Plotting the heatmap
+%heatmapSig(qDE)
+%heatmapSig(qDE, dist="euclidean")
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

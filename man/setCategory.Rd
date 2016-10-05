@@ -56,11 +56,12 @@ data(qPCRraw)
 exFiles <- read.delim(file.path(system.file("exData", package="HTqPCR"), "files.txt"))
  # Set categories in various ways
 setCategory(qPCRraw, flag=FALSE, quantile=NULL)
-setCategory(qPCRraw[,1:4], groups=exFiles$Treatment[1:4], plot=TRUE)
-setCategory(qPCRraw[,1:4], groups=exFiles$Treatment[1:4], plot=TRUE, quantile=0.80)
-x <- setCategory(qPCRraw, groups=exFiles$Treatment, verbose=FALSE, quantile=0.80)
-# Plot the categories
-plotCtCategory(x)
 }
+
+%setCategory(qPCRraw[,1:4], groups=exFiles$Treatment[1:4], plot=TRUE)
+%setCategory(qPCRraw[,1:4], groups=exFiles$Treatment[1:4], plot=TRUE, quantile=0.80)
+%x <- setCategory(qPCRraw, groups=exFiles$Treatment, verbose=FALSE, quantile=0.80)
+%# Plot the categories
+%plotCtCategory(x)
 
 \keyword{htest }

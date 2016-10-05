@@ -38,10 +38,6 @@ If it looks like there's an unacceptable (or interesting) difference in the vari
 # Load some example data
 data(qPCRraw)
 
-# Get a summary of the standard deviation across replicated features
-plotCtVariation(qPCRraw, variation="sd", log=TRUE)
-# Summary of the first 40 genes, assuming there are 3 groups of samples
-plotCtVariation(qPCRraw[1:40,], sample.reps=rep(1:2,3))
 
 # Detailed summary of variation versus mean Ct value for replicated features within each sample
 plotCtVariation(qPCRraw, type="detail", log=TRUE)
@@ -59,6 +55,12 @@ names(test)
 head(test[["Var"]])
 
 }
+
+%# Get a summary of the standard deviation across replicated features
+%plotCtVariation(qPCRraw, variation="sd", log=TRUE)
+%# Summary of the first 40 genes, assuming there are 3 groups of samples
+%plotCtVariation(qPCRraw[1:40,], sample.reps=rep(1:2,3))
+
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
