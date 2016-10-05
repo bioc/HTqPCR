@@ -46,7 +46,7 @@ setReplaceMethod("sampleNames",
 #------------------------------------------------------------------
 
 setMethod("[", "qPCRset",
-function(x, i=TRUE, j=TRUE, drop=FALSE) {
+function(x, i, j, drop=FALSE) {
 	# if(!missing(i)) {
 		# exprs(x) <- exprs(x)[i, , drop=FALSE]
 		# if (nrow(featureCategory(x))>0)
@@ -64,8 +64,12 @@ function(x, i=TRUE, j=TRUE, drop=FALSE) {
 		# phenoData(x) <- phenoData(x)[j,,drop=FALSE]
 	# }
 	# return(x)
+	if (missing(i))
+		i <- 1:nrow(x)
+	if (missing(j))
+		j <- 1:ncol(x)
 	out <- new("qPCRset", 
-				exprs=exprs(x)[i, j, drop=FALSE], 
+				exprs=unname(exprs(x)[i, j, drop=FALSE]), 
 				featureCategory=featureCategory(x)[i, j, drop=FALSE], 
 				flag=flag(x)[i, j, drop=FALSE])
 	phenoData(out) <- phenoData(x)[j,,drop=FALSE]
