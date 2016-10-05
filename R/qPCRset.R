@@ -150,7 +150,7 @@ setMethod("featureCategory", signature = "qPCRset", definition =
 )
 
 setReplaceMethod("featureCategory", signature = "qPCRset", definition =
- function (object, value) assayDataElementReplace(object, "featureCategory", value)
+ function (object, value) assayDataElementReplace(object, "featureCategory", value, validate=FALSE)
 )
 
 
@@ -177,7 +177,7 @@ setMethod("flag", signature = "qPCRset", definition =
 )
 
 setReplaceMethod("flag", signature = "qPCRset", definition =
- function (object, value) assayDataElementReplace(object, "flag", value)
+ function (object, value) assayDataElementReplace(object, "flag", value, validate=FALSE)
 )
 
 

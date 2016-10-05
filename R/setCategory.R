@@ -1,8 +1,8 @@
 setCategory <-
 function(q,
-	Ct.max	= 35,
-	Ct.min	= 10,
-	replicates	= TRUE,
+	Ct.max = 35,
+	Ct.min = 10,
+	replicates = TRUE,
 	quantile	= 0.90,
 	groups,
 	flag	= TRUE,

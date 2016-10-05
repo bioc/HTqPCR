@@ -24,7 +24,7 @@ LazyLoad: yes
 Depends: Biobase, RColorBrewer, limma 
 Suggests: statmod
 Imports: affy, Biobase, gplots, graphics, grDevices, limma, methods,
-  RColorBrewer, stats, stats4, utils, statmod
+  RColorBrewer, stats, stats4, utils
 biocViews: MicrotitrePlateAssay, DifferentialExpression,
   GeneExpression, DataImport, QualityControl, Preprocessing,
   Visualization, MultipleComparison, qPCR
