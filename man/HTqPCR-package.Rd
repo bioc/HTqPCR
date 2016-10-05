@@ -21,7 +21,7 @@ Depends: \tab methods\cr
 }
 
 \author{
-Maintainer: Heidi Dvinge <heidi@ebi.ac.uk> 
+Maintainer: Heidi Dvinge <hdvinge@fredhutch.org> 
 Maintainer: Paul Bertone <bertone@ebi.ac.uk>
 }
 
