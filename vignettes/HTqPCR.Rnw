@@ -38,10 +38,10 @@ raiselinks,plainpages,pdftex]{hyperref}
 
 \newcommand{\myincfig}[3]{%
   \begin{figure}[h!tb]
-    \begin{center}
-      \includegraphics[width=#2]{#1}
-      \caption{\label{#1}\textit{#3}}
-    \end{center}
+  \begin{center}
+  \includegraphics[width=#2]{#1}
+  \caption{\label{#1}\textit{#3}}
+  \end{center}
   \end{figure}
 }
 
@@ -142,15 +142,15 @@ class(qPCRraw)
 The format is the same for raw and normalized data, and depending on how much information is available about the input data, the object can contain the following information:
 
 \begin{description}
-    \item[\Robject{featureNames}] Object of class \Rclass{character} giving the names of the features (genes, miRNAs) used in the experiment. This is a column in the \Rclass{featureData} of the \Rclass{qPCRset} object (see below).
-    \item[\Robject{sampleNames}] Object of class \Rclass{character} containing the sample names of the individual experiments.
-    \item[\Robject{exprs}] Object of class \Rclass{matrix} containing the Ct values.
-    \item[\Robject{flag}] Object of class \Rclass{data.frame} containing the flag for each Ct value, as supplied by the input files. These are typically set during the calculation of Ct values, and indicate whether the results are flagged as e.g.~``Passed'' or ``Flagged''.
-    \item[\Robject{featureType}]Object of class \Rclass{character} representing the different types of features on the card, such as endogenous controls and target genes. This is a column in the \Rclass{featureData} of the \Rclass{qPCRset} object.
-    \item[\Robject{featurePos}] Object of class \Rclass{character} representing the location "well" of a gene in case TLDA cards are used, or some other method containing a defined spatial layout of features. Like \Robject{featureType} and \Robject{featureName}, \Robject{featurePos} is found within the \Rclass{featureData}.
-    \item[\Robject{featureClass}] Object of class \Rclass{factor} with some meta-data about the genes, for example if it is a  transcription factor, kinase, marker for different types of cancers or similar. This is typically set by the user, and will be located within the \Rclass{featureData}.
-    \item[\Robject{featureCategory}] Object of class \Rclass{data.frame} representing the quality of the measurement for each Ct value, such as ``OK'', ``Undetermined'' or ``Unreliable''. These can be set using the function \Rfunction{setCategories} depending on a number of parameters, such as how the Ct values are flagged, upper and lower limits of Ct values and variations between technical and biological replicates of the same feature.
-    \item[\Robject{history}] Object of class \Rclass{data.frame} indicating what operations have been performed on the \Rclass{qPCRset} object, and what the parameters were. Automatically set when any of the functions on the upper right hand side of figure~\ref{fig:workflow} are called (\Rfunction{readCtData, setCategory, filterCategory, normalizeCtData, filterCtData, changeCtLayout, rbind, cbind}).
+  \item[\Robject{featureNames}] Object of class \Rclass{character} giving the names of the features (genes, miRNAs) used in the experiment. This is a column in the \Rclass{featureData} of the \Rclass{qPCRset} object (see below).
+  \item[\Robject{sampleNames}] Object of class \Rclass{character} containing the sample names of the individual experiments.
+  \item[\Robject{exprs}] Object of class \Rclass{matrix} containing the Ct values.
+  \item[\Robject{flag}] Object of class \Rclass{data.frame} containing the flag for each Ct value, as supplied by the input files. These are typically set during the calculation of Ct values, and indicate whether the results are flagged as e.g.~``Passed'' or ``Flagged''.
+  \item[\Robject{featureType}]Object of class \Rclass{character} representing the different types of features on the card, such as endogenous controls and target genes. This is a column in the \Rclass{featureData} of the \Rclass{qPCRset} object.
+  \item[\Robject{featurePos}] Object of class \Rclass{character} representing the location "well" of a gene in case TLDA cards are used, or some other method containing a defined spatial layout of features. Like \Robject{featureType} and \Robject{featureName}, \Robject{featurePos} is found within the \Rclass{featureData}.
+  \item[\Robject{featureClass}] Object of class \Rclass{factor} with some meta-data about the genes, for example if it is a  transcription factor, kinase, marker for different types of cancers or similar. This is typically set by the user, and will be located within the \Rclass{featureData}.
+  \item[\Robject{featureCategory}] Object of class \Rclass{data.frame} representing the quality of the measurement for each Ct value, such as ``OK'', ``Undetermined'' or ``Unreliable''. These can be set using the function \Rfunction{setCategories} depending on a number of parameters, such as how the Ct values are flagged, upper and lower limits of Ct values and variations between technical and biological replicates of the same feature.
+  \item[\Robject{history}] Object of class \Rclass{data.frame} indicating what operations have been performed on the \Rclass{qPCRset} object, and what the parameters were. Automatically set when any of the functions on the upper right hand side of figure~\ref{fig:workflow} are called (\Rfunction{readCtData, setCategory, filterCategory, normalizeCtData, filterCtData, changeCtLayout, rbind, cbind}).
 \end{description}
 
 Generally, information can be handled in the \Rclass{qPCRset} using the same kind of functions as for \Rclass{ExpressionSet}, such as \Rfunction{exprs}, \Rfunction{featureNames} and \Rfunction{featureCategory} for extracting the data, and  \Rfunction{exprs<-}, \Rfunction{featureNames<-} and \Rfunction{featureCategory<-} for replacing or modifying values. The use of \Rfunction{exprs} might not be intuitive to users who are not used to dealing with microarray data, and hence \Rclass{ExpressionSet}. The functions \Rfunction{getCt} and \Rfunction{setCt<-} that perform the same operations as \Rfunction{exprs} and \Rfunction{exprs<-} are therefore also included. For the sake of consistency, \Rfunction{exprs} will be used throughout this vignette for accessing the Ct values, but it can be replaced by \Rfunction{getCt} in all examples.
@@ -302,15 +302,15 @@ In some cases more than two replicates are present, either within each qPCR card
 \Rfunction{plotCtVariation} generates a boxplot with all the variation values, either across genes or with each samples. That way the general distribution of variation or standard deviation values can be compared quickly (Figure~\ref{fig:variation}).  For illustration, we use a data set where one of the samples is highly variable.
 
 <<Ct variation ex 1, include=FALSE>>=
-raw.mix	<- raw
-exprs(raw.mix)[,6]	<- sample(exprs(raw[,6]))
+raw.mix <- raw
+exprs(raw.mix)[,6] <- sample(exprs(raw[,6]))
 plotCtVariation(raw.mix, variation="sd", log=TRUE, main="SD of replicated features", col="lightgrey")
 @
 
 If it looks like there's an unacceptable (or interesting) difference in the variation, this can be further investigated using the parameter \Rfunction{type="detail"}. This will generate multiple sub-plots, containing a single scatterplot of variation versus mean for each gene or sample (Figure~\ref{fig:variation}). That way individual outliers can be identified, or whole samples removed by examining the resulting variation in more detail. 
 
 <<Ct variation ex 2, include=FALSE>>=
-raw.variation	<- plotCtVariation(raw.mix, type="detail", add.featurenames=TRUE, pch=" ", cex=1.2)
+raw.variation <- plotCtVariation(raw.mix, type="detail", add.featurenames=TRUE, pch=" ", cex=1.2)
 @
 <<Ct variation ex 2 in detail>>=
 names(raw.variation)
@@ -479,17 +479,17 @@ nr.norm[,c(1,3,5)]
 
 Filtering is done by specifying the components to remove, either by just using a single criteria, or by combining multiple filters:
 <<Filter data 1>>=
-qFilt   <- filterCtData(nr.norm, remove.type="Endogenous Control")
-qFilt   <- filterCtData(nr.norm, remove.name=c("Gene1", "Gene20", "Gene30"))
-qFilt   <- filterCtData(nr.norm, remove.class="Kinase")
-qFilt   <- filterCtData(nr.norm, remove.type=c("Endogenous Control"), remove.name=c("Gene1", "Gene20", "Gene30"))
+qFilt <- filterCtData(nr.norm, remove.type="Endogenous Control")
+qFilt <- filterCtData(nr.norm, remove.name=c("Gene1", "Gene20", "Gene30"))
+qFilt <- filterCtData(nr.norm, remove.class="Kinase")
+qFilt <- filterCtData(nr.norm, remove.type=c("Endogenous Control"), remove.name=c("Gene1", "Gene20", "Gene30"))
 @
 
 The data can also be adjusted according to feature categories. With \Rfunction{filterCategory} mentioned previously it's possible to replace certain Ct values with NA, but one might want to completely exclude features where a certain number of the Ct values are for example unreliable.
 
 <<Filter data 2>>=
-qFilt   <- filterCtData(nr.norm, remove.category="Undetermined")
-qFilt   <- filterCtData(nr.norm, remove.category="Undetermined", n.category=5)
+qFilt <- filterCtData(nr.norm, remove.category="Undetermined")
+qFilt <- filterCtData(nr.norm, remove.category="Undetermined", n.category=5)
 @
 
 Another typical filtering step would be to remove features showing little or no variation across samples, prior to testing for statistical significance of genes between samples. Features with relatively constant Ct levels are less likely to be differentially expressed, so including them in the downstream analysis would cause some loss of power when adjusting the p-values for multiple testing (the feature-by-feature hypothesis testing).  Variation across samples can be assessed using for example the interquartile range (IQR) values for each feature (Figure~\ref{fig:IQR}). 
@@ -503,7 +503,7 @@ abline(v=1.5, col=2)
 All features with IQR below a certain threshold can then be filtered out.
 
 <<Filter data 3>>=
-qFilt   <- filterCtData(nr.norm, remove.IQR=1.5)
+qFilt <- filterCtData(nr.norm, remove.IQR=1.5)
 @
 
 \begin{figure}
@@ -820,8 +820,8 @@ Starve-Control, (Starve+LongStarve)/2-Control, levels=design)
 colnames(contrasts) <- c("LS-C", "LS-S", "S-C", "bothS-C")
 print(contrasts)
 # Reorder data to get the genes in consecutive rows
-sr.norm2    <- sr.norm[order(featureNames(sr.norm)),] 
-qDE.limma       <- limmaCtData(sr.norm2, design=design, contrasts=contrasts, 
+sr.norm2  <- sr.norm[order(featureNames(sr.norm)),] 
+qDE.limma   <- limmaCtData(sr.norm2, design=design, contrasts=contrasts, 
 ndups=2, spacing=1)
 @
 
@@ -960,8 +960,8 @@ getCtHistory(qPCRnew4)
 In some cases it might be desirable to merge multiple qPCRset objects, that have been read into R or processed individually. The \Rpackage{HTqPCR} package contains two functions for combining multiple \Robject{qPCRset} objects into one, by either adding columns (samples) or rows (features). This can be done for either identical samples across multiple different cards (such as a 384 well plate), or if more samples have been run on cards with the same layout.
 
 \begin{description}
-    \item[\Rfunction{cbind}] combines data assuming that all experiments have been carried out on identical cards, i.e.~that \Robject{featureNames, featureType, featurePos} and \Robject{featureClass} is identical across all the qPCRset objects. The number of features in each object much be identical, but number of samples can vary.
-    \item[\Rfunction{rbind}] combines data assuming that the same samples have been analysed using different qPCR cards. The number of samples in each object must be identical, but the number of features can vary.
+  \item[\Rfunction{cbind}] combines data assuming that all experiments have been carried out on identical cards, i.e.~that \Robject{featureNames, featureType, featurePos} and \Robject{featureClass} is identical across all the qPCRset objects. The number of features in each object much be identical, but number of samples can vary.
+  \item[\Rfunction{rbind}] combines data assuming that the same samples have been analysed using different qPCR cards. The number of samples in each object must be identical, but the number of features can vary.
 \end{description}
 
 Both these functions should be used with some care; consider e.g.~whether to normalize before or after joining the samples, and what method to use.
