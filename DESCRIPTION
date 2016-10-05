@@ -1,7 +1,7 @@
 Package: HTqPCR
 Type: Package
 Title: Automated analysis of high-throughput qPCR data
-Version: 1.27.2
+Version: 1.27.3
 Author: Heidi Dvinge, Paul Bertone
 Maintainer: Heidi Dvinge <hdvinge@fredhutch.org>
 Description: Analysis of Ct values from high throughput quantitative
@@ -21,10 +21,10 @@ Reference: Heidi Dvinge and Paul Bertone (2009). HTqPCR:
 License: Artistic-2.0
 URL: http://www.ebi.ac.uk/bertone/software
 LazyLoad: yes
-Depends: Biobase, RColorBrewer, limma
-Suggests: statmod
+Depends: Biobase, RColorBrewer, limma, statmod
+Suggests: 
 Imports: affy, Biobase, gplots, graphics, grDevices, limma, methods,
-        RColorBrewer, stats, stats4, utils
+        RColorBrewer, stats, stats4, utils, statmod
 biocViews: MicrotitrePlateAssay, DifferentialExpression,
         GeneExpression, DataImport, QualityControl, Preprocessing,
         Visualization, MultipleComparison, qPCR
