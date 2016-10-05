@@ -46,24 +46,31 @@ setReplaceMethod("sampleNames",
 #------------------------------------------------------------------
 
 setMethod("[", "qPCRset",
-function(x, i, j, drop=FALSE) {
-	if(!missing(i)) {
-		exprs(x) <- exprs(x)[i, , drop=FALSE]
-		if (nrow(featureCategory(x))>0)
-			featureCategory(x) <- featureCategory(x)[i, , drop=FALSE]
-		if (nrow(flag(x))>0)
-			flag(x) <- flag(x)[i, , drop=FALSE]
-		featureData(x) <- featureData(x)[i,,drop=FALSE]
-	}
-	if(!missing(j)) {
-		exprs(x) <- exprs(x)[, j, drop=FALSE]
-		if (ncol(featureCategory(x))>0)
-			featureCategory(x) <- featureCategory(x)[, j, drop=FALSE]
-		if (ncol(flag(x))>0)
-			flag(x) <- flag(x)[, j, drop=FALSE]
-		phenoData(x) <- phenoData(x)[j,,drop=FALSE]
-	}
-	return(x)
+function(x, i=TRUE, j=TRUE, drop=FALSE) {
+	# if(!missing(i)) {
+		# exprs(x) <- exprs(x)[i, , drop=FALSE]
+		# if (nrow(featureCategory(x))>0)
+			# featureCategory(x) <- featureCategory(x)[i, , drop=FALSE]
+		# if (nrow(flag(x))>0)
+			# flag(x) <- flag(x)[i, , drop=FALSE]
+		# featureData(x) <- featureData(x)[i,,drop=FALSE]
+	# }
+	# if(!missing(j)) {
+		# exprs(x) <- exprs(x)[, j, drop=FALSE]
+		# if (ncol(featureCategory(x))>0)
+			# featureCategory(x) <- featureCategory(x)[, j, drop=FALSE]
+		# if (ncol(flag(x))>0)
+			# flag(x) <- flag(x)[, j, drop=FALSE]
+		# phenoData(x) <- phenoData(x)[j,,drop=FALSE]
+	# }
+	# return(x)
+	out <- new("qPCRset", 
+				exprs=exprs(x)[i, j, drop=FALSE], 
+				featureCategory=featureCategory(x)[i, j, drop=FALSE], 
+				flag=flag(x)[i, j, drop=FALSE])
+	phenoData(out) <- phenoData(x)[j,,drop=FALSE]
+	featureNames(out) <- featureNames(x)[i]
+	out
 })
 
 
@@ -80,7 +87,7 @@ function(object) {
 	cat("Feature classes:\t\t", paste(levels(featureClass(object)), collapse=", "), "\n")
 	cat("Feature categories:\t", paste(unique(unlist(featureCategory(object))), collapse=", "), "\n")
 	n <- ifelse(length(sampleNames(object))>2, 3, length(sampleNames(object)))
-	cat("Sample names:\t\t\t", sampleNames(object)[1:n], "...\n")
+	cat("Sample names:\t\t", sampleNames(object)[1:n], "...\n")
 })
 
 setMethod("summary","qPCRset",
@@ -138,7 +145,8 @@ setReplaceMethod("featureType", signature = "qPCRset", definition =
 #------------------------------------------------------------------
 
 setMethod("featureCategory", signature = "qPCRset", definition =
- function (object) {x <-assayDataElement(object, "featureCategory"); rownames(x) <- make.unique(featureNames(object)); x}
+ function (object) {x <- assayDataElement(object, "featureCategory"); rownames(x) <- make.unique(featureNames(object)); x}
+# function (object) {x <- assayDataElement(object, "featureCategory"); x}
 )
 
 setReplaceMethod("featureCategory", signature = "qPCRset", definition =
@@ -165,6 +173,7 @@ setReplaceMethod("featureClass", signature = "qPCRset", definition =
 
 setMethod("flag", signature = "qPCRset", definition =
  function (object) {x <-assayDataElement(object, "flag"); rownames(x) <- make.unique(featureNames(object)); x}
+# function (object) {x <-assayDataElement(object, "flag"); x}
 )
 
 setReplaceMethod("flag", signature = "qPCRset", definition =
