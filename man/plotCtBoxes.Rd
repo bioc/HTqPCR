@@ -9,15 +9,15 @@ plotCtBoxes(q, cards = TRUE, xlab = "", col, main = NULL, names, stratify = "typ
 }
 
 \arguments{
-  \item{q}{object of class qPCRset. }
-  \item{cards}{vector, the numbers of the cards to plot. Defaults to TRUE = all cards.}
-  \item{xlab}{character string, label for the x-axis.}
-  \item{col}{vector of colours to use, defaults to different colour for each card.}
-  \item{main}{character string, plot title.}
-  \item{names}{vector, names to plot under the boxes. Defaults to sample names.}
-  \item{stratify}{character, specifying what to stratify the Ct values by. NULL, the default means no stratification, "type" is the feature types of the qPCRset, and "class" the feature class.}
-  \item{mar}{vector, the size of the margins. See \code{\link{par}} for details.}
-  \item{\dots}{any other arguments will be passed to the \code{boxplot} or \code{par}function.}
+ \item{q}{object of class qPCRset. }
+ \item{cards}{vector, the numbers of the cards to plot. Defaults to TRUE = all cards.}
+ \item{xlab}{character string, label for the x-axis.}
+ \item{col}{vector of colours to use, defaults to different colour for each card.}
+ \item{main}{character string, plot title.}
+ \item{names}{vector, names to plot under the boxes. Defaults to sample names.}
+ \item{stratify}{character, specifying what to stratify the Ct values by. NULL, the default means no stratification, "type" is the feature types of the qPCRset, and "class" the feature class.}
+ \item{mar}{vector, the size of the margins. See \code{\link{par}} for details.}
+ \item{\dots}{any other arguments will be passed to the \code{boxplot} or \code{par}function.}
 }
 
 \details{

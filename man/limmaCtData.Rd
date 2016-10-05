@@ -9,15 +9,15 @@ limmaCtData(q, design = NULL, contrasts, sort = TRUE, stringent = TRUE, ndups = 
 }
 
 \arguments{
-  \item{q}{object of class qPCRset.}
-  \item{design}{matrix, design of the experiment rows corresponding to cards and columns to coefficients to be estimated. See details.}
-  \item{contrasts}{matrix,  with columns containing contrasts. See details}
-  \item{sort}{boolean, should the output be sorted by adjusted p-values.}
-  \item{stringent}{boolean, for flagging results as "Undetermined". See details.}
-  \item{ndups}{integer, the number of times each feature is present on the card.}
-  \item{spacing}{integer, the spacing between duplicate spots, spacing=1 for consecutive spots}
-  \item{dupcor}{list, the output from \code{duplicateCorrelation}. See details.}
-  \item{\dots}{any other arguments are passed to \code{lmFit}, \code{contrasts.fit},  \code{eBayes} or \code{decideTests}.}
+ \item{q}{object of class qPCRset.}
+ \item{design}{matrix, design of the experiment rows corresponding to cards and columns to coefficients to be estimated. See details.}
+ \item{contrasts}{matrix, with columns containing contrasts. See details}
+ \item{sort}{boolean, should the output be sorted by adjusted p-values.}
+ \item{stringent}{boolean, for flagging results as "Undetermined". See details.}
+ \item{ndups}{integer, the number of times each feature is present on the card.}
+ \item{spacing}{integer, the spacing between duplicate spots, spacing=1 for consecutive spots}
+ \item{dupcor}{list, the output from \code{duplicateCorrelation}. See details.}
+ \item{\dots}{any other arguments are passed to \code{lmFit}, \code{contrasts.fit}, \code{eBayes} or \code{decideTests}.}
 }
 
 \details{This function is a wrapper for the functions \code{lmFit}, \code{contrasts.fit} (if a contrast matrix is supplied) and \code{eBayes} from the limma package. See the help pages for these functions for more information about setting up the design and contrast matrices.
@@ -26,7 +26,7 @@ All results are assigned to a category, either "OK" or "Unreliable" depending on
 
 Note that when there are replicated features in the samples, each feature is assumed to be present the same number of times, and with regular spacing between replicates. Reordering the sample by \code{featureNames} and setting \code{spacing=1} is recommendable.
 
-If technical sample replicates are available, \code{dupcor} can be used. It is a list containing the estimated correlation between replicates. \code{limmaCtData} will then take this correlation into account when fitting a model for each gene. It can be calculate using the function \code{\link[limma]{duplicateCorrelation}}. Technical replicates and duplicated spots can't be assessed at the same time though, so if \code{dupcor} is used, \code{ndups} should be 1. 
+If technical sample replicates are available, \code{dupcor} can be used. It is a list containing the estimated correlation between replicates. \code{limmaCtData} will then take this correlation into account when fitting a model for each gene. It can be calculate using the function \code{\link[limma]{duplicateCorrelation}}. Technical replicates and duplicated spots can't be assessed at the same time though, so if \code{dupcor} is used, \code{ndups} should be 1.
 }
 
 \value{A list of data.frames, one for each column in \code{design}, or for each comparison in \code{contrasts} if this matrix is supplied. Each component of the list contains the result of the given comparisons, with one row per gene and has the columns:
@@ -63,15 +63,15 @@ samples <- read.delim(file.path(system.file("exData", package="HTqPCR"), "files.
 # Define design and contrasts
 design <- model.matrix(~0+samples$Treatment)
 colnames(design) <- c("Control", "LongStarve", "Starve")
-contrasts	<- makeContrasts(LongStarve-Control, LongStarve-Starve, Starve-Control, levels=design)
+contrasts <- makeContrasts(LongStarve-Control, LongStarve-Starve, Starve-Control, levels=design)
 # The actual test
 diff.exp <- limmaCtData(qPCRpros, design=design, contrasts=contrasts)
 # Some of the results
 diff.exp[["LongStarve - Control"]][1:10,]
-# Example with duplicate genes on card. 
+# Example with duplicate genes on card.
 # Reorder data to get the genes in consecutive rows
-temp	<- qPCRpros[order(featureNames(qPCRpros)),] 
-diff.exp	<- limmaCtData(temp, design=design, contrasts=contrasts, ndups=2, spacing=1)
+temp <- qPCRpros[order(featureNames(qPCRpros)),]
+diff.exp <- limmaCtData(temp, design=design, contrasts=contrasts, ndups=2, spacing=1)
 # Some of the results
 names(diff.exp)
 diff.exp[["LongStarve - Control"]][1:10,]

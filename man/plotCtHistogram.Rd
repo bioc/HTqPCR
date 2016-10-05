@@ -10,13 +10,13 @@ plotCtHistogram(q, card = 1, xlab = "Ct", col, main, n = 30, ...)
 }
 
 \arguments{
-  \item{q}{an object of class qPCRset.}
-  \item{card}{integer, the number of the card (sample) to plot.}
-  \item{xlab}{character string, the label for the x-axis.}
-  \item{col}{integer or character, the colour for the histogram.}
-  \item{main}{character string, the plot title. Default is the name of the sample.}
-  \item{n}{integer, number of bins to divide the Ct values into.}
-  \item{\dots}{any other arguments are passed to \code{hist}.}
+ \item{q}{an object of class qPCRset.}
+ \item{card}{integer, the number of the card (sample) to plot.}
+ \item{xlab}{character string, the label for the x-axis.}
+ \item{col}{integer or character, the colour for the histogram.}
+ \item{main}{character string, the plot title. Default is the name of the sample.}
+ \item{n}{integer, number of bins to divide the Ct values into.}
+ \item{\dots}{any other arguments are passed to \code{hist}.}
 }
 
 \value{A figure is generated in the current graphics device.}

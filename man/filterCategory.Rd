@@ -11,12 +11,12 @@ filterCategory(q, na.categories = c("Unreliable", "Undetermined"))
 }
 
 \arguments{
-  \item{q}{a qPCRset object.}
-  \item{na.categories}{character vector, with the name(s) of the feature categories where Ct values will be considered NA.}
+ \item{q}{a qPCRset object.}
+ \item{na.categories}{character vector, with the name(s) of the feature categories where Ct values will be considered NA.}
 }
 
 %\details{
-%%  ~~ If necessary, more details than the description above ~~
+%% ~~ If necessary, more details than the description above ~~
 %}
 
 \value{A qPCRset object like the input, but with the selected Ct values replaced by NAs}

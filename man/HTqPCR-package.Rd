@@ -21,7 +21,7 @@ Depends: \tab methods\cr
 }
 
 \author{
-Maintainer: Heidi Dvinge <hdvinge@fredhutch.org> 
+Maintainer: Heidi Dvinge <hdvinge@fredhutch.org>
 Maintainer: Paul Bertone <bertone@ebi.ac.uk>
 }
 
@@ -41,8 +41,8 @@ exPath <- system.file("exData", package="HTqPCR")
 exFiles <- read.delim(file.path(exPath, "files.txt"))
 raw <- readCtData(files=exFiles$File, path=exPath)
 # Preprocess
-raw.cats	<- setCategory(raw, groups=exFiles$Treatment, plot=FALSE)
-norm	<- normalizeCtData(raw.cats, norm="scale.rank")
+raw.cats <- setCategory(raw, groups=exFiles$Treatment, plot=FALSE)
+norm <- normalizeCtData(raw.cats, norm="scale.rank")
 # Various plots
 plotCtDensity(norm)
 plotCtBoxes(norm)
@@ -52,9 +52,9 @@ plotCtScatter(norm, cards=c(1,4), col="type")
 # Define design and contrasts for testing differential expression
 design <- model.matrix(~0+exFiles$Treatment)
 colnames(design) <- c("Control", "LongStarve", "Starve")
-contrasts	<- makeContrasts(LongStarve-Control, LongStarve-Starve, Starve-Control, levels=design)
+contrasts <- makeContrasts(LongStarve-Control, LongStarve-Starve, Starve-Control, levels=design)
 # Reorder by featureNames (2 replicates of each feature) and the actual test
-norm2	<- norm[order(featureNames(norm)),]
+norm2 <- norm[order(featureNames(norm)),]
 diff.exp <- limmaCtData(norm2, design=design, contrasts=contrasts, ndups=2, spacing=1)
 # Some of the results
 names(diff.exp)

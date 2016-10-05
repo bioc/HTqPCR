@@ -10,18 +10,18 @@ plotCtPCA(q, s.names, f.names, scale = TRUE, features = TRUE, col, cex = c(1, 1)
 }
 
 \arguments{
-  \item{q}{a matrix or an object of class qPCRset containing Ct values.}
-  \item{s.names}{character vector, names of samples. See details.}
-  \item{f.names}{character vector, names of features. See details.}
-  \item{scale}{logical, should the variables be scaled to have unit variance. Passed on to \code{prcomp}.}
-  \item{features}{logical, should the features be plotted. See details.}
-  \item{col}{vector, the colours to use for the samples if \code{features=FALSE}.}
-  \item{cex}{vector of length 2, the expansion to use for features and samples respectively if \code{features=FALSE}.}
+ \item{q}{a matrix or an object of class qPCRset containing Ct values.}
+ \item{s.names}{character vector, names of samples. See details.}
+ \item{f.names}{character vector, names of features. See details.}
+ \item{scale}{logical, should the variables be scaled to have unit variance. Passed on to \code{prcomp}.}
+ \item{features}{logical, should the features be plotted. See details.}
+ \item{col}{vector, the colours to use for the samples if \code{features=FALSE}.}
+ \item{cex}{vector of length 2, the expansion to use for features and samples respectively if \code{features=FALSE}.}
 }
 
 \details{Per default the sample names from the qPCRset are used, however the feature names are replaced by "*" to avoid cluttering the plot.
 	
-If \code{features=TRUE} then a biplot including all features is produced, with samples  represented by vectors. I.e. both observations and variables are plotted, which can potentially be used to identify outliers among the features. For \code{features=FALSE} only the samples will be included in the plot. This might be more useful for clustering.
+If \code{features=TRUE} then a biplot including all features is produced, with samples represented by vectors. I.e. both observations and variables are plotted, which can potentially be used to identify outliers among the features. For \code{features=FALSE} only the samples will be included in the plot. This might be more useful for clustering.
 	
 In case of high-throughput arrays, some samples may be all NAs. These are ignored during the PCA calculation.}
 

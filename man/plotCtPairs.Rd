@@ -12,17 +12,17 @@ plotCtPairs(q, cards = TRUE, lower.panel = panel.Ct.cor, upper.panel = panel.Ct.
 }
 
 \arguments{
-  \item{q}{object of class qPCRset. }
-  \item{cards}{vector, the cards to plot against each other.}
-  \item{lower.panel}{function, to use for plotting the lower triangle.}
-  \item{upper.panel}{function, to use for plotting the upper triangle.}
-  \item{Ct.max}{numeric, Ct values above this limit will be excluded when calculating the correlation.}
-  \item{col}{vector with the colour(s) to use for the points, or a character string ("type" or "class") indicating whether points should be coloured according to \code{featureType} or \code{featureClass} of \code{q}.}
-  \item{pch}{integer or single character, which plotting symbol to use for the points.}
-  \item{cex.cor}{numeric, the expansion factor for the text in \code{panel.Ct.cor}.}
-  \item{cex.pch}{numeric, the expansion factor for the points in \code{panel.Ct.scatter}.}
-  \item{diag}{logical, should the diagonal line y=x be plotted.}
-  \item{\dots}{any other arguments are passed to the panel function or \code{pairs}.}
+ \item{q}{object of class qPCRset. }
+ \item{cards}{vector, the cards to plot against each other.}
+ \item{lower.panel}{function, to use for plotting the lower triangle.}
+ \item{upper.panel}{function, to use for plotting the upper triangle.}
+ \item{Ct.max}{numeric, Ct values above this limit will be excluded when calculating the correlation.}
+ \item{col}{vector with the colour(s) to use for the points, or a character string ("type" or "class") indicating whether points should be coloured according to \code{featureType} or \code{featureClass} of \code{q}.}
+ \item{pch}{integer or single character, which plotting symbol to use for the points.}
+ \item{cex.cor}{numeric, the expansion factor for the text in \code{panel.Ct.cor}.}
+ \item{cex.pch}{numeric, the expansion factor for the points in \code{panel.Ct.scatter}.}
+ \item{diag}{logical, should the diagonal line y=x be plotted.}
+ \item{\dots}{any other arguments are passed to the panel function or \code{pairs}.}
 }
 
 \details{

@@ -17,21 +17,21 @@ readCtData(files, path = NULL, n.features = 384, format="plain", column.info, fl
 }
 
 \arguments{
-  \item{files}{ character vector with the names of the files to be read.}
-  \item{path}{ character string with the path to the folder containing the data files.}
-  \item{n.features}{integer, number of features present on each array (e.g. 384). See details.}
-  \item{format}{character, the format of the input file. Options are "plain", "SDS", "LightCycler", "CFX", "OpenArray" and "BioMark". See Details. }
-  \item{column.info}{list, indicating which column number or name the information of interest is in. It is set automatically by \code{format}, but this can be overridden manually. The names list slots can be 'flag', 'feature', 'position', 'type and 'Ct'. See Details. Note than when indicating column names, these are sometimes changed by R to be syntactically valid, so replacing e.g. brackets by dots. }
-  \item{flag,feature,
-  Ct,type,
-  position}{deprecated, use \code{column.info} instead.}
-  \item{header}{logical, does the file contain a header row or not. Only used for \code{format="plain"}.}
-  \item{SDS}{deprecated, use \code{format="SDS"} instead.}
-  \item{n.data}{integer vector, same length as \code{files}. Indicates the number of samples that are present in each file. For each file in \code{files}, n.data*n.features lines will be read.}
+ \item{files}{ character vector with the names of the files to be read.}
+ \item{path}{ character string with the path to the folder containing the data files.}
+ \item{n.features}{integer, number of features present on each array (e.g. 384). See details.}
+ \item{format}{character, the format of the input file. Options are "plain", "SDS", "LightCycler", "CFX", "OpenArray" and "BioMark". See Details. }
+ \item{column.info}{list, indicating which column number or name the information of interest is in. It is set automatically by \code{format}, but this can be overridden manually. The names list slots can be 'flag', 'feature', 'position', 'type and 'Ct'. See Details. Note than when indicating column names, these are sometimes changed by R to be syntactically valid, so replacing e.g. brackets by dots. }
+ \item{flag,feature,
+ Ct,type,
+ position}{deprecated, use \code{column.info} instead.}
+ \item{header}{logical, does the file contain a header row or not. Only used for \code{format="plain"}.}
+ \item{SDS}{deprecated, use \code{format="SDS"} instead.}
+ \item{n.data}{integer vector, same length as \code{files}. Indicates the number of samples that are present in each file. For each file in \code{files}, n.data*n.features lines will be read.}
  \item{samples}{ character vector with names for each sample. Per default the file names are used.}
-  \item{na.value}{integer, a Ct value that will be assigned to all undetermined/NA wells.}
-  \item{sample.info}{object of class \code{AnnotatedDataFrame}, given the phenoData of the object. Can be added later.}
-  \item{\dots}{ any other arguments are passed to \code{\link{read.table}} or \code{\link{read.csv}}.}
+ \item{na.value}{integer, a Ct value that will be assigned to all undetermined/NA wells.}
+ \item{sample.info}{object of class \code{AnnotatedDataFrame}, given the phenoData of the object. Can be added later.}
+ \item{\dots}{ any other arguments are passed to \code{\link{read.table}} or \code{\link{read.csv}}.}
 }
 
 \details{
@@ -44,7 +44,7 @@ The information to be extracted is:
 	\item{\code{type}}{ integer indicating the number of column containing information about the type of each feature.}
 	\item{\code{position}}{ integer indicating the number of column containing information about the position of features on the card.}
 	\item{\code{Ct}}{ integer indicating the number of column containing information about the Ct values.}
-Per default, this information is assumed to be in certain columns depending on the input format.  
+Per default, this information is assumed to be in certain columns depending on the input format.
 }
 
 \code{featureNames}, \code{featureType} and \code{featurePos} will be extracted from the first file. If \code{flag}, \code{type} or \code{position} are not included into \code{column.info}, this means that this information is not available in the file. \code{flag} will then be set to "Passed", \code{type} to "Target" and \code{position} to "feature1", "feature2", ... etc until the end of the file. Especially \code{position} might not be available in case the data does not come from a card format, but it is required in subsequent functions in order to disambiguate in case some features are present multiple times.
@@ -63,7 +63,7 @@ The BioMark and OpenArray assays always contain information multiple samples on 
 If the data was analysed using for example SDS Software it may contain a variable length header specifying parameters for files that were analysed at the same time. If \code{format="SDS"} then \code{readCtData} will scan through the first 100 lines of each file, and skip all lines until (and including) the line beginning with "#", which is the header. The end of the file might also contain some plate ID information, but only the number of lines specified in \code{n.features} will be read.
 
 \code{n.features} indicates the number of features present on each array. For example, for a 384 well plate with just 1 sample, the number would be 382. For a plate with 2 individual samples loaded onto it, \code{n.features=196} and \code{n.data=2}. For 1 file with 5 plates and 2 samples per plate, the numbers are \code{n.features=196} and \code{n.data=10}. n.features*n.data must correspond to the total number of lines to be read from each file.
-}                               
+}
 
 \section{Warnings}{
 The files are all assumed to belong to the same design, i.e.~have the same features (genes) in them and in identical order.}
@@ -81,8 +81,8 @@ exPath <- system.file("exData", package="HTqPCR")
 exFiles <- read.delim(file.path(exPath, "files.txt"))
 raw <- readCtData(files=exFiles$File, path=exPath)
 # Example of adding missing information (random data in this case)
-featureClass(raw)	<- factor(rep(c("A", "B", "C"), each=384/3))
-pData(raw)[,"rep"] 	<- c(1,1,2,2,3,3)
+featureClass(raw) <- factor(rep(c("A", "B", "C"), each=384/3))
+pData(raw)[,"rep"]  <- c(1,1,2,2,3,3)
 
 ## See the package vignette for more examples, including different input formats.
 

@@ -10,23 +10,23 @@ plotCtRQ(qDE, comparison = 1, genes, transform = "log2", p.val = 0.1, mark.sig =
 }
 
 \arguments{
-  \item{qDE}{list or data.frame, the result from \code{ttestCtData} or \code{limmaCtData}.}
-  \item{comparison}{integer or character string, indicating which component to use if \code{qDE} is a list.}
-  \item{genes}{numeric or character vector, selected genes to make the plot for.}
-  \item{transform}{character string, how should the data be displayed. Options are "none", "log2" or "log10". See details}
-  \item{p.val}{numeric between 0 and 1, if \code{genes} is not supplied all given with (adjusted) p-value below this threshold will be included.}
-  \item{mark.sig}{logical, should significant features be marked.}
-  \item{p.sig}{numeric, the cut-off for significant p-values that will be marked by *.}
-  \item{p.very.sig}{numeric, the cut-off for very significant p-values that will be marked by ".}
-  \item{mark.un}{logical, should data with unreliable target or calibrator samples be marked. See details.}
-  \item{un.tar}{colour to use for the undetermined targets. See details.}
-  \item{un.cal}{colour to use for the undetermined calibrators. See details.}
-  \item{col}{vector, colours to use for the bars.}
-  \item{legend}{logical, should a legend be included in the barplot.}
-  \item{xlim}{vector of length 2, the limits on the x-axis. Mainly used for moving the legend to the left of bars.}
-  \item{mar}{vector with 4 values, the size of the margins. See \code{par} for more info.}
-  \item{main}{character string, the image title. Default to the name of the chosen comparison.}
-  \item{\dots}{any other arguments will be passed to the \code{barplot} function.}
+ \item{qDE}{list or data.frame, the result from \code{ttestCtData} or \code{limmaCtData}.}
+ \item{comparison}{integer or character string, indicating which component to use if \code{qDE} is a list.}
+ \item{genes}{numeric or character vector, selected genes to make the plot for.}
+ \item{transform}{character string, how should the data be displayed. Options are "none", "log2" or "log10". See details}
+ \item{p.val}{numeric between 0 and 1, if \code{genes} is not supplied all given with (adjusted) p-value below this threshold will be included.}
+ \item{mark.sig}{logical, should significant features be marked.}
+ \item{p.sig}{numeric, the cut-off for significant p-values that will be marked by *.}
+ \item{p.very.sig}{numeric, the cut-off for very significant p-values that will be marked by ".}
+ \item{mark.un}{logical, should data with unreliable target or calibrator samples be marked. See details.}
+ \item{un.tar}{colour to use for the undetermined targets. See details.}
+ \item{un.cal}{colour to use for the undetermined calibrators. See details.}
+ \item{col}{vector, colours to use for the bars.}
+ \item{legend}{logical, should a legend be included in the barplot.}
+ \item{xlim}{vector of length 2, the limits on the x-axis. Mainly used for moving the legend to the left of bars.}
+ \item{mar}{vector with 4 values, the size of the margins. See \code{par} for more info.}
+ \item{main}{character string, the image title. Default to the name of the chosen comparison.}
+ \item{\dots}{any other arguments will be passed to the \code{barplot} function.}
 }
 
 \details{
@@ -40,7 +40,7 @@ If \code{mark.un=TRUE}, those bars where either the calibrator or target sample 
 \author{Heidi Dvinge}
 
 \seealso{
-\code{\link{ttestCtData}} and \code{\link{limmaCtData}} for testing the Ct data for differential expression. 
+\code{\link{ttestCtData}} and \code{\link{limmaCtData}} for testing the Ct data for differential expression.
 }
 
 \examples{

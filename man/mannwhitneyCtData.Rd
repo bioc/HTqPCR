@@ -9,19 +9,19 @@ mannwhitneyCtData(q, groups = NULL, calibrator, alternative = "two.sided", paire
 }
 
 \arguments{
-  \item{q}{qPCRset object.}
-  \item{groups}{factor, assigning each sample to one of two groups.}
-  \item{calibrator}{which of the two groups is to be considered as the reference and not the test? Defaults to the first group in \code{groups}.}
-  \item{alternative}{character string (first letter is enough), specifying the alternative hypothesis, "two.sided" (default), "greater" or "less".}
-  \item{paired}{logical, should a paired t-test be used.}
-  \item{replicates}{logical, if replicated genes are present on the array, the statistics will be calculated for all the replicates combined, rather than the individual wells.}
-    \item{sort}{boolean, should the output be sorted by p-values.}
-  \item{stringent}{boolean, for flagging results as "Undetermined". See details.}
-  \item{p.adjust}{character string, which method to use for p-value adjustment for multiple testing. See details.}
-  \item{\dots}{any other arguments will be passed to the \code{\link{wilcox.test}} function.}
+ \item{q}{qPCRset object.}
+ \item{groups}{factor, assigning each sample to one of two groups.}
+ \item{calibrator}{which of the two groups is to be considered as the reference and not the test? Defaults to the first group in \code{groups}.}
+ \item{alternative}{character string (first letter is enough), specifying the alternative hypothesis, "two.sided" (default), "greater" or "less".}
+ \item{paired}{logical, should a paired t-test be used.}
+ \item{replicates}{logical, if replicated genes are present on the array, the statistics will be calculated for all the replicates combined, rather than the individual wells.}
+ \item{sort}{boolean, should the output be sorted by p-values.}
+ \item{stringent}{boolean, for flagging results as "Undetermined". See details.}
+ \item{p.adjust}{character string, which method to use for p-value adjustment for multiple testing. See details.}
+ \item{\dots}{any other arguments will be passed to the \code{\link{wilcox.test}} function.}
 }
 
-\details{Once the Ct values have been normalised, differential expression  can be calculated. This function deals with just the simple case, where there are two types of samples to compare. For a parametric test see \code{ttestCtData} and \code{limmaCtData} for more complex studies.
+\details{Once the Ct values have been normalised, differential expression can be calculated. This function deals with just the simple case, where there are two types of samples to compare. For a parametric test see \code{ttestCtData} and \code{limmaCtData} for more complex studies.
 	
 The underlying statistics is calculated by \code{wilcox.test}. Due to the high possibility of ties for each feature between samples, the test is run with \code{exact=FALSE}.
 
@@ -61,4 +61,4 @@ diff.exp <- mannwhitneyCtData(qPCRpros[,1:4], groups=factor(c("A", "B", "B", "A"
 diff.exp <- mannwhitneyCtData(qPCRpros[,1:4], groups=factor(c("A", "B", "B", "A")), calibrator="B", p.adjust="holm")
 }
 
-\keyword{htest  }
+\keyword{htest }

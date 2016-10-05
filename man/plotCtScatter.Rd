@@ -11,15 +11,15 @@ plotCtScatter(q, cards = c(1, 2), col = "class", pch = 20, diag = FALSE, cor = T
 }
 
 \arguments{
-  \item{q}{object of class qPCRset. }
-  \item{cards}{vector, the two cards to plot against each other.}
-  \item{col}{vector with the colour(s) to use for the points, or a character string ("type" or "class") indicating whether points should be coloured according to \code{featureType} or \code{featureClass} of \code{q}.}
-  \item{pch}{integer, the point type to use for the plot.}
-  \item{diag}{logical, should the diagonal line y=x be plotted.}
-  \item{cor}{logical, should information about the correlation between the two samples be included in the plot. The correlation is calculated both with and without removing Ct values above Ct.max.}
-  \item{Ct.max}{numeric, all Ct values above this will be removed for calculating one of the correlations.}
-  \item{legend}{logical, if \code{col} is either "type" or "class", should a colour legend for these be included.}
-  \item{\dots}{any other arguments are passed to \code{plot}.}
+ \item{q}{object of class qPCRset. }
+ \item{cards}{vector, the two cards to plot against each other.}
+ \item{col}{vector with the colour(s) to use for the points, or a character string ("type" or "class") indicating whether points should be coloured according to \code{featureType} or \code{featureClass} of \code{q}.}
+ \item{pch}{integer, the point type to use for the plot.}
+ \item{diag}{logical, should the diagonal line y=x be plotted.}
+ \item{cor}{logical, should information about the correlation between the two samples be included in the plot. The correlation is calculated both with and without removing Ct values above Ct.max.}
+ \item{Ct.max}{numeric, all Ct values above this will be removed for calculating one of the correlations.}
+ \item{legend}{logical, if \code{col} is either "type" or "class", should a colour legend for these be included.}
+ \item{\dots}{any other arguments are passed to \code{plot}.}
 }
 
 %\details{}

@@ -7,28 +7,28 @@ function(q,
 	main	= NULL,
 	legend	= TRUE,
 	lwd	= 2,
-	...) 
+	...)
 {
 	# Get the data
 	if (class(q)=="matrix") {
-		data	<- q[,cards]	
+		data <- q[,cards]	
 	} else if (class(q)=="qPCRset") {
-		data	<- exprs(q)[,cards,drop=FALSE]
+		data <- exprs(q)[,cards,drop=FALSE]
 	} else {
 		stop("Data is of wrong format, only qPCRset and matrices are supported.\n")
 	}
 	# Remove all with entie column = NA
-	index	<- apply(data, 2, function(x) !all(is.na(x)))
+	index <- apply(data, 2, function(x) !all(is.na(x)))
 	# Calculate density; collect x and y values
-	dens	<- apply(data[,index], 2, density, na.rm=TRUE)
+	dens <- apply(data[,index], 2, density, na.rm=TRUE)
 	x.pos <- do.call(cbind, lapply(dens, function(d) d$x))
-    y.pos <- do.call(cbind, lapply(dens, function(d) d$y))
-    # Plotting
-    if (missing(col))
-    	col	<- colorRampPalette(brewer.pal(11, "Spectral"))(ncol(data))
-    matplot(x.pos, y.pos, xlab=xlab, ylab=ylab, col=col, main=main, type="l", lwd=lwd, ...)
-    # Plot legend if required
-    if (legend) 
-    	legend(min(x.pos), max(y.pos), legend=sampleNames(q)[cards][index], col=col, lty=1:ncol(data), lwd=lwd, bty="n", ...)
+ y.pos <- do.call(cbind, lapply(dens, function(d) d$y))
+ # Plotting
+ if (missing(col))
+ 	col <- colorRampPalette(brewer.pal(11, "Spectral"))(ncol(data))
+ matplot(x.pos, y.pos, xlab=xlab, ylab=ylab, col=col, main=main, type="l", lwd=lwd, ...)
+ # Plot legend if required
+ if (legend)
+ 	legend(min(x.pos), max(y.pos), legend=sampleNames(q)[cards][index], col=col, lty=1:ncol(data), lwd=lwd, bty="n", ...)
 }
 

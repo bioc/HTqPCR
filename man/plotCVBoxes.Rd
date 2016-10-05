@@ -9,14 +9,14 @@ plotCVBoxes(q, cards = TRUE, xlab = "", ylab = "CV", col = brewer.pal(5, "Spectr
 }
 
 \arguments{
-  \item{q}{object of class qPCRset.}
-  \item{cards}{vector, the numbers of the cards to plot. Defaults to TRUE = all cards.}
-  \item{xlab}{character string, label for the x-axis.}
-  \item{ylab}{character string, label for the y-axis.}
-  \item{col}{vector of colours to use.}
-  \item{main}{character string, plot title.}
-  \item{stratify}{character, specifying what to stratify the Ct values by. NULL, the default means no stratification, "type" is the feature types of the qPCRset, and "class" the feature class.}
-  \item{\dots}{any other arguments will be passed to the \code{boxplot} function.}
+ \item{q}{object of class qPCRset.}
+ \item{cards}{vector, the numbers of the cards to plot. Defaults to TRUE = all cards.}
+ \item{xlab}{character string, label for the x-axis.}
+ \item{ylab}{character string, label for the y-axis.}
+ \item{col}{vector of colours to use.}
+ \item{main}{character string, plot title.}
+ \item{stratify}{character, specifying what to stratify the Ct values by. NULL, the default means no stratification, "type" is the feature types of the qPCRset, and "class" the feature class.}
+ \item{\dots}{any other arguments will be passed to the \code{boxplot} function.}
 }
 
 \details{The CV is calculated across all the selected cards based on each well position, without taking possibly replicated genes on the cards into consideration. "type" and "class" are automatically extracted from the qPCRset using \code{featureType} and \code{featureClass}.}
@@ -34,7 +34,7 @@ data(qPCRraw)
 plotCVBoxes(qPCRraw)
 plotCVBoxes(qPCRraw, cards=c(1,4))
 plotCVBoxes(qPCRraw, stratify="class")
-x	<- plotCVBoxes(qPCRraw, stratify="type")
+x <- plotCVBoxes(qPCRraw, stratify="type")
 x[1:10]
 }
 

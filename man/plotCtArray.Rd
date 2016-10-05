@@ -9,19 +9,19 @@ plotCtArray(q, plot = "Ct", main, col, col.range, na.col = "grey", na.value = 40
 }
 
 \arguments{
-  \item{q}{object of class qPCRset. }
-  \item{plot}{character string indicating what type of plot to produce. Currently only "Ct" is implemented.}
-  \item{main}{character string, the title of the plot. Per default "Ct values".}
-  \item{col}{the name of a colour scheme.}
-  \item{col.range}{vector, the range of colours to use.}
-  \item{na.col}{the colour used for well with NA (undetermined) Ct values.}
-  \item{na.value}{numeric, if NA has been replaced by an (arbitrary) high Ct value in the data.}
-  \item{chamber.size}{numeric, for adjusting the size of the reaction chamber on the card.}
-  \item{\dots}{any other arguments will be passed to the \code{plot} function.}
+ \item{q}{object of class qPCRset. }
+ \item{plot}{character string indicating what type of plot to produce. Currently only "Ct" is implemented.}
+ \item{main}{character string, the title of the plot. Per default "Ct values".}
+ \item{col}{the name of a colour scheme.}
+ \item{col.range}{vector, the range of colours to use.}
+ \item{na.col}{the colour used for well with NA (undetermined) Ct values.}
+ \item{na.value}{numeric, if NA has been replaced by an (arbitrary) high Ct value in the data.}
+ \item{chamber.size}{numeric, for adjusting the size of the reaction chamber on the card.}
+ \item{\dots}{any other arguments will be passed to the \code{plot} function.}
 }
 
 %\details{
-%%  ~~ If necessary, more details than the description above ~~
+%% ~~ If necessary, more details than the description above ~~
 %}
 
 \value{A plot is created on the current graphics device.}
@@ -36,7 +36,7 @@ plotCtArray(q, plot = "Ct", main, col, col.range, na.col = "grey", na.value = 40
 exPath <- system.file("exData", package="HTqPCR")
 exFiles <- "BioMark_sample.csv"
 # Create qPCRset object
-raw	<- readCtData(exFiles, path=exPath, n.features=48, n.data=48, format="BioMark")
+raw <- readCtData(exFiles, path=exPath, n.features=48, n.data=48, format="BioMark")
 # Plot
 plotCtArray(raw)
 # Change colour and range

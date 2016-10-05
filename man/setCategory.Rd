@@ -9,23 +9,23 @@ setCategory(q, Ct.max = 35, Ct.min = 10, replicates = TRUE, quantile = 0.9, grou
 }
 
 \arguments{
-  \item{q}{qPCRset object.}
-  \item{Ct.max}{numeric, the maximum tolerated Ct value. Everything above this will be "Undetermined".}
-  \item{Ct.min}{numeric, the minimum tolerated Ct value. Everything below this will be "Unreliable".}
-  \item{replicates}{logical, should Ct values from genes replicated within each sample be collapsed for the standard deviation.}
-  \item{quantile}{numeric from 0 to 1, the quantile interval accepted for standard deviations. See details. \code{NULL} means that variation between replicates is not used for setting the categories. }
-  \item{groups}{vector, grouping of cards, for example biological or technical replicates. \code{NULL} means that variation between groups os samples is not assessed, same as for setting \code{quantile=NULL}.}
-  \item{flag}{logical, should categories also be set to "Unreliable" according to the content of \code{flag(q)}.}
-  \item{flag.out}{character vector, if \code{flag=TRUE}, what are the flag(s) to be set as "Unreliable".}
-  \item{verbose}{logical, should a summary about category counts per sample be printed to the prompt.}
-  \item{plot}{logical, should some plots of the standard deviations be created.}
-  \item{\dots}{any other arguments are passed to \code{plot}.}
+ \item{q}{qPCRset object.}
+ \item{Ct.max}{numeric, the maximum tolerated Ct value. Everything above this will be "Undetermined".}
+ \item{Ct.min}{numeric, the minimum tolerated Ct value. Everything below this will be "Unreliable".}
+ \item{replicates}{logical, should Ct values from genes replicated within each sample be collapsed for the standard deviation.}
+ \item{quantile}{numeric from 0 to 1, the quantile interval accepted for standard deviations. See details. \code{NULL} means that variation between replicates is not used for setting the categories. }
+ \item{groups}{vector, grouping of cards, for example biological or technical replicates. \code{NULL} means that variation between groups os samples is not assessed, same as for setting \code{quantile=NULL}.}
+ \item{flag}{logical, should categories also be set to "Unreliable" according to the content of \code{flag(q)}.}
+ \item{flag.out}{character vector, if \code{flag=TRUE}, what are the flag(s) to be set as "Unreliable".}
+ \item{verbose}{logical, should a summary about category counts per sample be printed to the prompt.}
+ \item{plot}{logical, should some plots of the standard deviations be created.}
+ \item{\dots}{any other arguments are passed to \code{plot}.}
 }
 
 \details{Categories can be assigned to the \code{featureCategory} of the qPCRset using either just simple criteria (max/min of Ct values or \code{flag} of \code{q}) or by looking at the standard deviation of Ct values across biological and technical replicates for each gene.
 
 When looking at replicates, the standard deviation and mean are calculated and a normal distribution following these parameters is generated. Individual Ct values that are outside the interval set by \code{quantile} are set as "Unreliable". %This interval means whether they deviate from the e.g. 90\% quantile estimated from a normal distribution of the given mean and standard deviation.
-So if e.g. \code{quantile=90} the values outside the top 5\% and lower 5\% of the normal distribution with the given mean and standard deviation are removed. 
+So if e.g. \code{quantile=90} the values outside the top 5\% and lower 5\% of the normal distribution with the given mean and standard deviation are removed.
 
 "Undetermined" has priority over "Unreliable", so if a value is outside \code{quantile} but also above \code{Ct.max} it will be "Undetermined".
 	

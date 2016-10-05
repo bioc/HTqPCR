@@ -12,12 +12,12 @@
 }
 
 \arguments{
-  \item{\dots}{\code{qPCRset} objects that are to be combined.}
-  \item{deparse.level}{not implemented currently. See \code{\link[base]{cbind}}.}
+ \item{\dots}{\code{qPCRset} objects that are to be combined.}
+ \item{deparse.level}{not implemented currently. See \code{\link[base]{cbind}}.}
 }
 
 \details{
-In some cases it might be desirable to merge multiple \code{qPCRset} objects, that have been read into R or processed individually. This can be done for either identical samples across multiple different cards (such as a 384 well plate), or if more samples have been run on cards with the same layout. 
+In some cases it might be desirable to merge multiple \code{qPCRset} objects, that have been read into R or processed individually. This can be done for either identical samples across multiple different cards (such as a 384 well plate), or if more samples have been run on cards with the same layout.
 		
 \code{cbind} combines data assuming that all experiments have been carried out on identical cards, i.e. that \code{featureNames}, \code{featureType}, \code{featurePos} and \code{featureClass} is identical across all the \code{qPCRset} objects. \code{rbind} combines data assuming that the same samples have been analysed using different qPCR cards.
 
@@ -43,7 +43,7 @@ q.samples <- cbind(q1,q3,q2)
 n.wells(q.samples)
 n.samples(q.samples)
 # Combine as if the same samples had been run on multiple different cards
-sampleNames(q3)	<- sampleNames(q1)
+sampleNames(q3) <- sampleNames(q1)
 q.features <- rbind(q1,q3)
 n.wells(q.features)
 n.samples(q.features)

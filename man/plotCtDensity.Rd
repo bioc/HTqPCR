@@ -10,15 +10,15 @@ plotCtDensity(q, cards = TRUE, xlab = "Ct", ylab = "Density", col, main = NULL, 
 }
 
 \arguments{
-  \item{q}{object of class qPCRset. }
-  \item{cards}{vector, the numbers of the cards to plot. Defaults to TRUE = all cards.}
-  \item{xlab}{character string, label for the x-axis.}
-  \item{ylab}{character string, label for the y-axis.}
-  \item{col}{vector of colours to use, defaults to different colour for each card.}
-  \item{main}{character string, plot title.}
-  \item{legend}{logical, whether to include a colour legend or not.}
-  \item{lwd}{numeric, the width of the lines.}
-  \item{\dots}{any other arguments will be passed to the \code{matplot} function.}
+ \item{q}{object of class qPCRset. }
+ \item{cards}{vector, the numbers of the cards to plot. Defaults to TRUE = all cards.}
+ \item{xlab}{character string, label for the x-axis.}
+ \item{ylab}{character string, label for the y-axis.}
+ \item{col}{vector of colours to use, defaults to different colour for each card.}
+ \item{main}{character string, plot title.}
+ \item{legend}{logical, whether to include a colour legend or not.}
+ \item{lwd}{numeric, the width of the lines.}
+ \item{\dots}{any other arguments will be passed to the \code{matplot} function.}
 }
 
 \details{The distribution of Ct values in the qPCRset \code{q} is calculated using \code{density}.

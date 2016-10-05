@@ -10,15 +10,15 @@ plotCtReps(q, card = 1, percent = 20, verbose = TRUE, col = 1, ...)
 }
 
 \arguments{
-  \item{q}{object of class qPCRset.}
-  \item{card}{integer, the sample number to plot.}
-  \item{percent}{numeric, features with replicate values differ more than this percentage from their average will be marked on the plot.}
-  \item{verbose}{logical, should the deviating genes and their Ct values be printed to the terminal.}
-  \item{col}{integer or character; the colour of the points in the scatter plot.}
-  \item{\dots}{any other arguments are passed to \code{\link{plot}}.}
+ \item{q}{object of class qPCRset.}
+ \item{card}{integer, the sample number to plot.}
+ \item{percent}{numeric, features with replicate values differ more than this percentage from their average will be marked on the plot.}
+ \item{verbose}{logical, should the deviating genes and their Ct values be printed to the terminal.}
+ \item{col}{integer or character; the colour of the points in the scatter plot.}
+ \item{\dots}{any other arguments are passed to \code{\link{plot}}.}
 }
 
-\details{This function will look through the data in the qPCRset, find all genes with are presented twice on the array, and plot the Ct values of these replicated genes against each other. Whether a genes goes to the x or y-axis depends on the first occurrence of the gene names. 
+\details{This function will look through the data in the qPCRset, find all genes with are presented twice on the array, and plot the Ct values of these replicated genes against each other. Whether a genes goes to the x or y-axis depends on the first occurrence of the gene names.
 	
 All genes where abs(rep1-rep2) > percent/100*replicate mean will be marked by an open circle, and the gene names written in red letters.}
 

@@ -10,15 +10,15 @@ clusterCt(q, main = NULL, type = "genes", dist = "pearson", xlab = "Cluster dend
 }
 
 \arguments{
-  \item{q}{object of class qPCRset.}
-  \item{main}{character string, plot title.}
-  \item{type}{character string, either "genes" (default) or "samples", indicating what is to be clustered.}
-  \item{dist}{character string, specifying whether to use "pearson" correlation (default) or "euclidean" distance for the clustering.}
-  \item{xlab}{character string, label for the x-axis.}
-  \item{n.cluster}{integer, the number of cluster to divide the dendrogram into. See details.}
-  \item{h.cluster}{numeric, the height at which to cut the dendrogram into clusters. See details.}
-  \item{select.cluster}{logical, whether to select clusters interactively. See details.}
-  \item{\dots}{any other arguments will be passed to the \code{plot} function.}
+ \item{q}{object of class qPCRset.}
+ \item{main}{character string, plot title.}
+ \item{type}{character string, either "genes" (default) or "samples", indicating what is to be clustered.}
+ \item{dist}{character string, specifying whether to use "pearson" correlation (default) or "euclidean" distance for the clustering.}
+ \item{xlab}{character string, label for the x-axis.}
+ \item{n.cluster}{integer, the number of cluster to divide the dendrogram into. See details.}
+ \item{h.cluster}{numeric, the height at which to cut the dendrogram into clusters. See details.}
+ \item{select.cluster}{logical, whether to select clusters interactively. See details.}
+ \item{\dots}{any other arguments will be passed to the \code{plot} function.}
 }
 
 \details{This function may be used to cluster the Ct values and present the result as a dendrogram.

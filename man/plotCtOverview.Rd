@@ -12,16 +12,16 @@ plotCtOverview(q, cards = TRUE, genes, groups, calibrator, replicates = TRUE, co
 }
 
 \arguments{
-  \item{q}{object of class qPCRset.}
-  \item{cards}{integer, the cards (samples) to use. Defaults to all.}
-  \item{genes}{vector selecting the features to show. See Details.}
-  \item{groups}{vector with groups to average the samples across. If missing all the samples are displayed individually. See Details.}
-  \item{calibrator}{the value in \code{groups} to use as calibrator sample. See Details.}
-  \item{replicates}{logical, if should values from replicated features in each sample be collapsed or kept separate.}
-  \item{col}{colours to use for each sample or group. Per default a maximum of 10 colours are used, so this parameter should be set if more than 10 groups are present.}
-  \item{conf.int}{logical, should the 95 percent confidence interval be shown. See Details.}
-  \item{legend}{logical, should a legend be included in the plot.}
-  \item{\dots}{further arguments passed to \code{barplot}.}
+ \item{q}{object of class qPCRset.}
+ \item{cards}{integer, the cards (samples) to use. Defaults to all.}
+ \item{genes}{vector selecting the features to show. See Details.}
+ \item{groups}{vector with groups to average the samples across. If missing all the samples are displayed individually. See Details.}
+ \item{calibrator}{the value in \code{groups} to use as calibrator sample. See Details.}
+ \item{replicates}{logical, if should values from replicated features in each sample be collapsed or kept separate.}
+ \item{col}{colours to use for each sample or group. Per default a maximum of 10 colours are used, so this parameter should be set if more than 10 groups are present.}
+ \item{conf.int}{logical, should the 95 percent confidence interval be shown. See Details.}
+ \item{legend}{logical, should a legend be included in the plot.}
+ \item{\dots}{further arguments passed to \code{barplot}.}
 }
 
 \details{
@@ -40,9 +40,9 @@ The purpose of \code{group} is to tell plotCtOverview if any of the samples shou
 # Load example data
 data(qPCRraw)
 exPath <- system.file("exData", package="HTqPCR")
-samples	<- read.delim(file.path(exPath, "files.txt"))
+samples <- read.delim(file.path(exPath, "files.txt"))
 # Show all samples for the first 10 genes
-g	<- featureNames(qPCRraw)[1:10]
+g <- featureNames(qPCRraw)[1:10]
 plotCtOverview(qPCRraw, genes=g, xlim=c(0,90))
 plotCtOverview(qPCRraw, genes=g, xlim=c(0,50), groups=samples$Treatment)
 plotCtOverview(qPCRraw, genes=g, xlim=c(0,60), groups=samples$Treatment, conf.int=TRUE, ylim=c(0,55))
@@ -50,8 +50,8 @@ plotCtOverview(qPCRraw, genes=g, xlim=c(0,60), groups=samples$Treatment, conf.in
 plotCtOverview(qPCRraw, genes=g, groups=samples$Treatment, calibrator="Control")
 plotCtOverview(qPCRraw, genes=g, groups=samples$Treatment, calibrator="Control", conf.int=TRUE, ylim=c(-0.5,0.5))
 plotCtOverview(qPCRraw, genes=g, groups=samples$Treatment, calibrator="LongStarve")
-# Plotting just some of the groups. The qPCRraw object has to be subsetted. 
-ex	<- samples$Treatment %in% c("Control", "LongStarve")
+# Plotting just some of the groups. The qPCRraw object has to be subsetted.
+ex <- samples$Treatment %in% c("Control", "LongStarve")
 plotCtOverview(qPCRraw[,ex], genes=g, groups=samples$Treatment[ex])
 }
 

@@ -10,19 +10,19 @@ ttestCtData(q, groups = NULL, calibrator, alternative = "two.sided", paired = FA
 }
 
 \arguments{
-  \item{q}{qPCRset object.}
-  \item{groups}{factor, assigning each sample to one of two groups.}
-  \item{calibrator}{which of the two groups is to be considered as the reference and not the test? Defaults to the first group in \code{groups}.}
-  \item{alternative}{character string (first letter is enough), specifying the alternative hypothesis, "two.sided" (default), "greater" or "less".}
-  \item{paired}{logical, should a paired t-test be used.}
-  \item{replicates}{logical, if replicated genes are present on the array, the statistics will be calculated for all the replicates combined, rather than the individual wells.}
-    \item{sort}{boolean, should the output be sorted by p-values.}
-  \item{stringent}{boolean, for flagging results as "Undetermined". See details.}
-  \item{p.adjust}{character string, which method to use for p-value adjustment for multiple testing. See details.}
-  \item{\dots}{any other arguments will be passed to the \code{\link{t.test}} function.}
+ \item{q}{qPCRset object.}
+ \item{groups}{factor, assigning each sample to one of two groups.}
+ \item{calibrator}{which of the two groups is to be considered as the reference and not the test? Defaults to the first group in \code{groups}.}
+ \item{alternative}{character string (first letter is enough), specifying the alternative hypothesis, "two.sided" (default), "greater" or "less".}
+ \item{paired}{logical, should a paired t-test be used.}
+ \item{replicates}{logical, if replicated genes are present on the array, the statistics will be calculated for all the replicates combined, rather than the individual wells.}
+ \item{sort}{boolean, should the output be sorted by p-values.}
+ \item{stringent}{boolean, for flagging results as "Undetermined". See details.}
+ \item{p.adjust}{character string, which method to use for p-value adjustment for multiple testing. See details.}
+ \item{\dots}{any other arguments will be passed to the \code{\link{t.test}} function.}
 }
 
-\details{Once the Ct values have been normalised, differential expression  can be calculated. This function deals with just the simple case, where there are two types of samples to compare. For more complex studies, see \code{limmaCtData}.
+\details{Once the Ct values have been normalised, differential expression can be calculated. This function deals with just the simple case, where there are two types of samples to compare. For more complex studies, see \code{limmaCtData}.
 
 All results are assigned to a category, either "OK" or "Undetermined" depending on the input Ct values. If \code{stringent=TRUE} any unreliable or undetermined measurements among technical and biological replicates will result in the final result being "Undetermined". For \code{stringent=FALSE} the result will be "OK" unless at least half of the Ct values for a given gene are unreliable/undetermined.
 
@@ -58,4 +58,4 @@ diff.exp <- ttestCtData(qPCRpros[,1:4], groups=factor(c("A", "B", "B", "A")), ca
 diff.exp <- ttestCtData(qPCRpros[,1:4], groups=factor(c("A", "B", "B", "A")), calibrator="B", p.adjust="holm")
 }
 
-\keyword{htest  }
+\keyword{htest }

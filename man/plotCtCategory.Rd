@@ -10,20 +10,20 @@ plotCtCategory(q, cards = TRUE, by.feature = FALSE, stratify, col, xlim, main, .
 }
 
 \arguments{
-  \item{q}{object of class qPCRset.}
-  \item{cards}{integers, the number of the cards (samples) to plot.}
-  \item{by.feature}{logical, should the categories be summarised for features rather than samples. See details.}
-  \item{stratify}{character string, either "type" or "class" indicating if the categories should be stratified by \code{featureType} or \code{featureClass} of \code{q}. Ignored if \code{by.features} is TRUE.}
-  \item{col}{vector with the colours to use for the categories. Default is green for "OK", yellow for "Unreliable" and red for "Undetermined".  See details.}
-  \item{xlim}{vector, the limits of the x-axis. If \code{by.feature} is FALSE, this can be used to adjust the size of the barplot to fit in the colour legend.}
-  \item{main}{character string, the title of the plot.}
-  \item{\dots}{further arguments passed to \code{barplot} or \code{heatmap}.}
+ \item{q}{object of class qPCRset.}
+ \item{cards}{integers, the number of the cards (samples) to plot.}
+ \item{by.feature}{logical, should the categories be summarised for features rather than samples. See details.}
+ \item{stratify}{character string, either "type" or "class" indicating if the categories should be stratified by \code{featureType} or \code{featureClass} of \code{q}. Ignored if \code{by.features} is TRUE.}
+ \item{col}{vector with the colours to use for the categories. Default is green for "OK", yellow for "Unreliable" and red for "Undetermined". See details.}
+ \item{xlim}{vector, the limits of the x-axis. If \code{by.feature} is FALSE, this can be used to adjust the size of the barplot to fit in the colour legend.}
+ \item{main}{character string, the title of the plot.}
+ \item{\dots}{further arguments passed to \code{barplot} or \code{heatmap}.}
 }
 
 \details{
 This function is for generating two different types of plot. If \code{by.feature=FALSE} the number of each \code{featureCategory} will be counted for each card, and a barplot is made. If however \code{by.feature=TRUE}, then the categories for each feature across the selected cards will be clustered in a heatmap.
 
-The colours given in \code{col} correspond to all the unique categories present in the entire  \code{featureCategory} of \code{q}, even categories not represented for the samples selected by \code{cards}. Categories are sorted alphabetically, and colours assigned accordingly.
+The colours given in \code{col} correspond to all the unique categories present in the entire \code{featureCategory} of \code{q}, even categories not represented for the samples selected by \code{cards}. Categories are sorted alphabetically, and colours assigned accordingly.
 
 For \code{by.feature=TRUE} the plot can be modified extensively using calls to the underlying \code{heatmap} function, such as setting \code{cexRow} to adjust the size of row labels.
 }
