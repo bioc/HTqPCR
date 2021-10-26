@@ -1,7 +1,7 @@
 Package: HTqPCR
 Type: Package
 Title: Automated analysis of high-throughput qPCR data
-Version: 1.47.0
+Version: 1.48.0
 Author: Heidi Dvinge, Paul Bertone
 Maintainer: Heidi Dvinge <hdvinge@fredhutch.org>
 Description: Analysis of Ct values from high throughput quantitative
