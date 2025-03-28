@@ -5,7 +5,8 @@
 
 %%%% HEAD SECTION: START EDITING BELOW %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\documentclass[11pt, a4paper, fleqn]{article}
+%\documentclass[11pt, a4paper, fleqn]{article}
+\documentclass[11pt, fleqn]{article}
 \usepackage{geometry}\usepackage{color}
 \definecolor{darkblue}{rgb}{0.0,0.0,0.75}
 \usepackage[%
@@ -20,9 +21,10 @@ raiselinks,plainpages,pdftex]{hyperref}
 
 \usepackage{verbatim} % for multi-line comments
 \usepackage{fancyvrb}
-\usepackage{amsmath,a4,t1enc, graphicx}
-\usepackage{natbib}
-\bibpunct{(}{)}{;}{a}{,}{,}
+%\usepackage{amsmath,a4,t1enc, graphicx}
+\usepackage{amsmath,t1enc, graphicx}
+%\usepackage{natbib}
+%\bibpunct{(}{)}{;}{a}{,}{,}
 
 \parindent0mm
 %\parskip2ex plus0.5ex minus0.3ex
@@ -85,7 +87,7 @@ The example data used throughout this vignette is from from TaqMan Low Density A
 library("HTqPCR")
 @
 
-The package employs functions from other packages of the Bioconductor project \citep{ref:bioc}. Dependencies include \Rpackage{Biobase}, \Rpackage{RColorBrewer}, \Rpackage{limma}, \Rpackage{statmod}, \Rpackage{affy} and \Rpackage{gplots}.
+The package employs functions from other packages of the Bioconductor project. Dependencies include \Rpackage{Biobase}, \Rpackage{RColorBrewer}, \Rpackage{limma}, \Rpackage{statmod}, \Rpackage{affy} and \Rpackage{gplots}.
 
 \subsection*{Examples from the vignette}
 
@@ -418,7 +420,7 @@ applied to the entire sample.
 only the features found in a certain number of samples, and used the average Ct value
 of those as a scaling factor for correcting all Ct values.
 \item[deltaCt] Calculates the standard deltaCt values, i.e.~subtracts the mean of the chosen controls from all other values in the feature set.
-\item[geometric.mean] Calculates the average Ct value for each sample, and scales all Ct values according to the ratio of these mean Ct values across samples. There are some indications that this is beneficial for e.g.~miRNA studies~\citep{Mestdagh:2009}.
+\item[geometric.mean] Calculates the average Ct value for each sample, and scales all Ct values according to the ratio of these mean Ct values across samples. There are some indications that this is beneficial for e.g.~miRNA studies.%~\citep{Mestdagh:2009}.
 \end{description}
 
 For the rank-invariant normalisation and geometric mean methods, Ct values above a given threshold can be excluded from the calculation of a scaling factor or normalisation curve. This is useful so that a high proportion of ``Undetermined'' Ct values (assigned a value of 40 by default) in a given sample doesn't bias the normalisation of the remaining features.
@@ -786,7 +788,7 @@ In general there are three approaches in \Rpackage{HTqPCR} for testing the signi
 \begin{description}
 \item[ t-test] Performing a standard t-test between two sample groups. This function will incorporate information about replicates to calculate t and p-values. This is a fairly simple approach, typically used when comparing a single treatment and control sample, and multiple pair-wise tests can be carried out one-by-one by the user.
 \item[Mann-Whitney] This is a non-parametric test, also known as a two sample Wilcoxon test. Similar to the t-test, multiple pair-wise tests will have to be carried out one by one if more than two types of samples are present. This is a rank-based test that doesn't make any assumptions about the population distribution of Ct values.
-\item[\Rpackage{limma}] Using a wrapper for functions from the package \Rpackage{limma}~\citep{ref:limma} to calculate more sophisticated t and p-values for any number of groups present across the experiment. This is more flexible in terms of what types of comparisons can be made, but the users need to familiarise themselves with the \Rpackage{limma} conventions for specifying what contrasts are of interest.
+\item[\Rpackage{limma}] Using a wrapper for functions from the package \Rpackage{limma} to calculate more sophisticated t and p-values for any number of groups present across the experiment. This is more flexible in terms of what types of comparisons can be made, but the users need to familiarise themselves with the \Rpackage{limma} conventions for specifying what contrasts are of interest.
 \end{description}
 
 Examples of how to use each of these are given in the next sections. In all cases the output is similar; a data frame containing the test statistics for each feature, along with fold change and information about whether the Ct values are ``OK'' or ``Unreliable''. This result can be written to a file using standard functions such as \Rfunction{write.table}.
@@ -1023,7 +1025,7 @@ show(raw)
 
 \subsection{LightCycler format}
 
-Some qPCR systems, such as the LightCycler from Roche, don't provide the results as Ct values, but instead as crossing points (Cp). Ct values are measured at the exponential phase of amplification by drawing a line parallel to the x-axis of the real-time fluorescence intensity curve (fit point method), whereas Cp (second derivative method) calculates the fractional cycle where the second derivative of the real-time fluorescence intensity curve reaches the maximum value~\citep{Luu-The:2005}.
+Some qPCR systems, such as the LightCycler from Roche, don't provide the results as Ct values, but instead as crossing points (Cp). Ct values are measured at the exponential phase of amplification by drawing a line parallel to the x-axis of the real-time fluorescence intensity curve (fit point method), whereas Cp (second derivative method) calculates the fractional cycle where the second derivative of the real-time fluorescence intensity curve reaches the maximum value.%~\citep{Luu-The:2005}.
 
 As long as all samples and features are quantified using the same method, it shouldn't matter whether Ct or Cp values are being used to test for significant differences between samples. The analysis of e.g.~LightCycler Cp data can therefore proceed as outlined in this vignette. One thing to bear in mind though, is that for Ct values a value of 40 generally means NA, and above 35 is considered unreliable, however these numbers will be different for Cp. When using the filtering methods to set results as being ``OK", ``Unreliable" and ``Undetermined", the parameters in e.g.~\Rfunction{setCategory(..., Ct.max = 35, Ct.min = 10, ...)} and \Rfunction{readCtData(..., na.value, ...)} will need to be adjusted accordingly.
 
@@ -1137,11 +1139,11 @@ Information from multiple microfluidic devices can then subsequently be combined
 
 \newpage
 \section{Concluding remarks}
-
-Use the function \Rfunction{news} to see what bug fixes and updates have been incorporated into \Rpackage{HTqPCR}. For example:
-<<Check HTqPCR news>>=
-news(Version>1.7, package="HTqPCR")
-@
+% 
+% Use the function \Rfunction{news} to see what bug fixes and updates have been incorporated into \Rpackage{HTqPCR}. For example:
+% <<Check HTqPCR news>>=
+% news(Version>1.7, package="HTqPCR")
+% @
 
 This vignette was generated using:
 
@@ -1151,8 +1153,8 @@ toLatex(sessionInfo())
 
 %%%%%%%%%%%%%%%% BIBLIOGRAPHY %%%%%%%%%%%%%%%%%
 
-\newpage
-\bibliographystyle{abbrvnat}
-\bibliography{HTqPCR-Bibliography}
+% \newpage
+% \bibliographystyle{abbrvnat}
+% \bibliography{HTqPCR-Bibliography}
 
 \end{document}
