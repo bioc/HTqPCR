@@ -1,7 +1,7 @@
 Package: HTqPCR
 Type: Package
 Title: Automated analysis of high-throughput qPCR data
-Version: 1.61.2
+Version: 1.61.3
 Author: Heidi Dvinge, Paul Bertone
 Maintainer: Matthew N. McCall <mccallm@gmail.com>
 Description: Analysis of Ct values from high throughput quantitative
@@ -28,4 +28,3 @@ Imports: affy, Biobase, gplots, graphics, grDevices, limma, methods,
 biocViews: MicrotitrePlateAssay, DifferentialExpression,
   GeneExpression, DataImport, QualityControl, Preprocessing,
   Visualization, MultipleComparison, qPCR
-PackageStatus: Deprecated
